@@ -107,6 +107,7 @@ export interface InvokeChannels {
     'connect-popup/enabled': () => boolean;
     'connect-popup/ready': () => void;
     'connect-popup/response': (response: ConnectPopupResponse) => void;
+    'bluetooth/open-settings': () => InvokeResult;
 }
 
 type DesktopApiListener = ListenerMethod<RendererChannels>;
@@ -173,4 +174,5 @@ export interface DesktopApi {
     connectPopupEnabled: DesktopApiInvoke<'connect-popup/enabled'>;
     connectPopupReady: DesktopApiInvoke<'connect-popup/ready'>;
     connectPopupResponse: DesktopApiInvoke<'connect-popup/response'>;
+    bluetoothOpenSettings: DesktopApiInvoke<'bluetooth/open-settings'>;
 }
