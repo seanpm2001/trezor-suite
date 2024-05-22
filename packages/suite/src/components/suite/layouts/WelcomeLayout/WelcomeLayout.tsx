@@ -32,6 +32,8 @@ import { MAX_ONBOARDING_WIDTH } from 'src/constants/suite/layout';
 
 import { NavSettings } from './NavSettings';
 import { TrafficLightOffset } from '../../TrafficLightOffset';
+import { ModalContextProvider } from 'src/support/suite/ModalContext';
+import { ModalSwitcher } from 'src/components/suite/modals/ModalSwitcher/ModalSwitcher';
 
 const MessageContainer = styled.div`
     margin: ${spacingsPx.xxs} ${spacingsPx.xs} ${spacingsPx.xs};
@@ -132,57 +134,64 @@ const Left = () => {
 
     return (
         <WelcomeWrapper $elevation={elevation}>
-            <AnimatePresence>
-                {(!isGuideOpen || isGuideOnTop) && (
-                    <MotionWelcome
-                        initial={{
-                            width: isFirstRender ? '40vw' : 0,
-                            minWidth: isFirstRender ? '380px' : 0,
-                        }}
-                        animate={{
-                            width: '40vw',
-                            minWidth: '380px',
-                            transition: { duration: 0.3, bounce: 0 },
-                        }}
-                        exit={{
-                            width: 0,
-                            minWidth: 0,
-                            transition: { duration: 0.3, bounce: 0 },
-                        }}
-                    >
-                        <TrafficLightOffset>
-                            <Column justifyContent="center" alignItems="center" height="100%">
-                                <Expander data-testid="@welcome/title">
-                                    <TrezorLogo type="symbol" width="57px" />
-                                </Expander>
+            <ModalContextProvider>
+                <ModalSwitcher />
+                <AnimatePresence>
+                    {(!isGuideOpen || isGuideOnTop) && (
+                        <MotionWelcome
+                            initial={{
+                                width: isFirstRender ? '40vw' : 0,
+                                minWidth: isFirstRender ? '380px' : 0,
+                            }}
+                            animate={{
+                                width: '40vw',
+                                minWidth: '380px',
+                                transition: { duration: 0.3, bounce: 0 },
+                            }}
+                            exit={{
+                                width: 0,
+                                minWidth: 0,
+                                transition: { duration: 0.3, bounce: 0 },
+                            }}
+                        >
+                            <TrafficLightOffset>
+                                <Column justifyContent="center" alignItems="center" height="100%">
+                                    <Expander data-testid="@welcome/title">
+                                        <TrezorLogo type="symbol" width="57px" />
+                                    </Expander>
 
-                                <LinksContainer>
-                                    {isWeb() && (
-                                        <TrezorLink type="hint" variant="nostyle" href={SUITE_URL}>
+                                    <LinksContainer>
+                                        {isWeb() && (
+                                            <TrezorLink
+                                                type="hint"
+                                                variant="nostyle"
+                                                href={SUITE_URL}
+                                            >
+                                                <Button
+                                                    variant="tertiary"
+                                                    icon="arrowUpRight"
+                                                    iconAlignment="right"
+                                                >
+                                                    <Translation id="TR_ONBOARDING_DOWNLOAD_DESKTOP_APP" />
+                                                </Button>
+                                            </TrezorLink>
+                                        )}
+                                        <TrezorLink type="hint" variant="nostyle" href={TREZOR_URL}>
                                             <Button
                                                 variant="tertiary"
                                                 icon="arrowUpRight"
                                                 iconAlignment="right"
                                             >
-                                                <Translation id="TR_ONBOARDING_DOWNLOAD_DESKTOP_APP" />
+                                                trezor.io
                                             </Button>
                                         </TrezorLink>
-                                    )}
-                                    <TrezorLink type="hint" variant="nostyle" href={TREZOR_URL}>
-                                        <Button
-                                            variant="tertiary"
-                                            icon="arrowUpRight"
-                                            iconAlignment="right"
-                                        >
-                                            trezor.io
-                                        </Button>
-                                    </TrezorLink>
-                                </LinksContainer>
-                            </Column>
-                        </TrafficLightOffset>
-                    </MotionWelcome>
-                )}
-            </AnimatePresence>
+                                    </LinksContainer>
+                                </Column>
+                            </TrafficLightOffset>
+                        </MotionWelcome>
+                    )}
+                </AnimatePresence>
+            </ModalContextProvider>
         </WelcomeWrapper>
     );
 };
