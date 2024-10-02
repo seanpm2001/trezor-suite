@@ -22,7 +22,7 @@ import { getWorkspacesList } from './utils/getWorkspacesList';
         const { dependencies, devDependencies } = JSON.parse(packageJSON);
         const listOfWorkspaceDependencies = { ...dependencies, ...devDependencies };
 
-        workspace.workspaceDependencies.forEach(workspaceDependency => {
+        workspace.workspaceDependencies?.forEach(workspaceDependency => {
             const dependencyName = packageNames[workspaceDependency];
             const dependencyVersion = listOfWorkspaceDependencies[dependencyName];
 

@@ -75,7 +75,7 @@ import { getPrettierConfig } from './utils/getPrettierConfig';
                 path: path.relative(workspacePath, path.resolve(process.cwd(), typingPath)),
             }));
 
-            Object.values(workspace.workspaceDependencies).forEach(dependencyLocation => {
+            Object.values(workspace?.workspaceDependencies ?? []).forEach(dependencyLocation => {
                 const dependencyPath = path.resolve(process.cwd(), dependencyLocation);
                 const relativeDependencyPath = path.relative(workspacePath, dependencyPath);
 
