@@ -83,6 +83,7 @@ export const prepareDiscoveryMiddleware = createMiddlewareWithExtraDeps(
             !locks.includes(SUITE.LOCK_TYPE.DEVICE) &&
             (deviceActions.selectDevice.match(action) || action.type === SUITE.APP_CHANGED)
         ) {
+            console.log('true 1');
             authorizationIntent = true;
         }
 
@@ -103,12 +104,17 @@ export const prepareDiscoveryMiddleware = createMiddlewareWithExtraDeps(
                 device.connected
             );
             if (becomesAcquired) {
+                console.log('true 2');
+
                 authorizationIntent = true;
             }
         }
 
         // 3. begin auth process
         if (authorizationIntent) {
+            console.log('middleware handling action', action.type);
+
+            console.log('authorizeDeviceThunk()');
             dispatch(authorizeDeviceThunk());
         }
 
