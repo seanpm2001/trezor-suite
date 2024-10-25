@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Sentry from '@sentry/react-native';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import * as Updates from 'expo-updates';
 
 import { selectIsAppReady, selectIsConnectInitialized, StoreProvider } from '@suite-native/state';
 import { FormatterProvider } from '@suite-common/formatters';
@@ -14,6 +15,7 @@ import { FeatureMessageScreen, MessageSystemBannerRenderer } from '@suite-native
 import { configureNetInfo, OfflineBanner } from '@suite-native/connection-status';
 import { IntlProvider } from '@suite-native/intl';
 import { isDebugEnv } from '@suite-native/config';
+import { useAlert } from '@suite-native/alerts';
 
 import { RootStackNavigator } from './navigation/RootStackNavigator';
 import { StylesProvider } from './StylesProvider';
@@ -46,6 +48,8 @@ const AppComponent = () => {
     const isAppReady = useSelector(selectIsAppReady);
     const isConnectInitialized = useSelector(selectIsConnectInitialized);
 
+    const { showAlert } = useAlert();
+
     useReportAppInitToAnalytics(APP_STARTED_TIMESTAMP);
 
     useEffect(() => {
@@ -59,6 +63,14 @@ const AppComponent = () => {
             SplashScreen.hideAsync();
         }
     }, [isAppReady]);
+
+    useEffect(() => {
+        showAlert({
+            title: 'EAS Update info',
+            description: `Runtime version: ${Updates.runtimeVersion},\n created at: ${Updates.createdAt},\n update ID:\n ${Updates.updateId}`,
+            primaryButtonTitle: 'OK',
+        });
+    }, [showAlert]);
 
     if (!isAppReady) return null;
 
