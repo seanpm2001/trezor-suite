@@ -25,7 +25,7 @@ import {
     verifyTx,
     parseTransactionHexes,
 } from './bitcoin';
-import type { ComposeOutput, TransactionInputOutputSortingStrategy } from '@trezor/utxo-lib';
+import type { ComposeOutput } from '@trezor/utxo-lib';
 import type { BitcoinNetworkInfo, DiscoveryAccount, AccountUtxo } from '../types';
 import type {
     SignedTransaction,
@@ -48,18 +48,7 @@ type Params = {
     sequence?: PrecomposeParams['sequence'];
     total: BigNumber;
     sortingStrategy: PrecomposeParams['sortingStrategy'];
-} & (
-    | {
-          /** @deprecated: use sortingStrategy=none instead */
-          skipPermutation?: PrecomposeParams['skipPermutation'];
-          sortingStrategy?: undefined;
-      }
-    | {
-          /** @deprecated: use sortingStrategy=none instead */
-          skipPermutation?: undefined;
-          sortingStrategy?: TransactionInputOutputSortingStrategy;
-      }
-);
+};
 
 export default class ComposeTransaction extends AbstractMethod<'composeTransaction', Params> {
     discovery?: Discovery;
@@ -79,7 +68,6 @@ export default class ComposeTransaction extends AbstractMethod<'composeTransacti
             { name: 'baseFee', type: 'number' },
             { name: 'floorBaseFee', type: 'boolean' },
             { name: 'sequence', type: 'number' },
-            { name: 'skipPermutation', type: 'boolean' },
             { name: 'sortingStrategy', type: 'string' },
         ]);
 
@@ -128,7 +116,7 @@ export default class ComposeTransaction extends AbstractMethod<'composeTransacti
             baseFee: payload.baseFee,
             floorBaseFee: payload.floorBaseFee,
             sequence: payload.sequence,
-            sortingStrategy: payload.skipPermutation === true ? 'none' : payload.sortingStrategy,
+            sortingStrategy: payload.sortingStrategy,
             push: typeof payload.push === 'boolean' ? payload.push : false,
             total,
         };
@@ -314,7 +302,7 @@ export default class ComposeTransaction extends AbstractMethod<'composeTransacti
     }
 
     async selectFee(account: DiscoveryAccount, utxos: AccountUtxo[]) {
-        const { coinInfo, outputs, sortingStrategy, skipPermutation } = this.params;
+        const { coinInfo, outputs, sortingStrategy } = this.params;
 
         // get backend instance (it should be initialized before)
         const blockchain = await this.getBlockchain();
@@ -323,8 +311,7 @@ export default class ComposeTransaction extends AbstractMethod<'composeTransacti
             utxos,
             coinInfo,
             outputs,
-            sortingStrategy:
-                skipPermutation === true ? 'none' : sortingStrategy ?? DEFAULT_SORTING_STRATEGY,
+            sortingStrategy: sortingStrategy ?? DEFAULT_SORTING_STRATEGY,
         });
         await composer.init(blockchain);
 
