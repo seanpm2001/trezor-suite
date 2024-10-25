@@ -144,9 +144,6 @@ export const factory = <R extends StrictIpcRenderer<any, IpcRendererEvent>>(
             return Promise.resolve({ success: false, error: 'invalid params' });
         },
 
-        // Udev rules
-        installUdevRules: () => ipcRenderer.invoke('udev/install'),
-
         // Logger
         configLogger: config => {
             ipcRenderer.send('logger/config', config);

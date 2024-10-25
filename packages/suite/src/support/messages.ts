@@ -7139,7 +7139,7 @@ export default defineMessages({
     TR_TROUBLESHOOTING_TIP_UDEV_INSTALL_DESCRIPTION: {
         id: 'TR_TROUBLESHOOTING_TIP_UDEV_INSTALL_DESCRIPTION',
         defaultMessage:
-            'Try installing <a>udev rules</a>. Make sure they are saved to the desktop before opening.',
+            'Try installing udev rules. Make sure they are saved to the desktop before opening.',
     },
     TR_TROUBLESHOOTING_CLOSE_TABS: {
         defaultMessage: 'Close other tabs and windows that might be using your Trezor',

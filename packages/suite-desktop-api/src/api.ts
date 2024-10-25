@@ -92,7 +92,6 @@ export interface InvokeChannels {
     'bridge/get-settings': () => InvokeResult<BridgeSettings>;
     'user-data/clear': () => InvokeResult;
     'user-data/open': (directory?: string) => InvokeResult;
-    'udev/install': () => InvokeResult;
     'app/auto-start/is-enabled': () => InvokeResult<boolean>;
 }
 
@@ -144,8 +143,6 @@ export interface DesktopApi {
     clearStore: DesktopApiSend<'store/clear'>;
     clearUserData: DesktopApiInvoke<'user-data/clear'>;
     openUserDataDirectory: DesktopApiInvoke<'user-data/open'>;
-    // Udev rules
-    installUdevRules: DesktopApiInvoke<'udev/install'>;
     // Logger
     configLogger: DesktopApiSend<'logger/config'>;
     // Bridge

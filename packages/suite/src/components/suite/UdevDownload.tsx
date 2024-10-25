@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import { DATA_URL, HELP_CENTER_UDEV_URL } from '@trezor/urls';
 import { Translation } from 'src/components/suite';
 import { variables, Button, Select, Link, Spinner } from '@trezor/components';
-import { useSelector } from 'src/hooks/suite';
 import { LearnMoreButton } from './LearnMoreButton';
+import { suggestUdevInstaller } from '@trezor/connect';
+import { getInstallerPackage } from '@trezor/connect-common';
 
 const Wrapper = styled.div`
     display: flex;
@@ -52,16 +53,14 @@ interface Installer {
 }
 
 export const UdevDownload = () => {
-    const transport = useSelector(state => state.suite.transport);
+    // const transport = useSelector(state => state.suite.transport);
 
-    const installers: Installer[] =
-        transport && transport.udev
-            ? transport.udev.packages.map(p => ({
-                  label: p.name,
-                  value: DATA_URL + p.url.substring(1),
-                  preferred: p.preferred,
-              }))
-            : [];
+    const installers: Installer[] = suggestUdevInstaller(getInstallerPackage()).packages.map(p => ({
+        label: p.name,
+        value: DATA_URL + p.url.substring(1),
+        preferred: p.preferred,
+    }));
+
     const [selectedTarget, setSelectedTarget] = useState<Installer | null>(null);
     const preferredTarget = installers.find(i => i.preferred);
     const target = selectedTarget || preferredTarget || installers[0];
