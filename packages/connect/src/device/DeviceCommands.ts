@@ -312,7 +312,7 @@ export class DeviceCommands {
             session: this.transportSession,
             name: type,
             data: msg,
-            protocol: this.device.protocol,
+            protocol: this.device.transport['usb'].protocol,
         });
 
         const res = await this.callPromise;
@@ -363,7 +363,7 @@ export class DeviceCommands {
             // Bridge may have some unread message in buffer, read it
             await this.transport.receive({
                 session: this.transportSession,
-                protocol: this.device.protocol,
+                protocol: this.device.transport['usb'].protocol,
             });
             // throw error anyway, next call should be resolved properly
             throw error;

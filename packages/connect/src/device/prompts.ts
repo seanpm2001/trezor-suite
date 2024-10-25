@@ -34,10 +34,12 @@ export const cancelPrompt = (device: Device, expectResponse = true) => {
         session,
         name: 'Cancel',
         data: {},
-        protocol: device.protocol,
+        protocol: device.transport['usb'].protocol,
     };
 
-    return expectResponse ? device.transport.call(cancelArgs) : device.transport.send(cancelArgs);
+    return expectResponse
+        ? device.transport['usb'].instance.call(cancelArgs)
+        : device.transport['usb'].instance.send(cancelArgs);
 };
 
 const prompt = <E extends PromptEvents>(event: E, ...[device, ...args]: DeviceEventArgs<E>) => {

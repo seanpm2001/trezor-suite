@@ -119,16 +119,21 @@ type DeviceParams = {
     listener: DeviceLifecycleListener;
 };
 
+type TransportMedium = 'usb'; // todo 'usb' | 'udp' | 'ble'
 /**
  * @export
  * @class Device
  * @extends {EventEmitter}
  */
 export class Device extends TypedEmitter<DeviceEvents> {
-    public readonly transport: Transport;
-    public readonly protocol: TransportProtocol;
-    private readonly transportPath;
-    private session;
+    public readonly transport: Record<
+        TransportMedium,
+        {
+            instance: Transport;
+            descriptor: Descriptor;
+            protocol: TransportProtocol;
+        }
+    >;
     private isLocalSession;
 
     /**
@@ -208,14 +213,17 @@ export class Device extends TypedEmitter<DeviceEvents> {
         super();
 
         this.emitLifecycle = listener;
-        this.protocol = v1Protocol;
+        this.transport = {
+            ['usb']: {
+                instance: transport,
+                descriptor,
+                protocol: v1Protocol,
+            },
+        };
 
         // === immutable properties
         this.uniquePath = id;
-        this.transport = transport;
-        this.transportPath = descriptor.path;
 
-        this.session = descriptor.session;
         this.isLocalSession = false;
 
         // this will be released after first run
@@ -258,16 +266,23 @@ export class Device extends TypedEmitter<DeviceEvents> {
     acquire() {
         const sessionPromise = this.getSessionChangePromise();
 
-        this.acquirePromise = this.transport
-            .acquire({ input: { path: this.transportPath, previous: this.session } })
+        const { path, session } = this.transport['usb'].descriptor;
+        this.acquirePromise = this.transport['usb'].instance
+            .acquire({
+                input: { path, previous: session },
+            })
             .then(result => this.waitAndCompareSession(result, sessionPromise))
             .then(result => {
                 if (result.success) {
-                    this.session = result.payload;
+                    this.transport['usb'].descriptor.session = result.payload;
                     this.isLocalSession = true;
 
                     this.commands?.dispose();
-                    this.commands = new DeviceCommands(this, this.transport, this.session);
+                    this.commands = new DeviceCommands(
+                        this,
+                        this.transport['usb'].instance,
+                        this.transport['usb'].descriptor.session,
+                    );
 
                     return result;
                 } else {
@@ -300,12 +315,12 @@ export class Device extends TypedEmitter<DeviceEvents> {
 
         const sessionPromise = this.getSessionChangePromise();
 
-        this.releasePromise = this.transport
-            .release({ session: localSession, path: this.transportPath })
+        this.releasePromise = this.transport['usb'].instance
+            .release({ session: localSession, path: this.transport['usb'].descriptor.path })
             .then(result => this.waitAndCompareSession(result, sessionPromise))
             .then(result => {
                 if (result.success) {
-                    this.session = null;
+                    this.transport['usb'].descriptor.session = null;
                     this.isLocalSession = false;
                 }
 
@@ -396,7 +411,7 @@ export class Device extends TypedEmitter<DeviceEvents> {
 
         // Session changed to different than the current one
         // -> acquired by someone else
-        if (descriptor.session && descriptor.session !== this.session) {
+        if (descriptor.session && descriptor.session !== this.transport['usb'].descriptor.session) {
             this.usedElsewhere();
         }
 
@@ -423,7 +438,7 @@ export class Device extends TypedEmitter<DeviceEvents> {
             }
         }
 
-        this.session = descriptor.session;
+        this.transport['usb'].descriptor.session = descriptor.session;
         this.emitLifecycle(DEVICE.CHANGED);
     }
 
@@ -517,8 +532,8 @@ export class Device extends TypedEmitter<DeviceEvents> {
         // session was acquired by another instance. but another might not have power to release interface
         // so it only notified about its session acquiral and the interrupted instance should cooperate
         // and release device too.
-        if (this.session) {
-            this.transport.releaseDevice(this.session);
+        if (this.transport['usb'].descriptor.session) {
+            this.transport['usb'].instance.releaseDevice(this.transport['usb'].descriptor.session);
         }
     }
 
@@ -1049,7 +1064,7 @@ export class Device extends TypedEmitter<DeviceEvents> {
     }
 
     isUsed() {
-        return typeof this.session === 'string';
+        return typeof this.transport['usb'].descriptor.session === 'string';
     }
 
     isUsedHere() {
@@ -1073,7 +1088,7 @@ export class Device extends TypedEmitter<DeviceEvents> {
     }
 
     getLocalSession() {
-        return this.isLocalSession ? this.session : null;
+        return this.isLocalSession ? this.transport['usb'].descriptor.session : null;
     }
 
     getUniquePath() {
@@ -1109,14 +1124,14 @@ export class Device extends TypedEmitter<DeviceEvents> {
 
     async dispose() {
         this.removeAllListeners();
-        if (this.session && this.isLocalSession) {
+        if (this.transport['usb'].descriptor.session && this.isLocalSession) {
             try {
                 await this.cancelableAction?.();
                 await this.commands?.cancel();
 
-                return this.transport.release({
-                    session: this.session,
-                    path: this.transportPath,
+                return this.transport['usb'].instance.release({
+                    session: this.transport['usb'].descriptor.session,
+                    path: this.transport['usb'].descriptor.path,
                     onClose: true,
                 });
             } catch (err) {
