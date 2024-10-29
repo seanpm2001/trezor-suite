@@ -11563,7 +11563,6 @@ __metadata:
     "@trezor/components": "workspace:*"
     "@trezor/connect": "workspace:*"
     "@trezor/connect-analytics": "workspace:*"
-    "@trezor/connect-common": "workspace:*"
     "@trezor/dom-utils": "workspace:*"
     "@trezor/env-utils": "workspace:*"
     "@trezor/product-components": "workspace:*"
