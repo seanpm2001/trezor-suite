@@ -1,7 +1,7 @@
-import { storage } from '@trezor/connect-common';
 import { versionUtils } from '@trezor/utils';
 import { DataManager } from '../data/DataManager';
 import { NETWORK } from '../constants';
+import { storage } from '../storage';
 import {
     UI,
     DEVICE,

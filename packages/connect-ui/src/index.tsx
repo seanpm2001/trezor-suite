@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState, useMemo, ReactNode } from 'react';
 import styled from 'styled-components';
 
 import { UI, UI_REQUEST, POPUP, CoreRequestMessage } from '@trezor/connect';
-import { storage, OriginBoundState } from '@trezor/connect-common';
+import { storage, OriginBoundState } from '@trezor/connect/src/storage';
 
 // views
 import { Transport } from './views/Transport';

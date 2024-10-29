@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { storage } from '..';
 
 const origin = 'foo.bar';

@@ -17,12 +17,6 @@ Binaries of the latest versions of firmware for each Trezor model are included i
 
 There is a `releases.json` file for each Trezor model which must be updated any time new binaries are added. This file provides data about all available firmware versions and it is used to display them in Suite and to make sure that the correct firmware is downloaded. Read more about `releases.json` and it's structure [here](../../docs/releases/adding-new-firmwares.md#firmware-releasesjson-files-structure)
 
-## src
-
-### Storage
-
-A utility to remember app permissions given by user.
-
 ## Publishing
 
 [Follow instructions](../../docs/releases/npm-packages.md) how to publish @trezor package to npm registry.

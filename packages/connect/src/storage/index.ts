@@ -1,6 +1,5 @@
-// https://github.com/trezor/connect/blob/develop/src/js/storage/index.js
-
 import { TypedEmitter } from '@trezor/utils';
+import type { StaticSessionId } from '../types';
 
 const storageVersion = 2;
 const storageName = `storage_v${storageVersion}`;
@@ -18,7 +17,7 @@ export interface Permission {
 export interface PreferredDevice {
     label?: string;
     path: string & { __type: 'DeviceUniquePath' };
-    state?: string;
+    state?: StaticSessionId;
     internalState?: string;
     internalStateExpiration?: number;
     instance?: number;
@@ -38,10 +37,6 @@ export interface GlobalState {
 export type Store = GlobalState & {
     origin: { [origin: string]: OriginBoundState };
 };
-
-// TODO: move storage somewhere else. Having it here brings couple of problems:
-// - We can not import types from connect (would cause cyclic dependency)
-// - it has here dependency on window object, not good
 
 const getEmptyState = (): Store => ({
     origin: {},

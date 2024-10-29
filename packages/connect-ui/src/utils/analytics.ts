@@ -1,5 +1,5 @@
 import { analytics, EventType, getRandomId } from '@trezor/connect-analytics';
-import { storage } from '@trezor/connect-common';
+import { storage } from '@trezor/connect/src/storage';
 import {
     getBrowserName,
     getBrowserVersion,

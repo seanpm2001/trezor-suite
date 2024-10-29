@@ -1,6 +1,6 @@
 import { PopupHandshake, PopupMethodInfo, IFrameLoaded } from '@trezor/connect';
 import type { Core } from '@trezor/connect/src/core';
-import type { OriginBoundState } from '@trezor/connect-common';
+import type { OriginBoundState } from '@trezor/connect/src/storage';
 
 export type State = Partial<PopupHandshake['payload']> &
     Partial<PopupMethodInfo['payload']> &

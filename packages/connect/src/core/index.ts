@@ -4,8 +4,8 @@ import EventEmitter from 'events';
 import { TRANSPORT, TRANSPORT_ERROR } from '@trezor/transport';
 import { createLazy, createDeferred, throwError } from '@trezor/utils';
 import { getSynchronize } from '@trezor/utils';
-import { storage } from '@trezor/connect-common';
 
+import { storage } from '../storage';
 import { DataManager } from '../data/DataManager';
 import { DeviceList, IDeviceList, assertDeviceListConnected } from '../device/DeviceList';
 import { enhanceMessageWithAnalytics } from '../data/analyticsInfo';

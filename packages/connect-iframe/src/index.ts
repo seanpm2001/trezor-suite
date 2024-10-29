@@ -27,7 +27,8 @@ import { initLog, LogWriter } from '@trezor/connect/src/utils/debug';
 import { getOrigin } from '@trezor/connect/src/utils/urlUtils';
 import { suggestBridgeInstaller } from '@trezor/connect/src/data/transportInfo';
 import { suggestUdevInstaller } from '@trezor/connect/src/data/udevInfo';
-import { storage, getSystemInfo, getInstallerPackage } from '@trezor/connect-common';
+import { storage } from '@trezor/connect/src/storage';
+import { getSystemInfo, getInstallerPackage } from '@trezor/connect-common';
 import { parseConnectSettings, isOriginWhitelisted } from './connectSettings';
 import { analytics, EventType } from '@trezor/connect-analytics';
 // @ts-expect-error (typescript does not know this is worker constructor, this is done by webpack)
