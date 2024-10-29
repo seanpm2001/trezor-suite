@@ -4,6 +4,7 @@ import type { ConnectSettingsPublic, ConnectSettingsWeb } from '@trezor/connect'
 
 import { CoreInIframe } from './impl/core-in-iframe';
 import { CoreInPopup } from './impl/core-in-popup';
+import { CoreInSuiteDesktop } from './impl/core-in-suite-desktop';
 import { getEnv } from './connectSettings';
 
 const IFRAME_ERRORS = ['Init_IframeBlocked', 'Init_IframeTimeout', 'Transport_Missing'];
@@ -15,7 +16,7 @@ type ConnectWebExtraMethods = {
 };
 
 const impl = new TrezorConnectDynamic<
-    'iframe' | 'core-in-popup',
+    'iframe' | 'core-in-popup' | 'core-in-suite-desktop',
     ConnectSettingsWeb,
     ConnectFactoryDependencies<ConnectSettingsWeb> & ConnectWebExtraMethods
 >({
@@ -28,12 +29,18 @@ const impl = new TrezorConnectDynamic<
             type: 'core-in-popup',
             impl: new CoreInPopup(),
         },
+        {
+            type: 'core-in-suite-desktop',
+            impl: new CoreInSuiteDesktop(),
+        },
     ],
     getInitTarget: (settings: Partial<ConnectSettingsPublic & ConnectSettingsWeb>) => {
         if (settings.coreMode === 'iframe') {
             return 'iframe';
         } else if (settings.coreMode === 'popup') {
             return 'core-in-popup';
+        } else if (settings.coreMode === 'suite-desktop') {
+            return 'core-in-suite-desktop';
         } else {
             if (settings.coreMode && settings.coreMode !== 'auto') {
                 console.warn(`Invalid coreMode: ${settings.coreMode}`);

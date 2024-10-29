@@ -51,7 +51,7 @@ export interface ConnectSettingsInternal {
 export interface ConnectSettingsWeb {
     hostLabel?: string;
     hostIcon?: string;
-    coreMode?: 'auto' | 'popup' | 'iframe' | 'deeplink';
+    coreMode?: 'auto' | 'popup' | 'iframe' | 'deeplink' | 'suite-desktop';
 }
 export interface ConnectSettingsWebextension {
     /** _extendWebextensionLifetime features makes the service worker in @trezor/connect-webextension stay alive longer */
