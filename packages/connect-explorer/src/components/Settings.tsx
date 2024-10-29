@@ -57,6 +57,7 @@ export const Settings = () => {
                 { value: 'iframe', label: 'Iframe' },
                 { value: 'popup', label: 'Popup' },
                 ...(isBetaOnly ? [{ value: 'deeplink', label: 'Deeplink (mobile)' }] : []),
+                ...(isBetaOnly ? [{ value: 'suite-desktop', label: 'Suite desktop' }] : []),
             ],
         },
         {
