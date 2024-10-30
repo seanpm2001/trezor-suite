@@ -40,13 +40,19 @@ const buttonRequest =
         // ugly hack to make Cardano review modal work
         // ugly hack to make Ethereum staking and bump fee review modal on specific devices work
         // root cause of this bug is wrong button request ButtonRequest_Other from CardanoSignTx - should be ButtonRequest_SignTx
-        if (action.type === UI.REQUEST_BUTTON && action.payload.code === 'ButtonRequest_Other') {
+        if (
+            action.type === UI.REQUEST_BUTTON &&
+            action.payload.code === 'ButtonRequest_Other' &&
+            // labeling can be done on these routes as well
+            action.payload.method !== 'CipherKeyValue'
+        ) {
             const {
                 wallet: {
                     selectedAccount: { account },
                 },
                 router: { route },
             } = api.getState();
+            // TODO: rewrite this condition to be based on payload.method
             if (
                 ['cardano', 'ethereum'].includes(account?.networkType || '') &&
                 ['wallet-send', 'wallet-staking', 'wallet-index'].includes(route?.name || '')
