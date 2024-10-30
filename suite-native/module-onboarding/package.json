@@ -26,8 +26,8 @@
         "@suite-native/theme": "workspace:*",
         "@trezor/styles": "workspace:*",
         "react": "18.2.0",
-        "react-native": "0.75.2",
-        "react-native-svg": "15.6.0",
+        "react-native": "0.76.1",
+        "react-native-svg": "15.8.0",
         "react-redux": "8.0.7"
     }
 }

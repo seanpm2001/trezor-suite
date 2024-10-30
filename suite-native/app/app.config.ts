@@ -100,9 +100,10 @@ const getPlugins = (): ExpoPlugins => {
             {
                 android: {
                     minSdkVersion: 28,
+                    kotlinVersion: '1.9.24', // trying to fix the build of expo-updates with incompatible ksp
                 },
                 ios: {
-                    deploymentTarget: '14.0',
+                    deploymentTarget: '15.1',
                 },
             },
         ],
