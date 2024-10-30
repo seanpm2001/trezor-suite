@@ -28,6 +28,7 @@ const registerEvents = (device: Device, postMessage: PostMessage) => {
             createDeviceMessage(DEVICE.BUTTON, {
                 code: request.code,
                 device: device.toMessageObject(),
+                method: 'FirmwareUpload',
             }),
         );
     });

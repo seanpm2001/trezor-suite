@@ -20,6 +20,7 @@ export const DEVICE = {
 
 export interface DeviceButtonRequestPayload extends Omit<PROTO.ButtonRequest, 'code'> {
     code?: PROTO.ButtonRequest['code'] | 'ButtonRequest_FirmwareUpdate';
+    method: PROTO.MessageKey;
 }
 
 export interface DeviceButtonRequest {

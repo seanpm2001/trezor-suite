@@ -10,7 +10,10 @@ import type { TypedCall } from '../../device/DeviceCommands';
 const postConfirmationMessage = (device: Device) => {
     // only if firmware is already installed. fresh device does not require button confirmation
     if (device.features.firmware_present) {
-        device.emit(DEVICE.BUTTON, device, { code: 'ButtonRequest_FirmwareUpdate' });
+        device.emit(DEVICE.BUTTON, device, {
+            code: 'ButtonRequest_FirmwareUpdate',
+            method: 'FirmwareUpload',
+        });
     }
 };
 

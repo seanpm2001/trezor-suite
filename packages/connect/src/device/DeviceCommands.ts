@@ -378,10 +378,13 @@ export class DeviceCommands {
             throw ERRORS.TypedError('Runtime', 'typedCall: DeviceCommands already disposed');
         }
 
-        return this._filterCommonTypes(resp);
+        return this._filterCommonTypes(type, resp);
     }
 
-    _filterCommonTypes(res: DefaultPayloadMessage): Promise<DefaultPayloadMessage> {
+    _filterCommonTypes(
+        reqType: MessageKey,
+        res: DefaultPayloadMessage,
+    ): Promise<DefaultPayloadMessage> {
         this.device.clearCancelableAction();
 
         if (res.type === 'Failure') {
@@ -419,7 +422,10 @@ export class DeviceCommands {
             if (res.message.code === 'ButtonRequest_PassphraseEntry') {
                 this.device.emit(DEVICE.PASSPHRASE_ON_DEVICE);
             } else {
-                this.device.emit(DEVICE.BUTTON, this.device, res.message);
+                this.device.emit(DEVICE.BUTTON, this.device, {
+                    ...res.message,
+                    method: reqType,
+                });
             }
 
             return this._commonCall('ButtonAck', {});
