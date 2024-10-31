@@ -225,7 +225,6 @@ module.exports = {
         'no-sync': 'off', // disallow use of synchronous methods (off by default)
         'eol-last': 'error',
         'import/no-default-export': 'error',
-        'no-control-regex': 'error',
 
         // Variables
         // These rules have to do with variable declarations.
@@ -239,7 +238,6 @@ module.exports = {
         'no-undefined': 'off', // disallow use of undefined variable (off by default)
         'no-undef-init': 'error', // disallow use of undefined when initializing variables
         'no-unused-vars': 'off',
-        'no-useless-escape': 'error',
         'no-unused-expressions': 0,
         'chai-friendly/no-unused-expressions': 2,
         '@typescript-eslint/no-unused-vars': [
@@ -313,7 +311,8 @@ module.exports = {
         // Jest plugin config
         'jest/valid-title': 'off', // This rule does not use Typescript and produces false positives
         'jest/valid-describe-callback': 'off', // This rule does not use Typescript and produces false positives
-        'jest/no-disabled-tests': 'off', // we still have a lot of skipped tests (WIP)
+        'jest/no-disabled-tests': 'off', // Well, what can I say... ¯\_(ツ)_/¯ We skip tests sometimes.
+        'jest/no-focused-tests': 'off', // Same as above, but // Todo: shall be easy to get rid of this
         'jest/no-conditional-expect': 'off', // Todo: we shall solve this, this is bad practice
         'jest/expect-expect': 'off', // Todo: we have test with no assertions, this may be legit but it needs to be checked
         'jest/no-standalone-expect': [
@@ -361,6 +360,8 @@ module.exports = {
             rules: {
                 '@typescript-eslint/no-shadow': 'off',
                 'import/no-default-export': 'off',
+                'import/order': 'off',
+                '@typescript-eslint/no-unused-vars': 'off',
                 'no-console': 'off',
                 'react/jsx-no-undef': 'off',
                 'no-catch-shadow': 'off',
@@ -392,7 +393,7 @@ module.exports = {
         {
             files: ['packages/connect/e2e/**/*'],
             rules: {
-                'jest/no-jasmine-globals': 'off', // Karma tests
+                'jest/no-jasmine-globals': 'off', // Kamma tests
             },
         },
     ],
