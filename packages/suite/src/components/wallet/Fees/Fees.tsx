@@ -13,7 +13,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { FeeLevel } from '@trezor/connect';
 import { Icon, Paragraph, SelectBar, Tooltip, motionEasing, variables } from '@trezor/components';
 import {
-    FormState,
+    FormState ,
     FeeInfo,
     PrecomposedLevels,
     PrecomposedLevelsCardano,
