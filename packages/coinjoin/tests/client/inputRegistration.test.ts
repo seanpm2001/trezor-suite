@@ -342,6 +342,7 @@ describe('inputRegistration', () => {
         expect(spy.mock.calls.length).toBeGreaterThan(0);
 
         // 2. wait for confirmation interval to resolve
+        // eslint-disable-next-line jest/valid-expect-in-promise
         Promise.all(response.inputs.map(input => input.getConfirmationInterval()?.promise)).then(
             res => {
                 res.forEach(input => {
