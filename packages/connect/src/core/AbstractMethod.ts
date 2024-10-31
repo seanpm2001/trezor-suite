@@ -1,6 +1,6 @@
 import { storage } from '@trezor/connect-common';
 import { versionUtils } from '@trezor/utils';
-import { NETWORK, ERRORS } from '../constants';
+import { NETWORK , ERRORS } from '../constants';
 import {
     UI,
     DEVICE,

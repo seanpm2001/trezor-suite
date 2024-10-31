@@ -17,7 +17,7 @@ import { notificationsActions } from '@suite-common/toast-notifications';
 import { formInputsMaxLength } from '@suite-common/validators';
 import type { Output } from '@suite-common/wallet-types';
 import TrezorConnect from '@trezor/connect';
-import { useSelector, useDevice, useDispatch, useTranslation } from 'src/hooks/suite';
+import { useSelector , useDevice, useDispatch, useTranslation } from 'src/hooks/suite';
 import {
     isAddressValid,
     isAddressDeprecated,

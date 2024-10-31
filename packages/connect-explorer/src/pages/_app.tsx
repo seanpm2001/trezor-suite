@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 
-import { ThemeProvider as NextThemeProvider, useTheme } from 'next-themes';
+import { ThemeProvider as NextThemeProvider , useTheme } from 'next-themes';
 import { ThemeProvider } from 'styled-components';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
