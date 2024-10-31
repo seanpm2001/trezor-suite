@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import styled, { css, useTheme } from 'styled-components';
-import { Icon, useElevation } from '@trezor/components';
+import { Icon , useElevation } from '@trezor/components';
 import { DeviceModelInternal } from '@trezor/connect';
 import {
     Elevation,

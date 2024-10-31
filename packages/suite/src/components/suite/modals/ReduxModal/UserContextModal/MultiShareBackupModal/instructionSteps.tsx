@@ -1,4 +1,4 @@
-import { Row, Image, Text } from '@trezor/components';
+import { Row , Image, Text } from '@trezor/components';
 import styled from 'styled-components';
 
 import { borders, spacings, spacingsPx } from '@trezor/theme';

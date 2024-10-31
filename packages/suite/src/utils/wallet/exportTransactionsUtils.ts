@@ -4,7 +4,7 @@ import { fromWei } from 'web3-utils';
 
 import { FiatCurrencyCode } from '@suite-common/suite-config';
 import { trezorLogo } from '@suite-common/suite-constants';
-import { TokenDefinitions, getIsPhishingTransaction } from '@suite-common/token-definitions';
+import { TokenDefinitions , getIsPhishingTransaction } from '@suite-common/token-definitions';
 import { NetworkSymbol } from '@suite-common/wallet-config';
 import {
     ExportFileType,
