@@ -12,5 +12,4 @@ export const tokenIcons = {
 } as const;
 export type TokenIconName = keyof typeof tokenIcons;
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 export const genericTokenIcon = require('../assets/tokenIcons/erc20.svg');
