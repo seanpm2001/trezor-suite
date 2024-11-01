@@ -68,6 +68,7 @@
         "@trezor/device-utils": "workspace:*",
         "@trezor/dom-utils": "workspace:*",
         "@trezor/env-utils": "workspace:*",
+        "@trezor/eslint": "workspace:*",
         "@trezor/ipc-proxy": "workspace:*",
         "@trezor/product-components": "workspace:*",
         "@trezor/react-utils": "workspace:*",
