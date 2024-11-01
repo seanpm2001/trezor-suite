@@ -1,8 +1,8 @@
 import * as mdx from 'eslint-plugin-mdx';
-import parentConfig from '../../eslint.config.mjs';
+import { eslint } from '@trezor/eslint';
 
 export default [
-    ...parentConfig,
+    ...eslint,
     // Mdx
     {
         ...mdx.flat,

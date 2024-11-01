@@ -1,7 +1,7 @@
-import parentConfig from '../../eslint.config.mjs';
+import { eslint } from '@trezor/eslint';
 
 export default [
-    ...parentConfig,
+    ...eslint,
     {
         rules: {
             '@typescript-eslint/ban-types': 'off', // allow {} in protobuf.d.ts
