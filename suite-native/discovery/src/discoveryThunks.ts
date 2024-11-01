@@ -1,6 +1,6 @@
 import { A, G, pipe } from '@mobily/ts-belt';
 
-import { getWeakRandomId , isArrayMember } from '@trezor/utils';
+import { getWeakRandomId, isArrayMember } from '@trezor/utils';
 import { createThunk } from '@suite-common/redux-utils';
 import {
     accountsActions,

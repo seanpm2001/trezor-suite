@@ -75,7 +75,6 @@ describe('createActionWithExtraDeps', () => {
         expect(dummyAction.match({ type: 'dummyAction' })).toEqual(true);
     });
 
-    // eslint-disable-next-line jest/expect-expect
     it('has correct types', () => {
         const store = initStore();
 

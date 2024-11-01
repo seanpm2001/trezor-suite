@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { variables, Column } from '@trezor/components';
 import * as deviceUtils from '@suite-common/suite-utils';
 
-import { selectDevice, selectDeviceThunk , acquireDevice } from '@suite-common/wallet-core';
+import { selectDevice, selectDeviceThunk, acquireDevice } from '@suite-common/wallet-core';
 import { useDispatch, useSelector } from 'src/hooks/suite';
 
 import { WalletInstance } from './WalletInstance';

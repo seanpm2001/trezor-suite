@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { useTheme } from 'styled-components';
 import { Network } from '@suite-common/wallet-config';
-import { Icon, Table, Row, IconButton, Column , Text } from '@trezor/components';
+import { Icon, Table, Row, IconButton, Column, Text } from '@trezor/components';
 import {
     AmountUnitSwitchWrapper,
     CoinBalance,
