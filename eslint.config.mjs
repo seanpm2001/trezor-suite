@@ -105,40 +105,10 @@ export default [
                 },
             ],
             '@typescript-eslint/no-shadow': [
-                'error',
+                'off',
                 {
-                    builtinGlobals: true,
-                    allow: [
-                        '_',
-                        'error',
-                        'resolve',
-                        'reject',
-                        'fetch',
-
-                        // Todo: all below are magic, I have no idea why they are triggered
-                        'Text',
-                        'navigation',
-                        'Screen',
-                        'screen',
-                        'top',
-                        'Image',
-                        'event',
-                        'Event',
-                        'alert',
-                        'model',
-                        'StyleSheet',
-                        'Crypto',
-                        'Keyboard',
-                        'name',
-                        'Clipboard',
-                        'Storage',
-                        'status',
-                        'Notification',
-                        'PermissionStatus',
-                        'length',
-                        'close',
-                        'path',
-                    ],
+                    builtinGlobals: false,
+                    allow: ['_', 'error', 'resolve', 'reject', 'fetch'],
                 },
             ],
             '@typescript-eslint/no-use-before-define': ['error'],
@@ -200,22 +170,13 @@ export default [
             'jest/no-disabled-tests': 'off', // Well, what can I say... ¯\_(ツ)_/¯ We skip tests sometimes.
             'jest/no-focused-tests': 'off', // Same as above, but // Todo: shall be easy to get rid of this
             'jest/no-conditional-expect': 'off', // Todo: we shall solve this, this is bad practice
+            'jest/expect-expect': 'off', // Todo: we have test with no assertions, this may be legit but it needs to be checked
         },
     },
-    // {
-    //     files: ['**/*.test.*', '**/__tests__/**/*'],
-    //     rules: {
-    //         'import/no-extraneous-dependencies': 'off',
-    //         'import/no-unresolved': 'off',
-    //         'import/no-default-export': 'off',
-    //     },
-    // },
-
-    // Suite Native E2E tests
     {
-        files: ['suite-native/app/e2e/tests/**'],
+        files: ['**/__fixtures__/**/*'],
         rules: {
-            'jest/expect-expect': 'off',
+            'import/no-default-export': 'off', // Todo: we have many default exports in fixtures, we shall get rid of them
         },
     },
 

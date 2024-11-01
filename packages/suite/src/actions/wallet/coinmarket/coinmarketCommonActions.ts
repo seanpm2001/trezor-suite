@@ -10,7 +10,7 @@ import {
     hasNetworkFeatures,
     parseFormDraftKey,
 } from '@suite-common/wallet-utils';
-import { Output , AddressDisplayOptions } from '@suite-common/wallet-types/src';
+import { Output, AddressDisplayOptions } from '@suite-common/wallet-types/src';
 import {
     confirmAddressOnDeviceThunk,
     selectDevice,

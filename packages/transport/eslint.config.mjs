@@ -4,8 +4,8 @@ export default [
     ...parentConfig,
     {
         rules: {
-            'no-nested-ternary': 'off', // useful in tests...
             'no-console': 'off',
+            '@typescript-eslint/no-unused-vars': 'off',
         },
     },
 ];
