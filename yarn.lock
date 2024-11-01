@@ -10568,6 +10568,7 @@ __metadata:
   dependencies:
     "@shopify/react-native-skia": "npm:1.3.11"
     "@suite-common/suite-utils": "workspace:*"
+    "@trezor/eslint": "workspace:*"
     "@types/react": "npm:18.2.79"
     react: "npm:18.2.0"
     react-native: "npm:0.75.2"
@@ -11154,6 +11155,7 @@ __metadata:
     "@solana/web3.js": "npm:^1.95.4"
     "@trezor/blockchain-link-types": "workspace:*"
     "@trezor/env-utils": "workspace:*"
+    "@trezor/eslint": "workspace:*"
     "@trezor/type-utils": "workspace:*"
     "@trezor/utils": "workspace:*"
     tsx: "npm:^4.16.3"
@@ -11172,6 +11174,7 @@ __metadata:
     "@trezor/blockchain-link-utils": "workspace:*"
     "@trezor/e2e-utils": "workspace:*"
     "@trezor/env-utils": "workspace:*"
+    "@trezor/eslint": "workspace:*"
     "@trezor/type-utils": "workspace:*"
     "@trezor/utils": "workspace:*"
     "@trezor/utxo-lib": "workspace:*"
@@ -11201,6 +11204,7 @@ __metadata:
     "@trezor/blockchain-link": "workspace:*"
     "@trezor/blockchain-link-types": "workspace:*"
     "@trezor/blockchain-link-utils": "workspace:*"
+    "@trezor/eslint": "workspace:*"
     "@trezor/utils": "workspace:*"
     "@trezor/utxo-lib": "workspace:*"
     cross-fetch: "npm:^4.0.0"
@@ -11341,6 +11345,7 @@ __metadata:
     "@trezor/connect-mobile": "workspace:^"
     "@trezor/connect-web": "workspace:^"
     "@trezor/connect-webextension": "workspace:^"
+    "@trezor/eslint": "workspace:*"
     "@trezor/protobuf": "workspace:^"
     "@trezor/schema-utils": "workspace:^"
     "@trezor/theme": "workspace:^"
@@ -11522,6 +11527,7 @@ __metadata:
     "@playwright/test": "npm:^1.46.1"
     "@trezor/connect": "workspace:*"
     "@trezor/connect-common": "workspace:*"
+    "@trezor/eslint": "workspace:*"
     "@trezor/utils": "workspace:*"
     "@types/chrome": "npm:^0.0.278"
     "@types/w3c-web-usb": "npm:^1.0.10"
@@ -11550,6 +11556,7 @@ __metadata:
     "@trezor/connect": "workspace:*"
     "@trezor/connect-common": "workspace:*"
     "@trezor/connect-web": "workspace:*"
+    "@trezor/eslint": "workspace:*"
     "@trezor/node-utils": "workspace:*"
     "@trezor/trezor-user-env-link": "workspace:*"
     "@trezor/utils": "workspace:*"
@@ -11582,6 +11589,7 @@ __metadata:
     "@trezor/blockchain-link-types": "workspace:*"
     "@trezor/connect-analytics": "workspace:*"
     "@trezor/connect-common": "workspace:*"
+    "@trezor/eslint": "workspace:*"
     "@trezor/protobuf": "workspace:*"
     "@trezor/protocol": "workspace:*"
     "@trezor/schema-utils": "workspace:*"
@@ -11665,6 +11673,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@trezor/eslint@workspace:*, @trezor/eslint@workspace:packages/eslint":
+  version: 0.0.0-use.local
+  resolution: "@trezor/eslint@workspace:packages/eslint"
+  dependencies:
+    "@eslint/js": "npm:^9.13.0"
+    eslint: "npm:^9.13.0"
+    eslint-plugin-import: "npm:^2.31.0"
+    eslint-plugin-jest: "npm:^28.8.3"
+    eslint-plugin-react: "npm:^7.37.2"
+    eslint-plugin-react-hooks: "npm:^5.0.0"
+    typescript-eslint: "npm:^8.12.2"
+  languageName: unknown
+  linkType: soft
+
 "@trezor/ipc-proxy@workspace:*, @trezor/ipc-proxy@workspace:packages/ipc-proxy":
   version: 0.0.0-use.local
   resolution: "@trezor/ipc-proxy@workspace:packages/ipc-proxy"
@@ -11720,6 +11742,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@trezor/protobuf@workspace:packages/protobuf"
   dependencies:
+    "@trezor/eslint": "workspace:*"
     "@trezor/schema-utils": "workspace:*"
     protobufjs: "npm:7.4.0"
     protobufjs-cli: "npm:^1.1.3"
@@ -11778,6 +11801,7 @@ __metadata:
   dependencies:
     "@sinclair/typebox": "npm:^0.33.7"
     "@sinclair/typebox-codegen": "npm:^0.10.4"
+    "@trezor/eslint": "workspace:*"
     ts-mixer: "npm:^6.0.3"
     ts-node: "npm:^10.9.2"
     tsx: "npm:^4.16.3"
@@ -11791,6 +11815,7 @@ __metadata:
   resolution: "@trezor/scripts@workspace:scripts"
   dependencies:
     "@mobily/ts-belt": "npm:^3.13.1"
+    "@trezor/eslint": "workspace:*"
     "@types/prettier": "npm:^3.0.0"
     chalk: "npm:^4.1.2"
     dotenv: "npm:^16.4.1"
@@ -12113,6 +12138,7 @@ __metadata:
     "@trezor/device-utils": "workspace:*"
     "@trezor/dom-utils": "workspace:*"
     "@trezor/env-utils": "workspace:*"
+    "@trezor/eslint": "workspace:*"
     "@trezor/ipc-proxy": "workspace:*"
     "@trezor/product-components": "workspace:*"
     "@trezor/react-utils": "workspace:*"
@@ -12238,6 +12264,7 @@ __metadata:
   dependencies:
     "@jest/types": "npm:^29.6.3"
     "@trezor/protobuf": "workspace:*"
+    "@trezor/eslint": "workspace:*"
     "@trezor/transport": "workspace:*"
     "@trezor/transport-bridge": "workspace:*"
     "@trezor/trezor-user-env-link": "workspace:^"
@@ -12257,6 +12284,7 @@ __metadata:
   dependencies:
     "@babel/preset-env": "npm:^7.23.9"
     "@babel/preset-typescript": "npm:^7.24.7"
+    "@trezor/eslint": "workspace:*"
     "@trezor/protobuf": "workspace:*"
     "@trezor/protocol": "workspace:*"
     "@trezor/trezor-user-env-link": "workspace:*"
@@ -12306,6 +12334,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@trezor/utils@workspace:packages/utils"
   dependencies:
+    "@trezor/eslint": "workspace:*"
     bignumber.js: "npm:^9.1.2"
     tsx: "npm:^4.16.3"
   peerDependencies:
@@ -12317,6 +12346,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@trezor/utxo-lib@workspace:packages/utxo-lib"
   dependencies:
+    "@trezor/eslint": "workspace:*"
     "@trezor/utils": "workspace:*"
     "@types/bchaddrjs": "npm:^0.4.3"
     "@types/bn.js": "npm:^5.1.6"
@@ -40138,8 +40168,8 @@ __metadata:
     "@babel/preset-react": "npm:^7.24.7"
     "@babel/preset-typescript": "npm:^7.24.7"
     "@babel/runtime": "npm:^7.23.9"
-    "@eslint/js": "npm:^9.13.0"
     "@suite-common/wallet-types": "workspace:*"
+    "@trezor/eslint": "workspace:*"
     "@types/jest": "npm:29.5.12"
     "@types/node": "npm:20.12.7"
     "@types/prettier": "npm:^3.0.0"
@@ -40147,11 +40177,6 @@ __metadata:
     "@types/tar": "npm:^6.1.11"
     babel-jest: "npm:29.7.0"
     depcheck: "npm:^1.4.7"
-    eslint: "npm:^9.13.0"
-    eslint-plugin-import: "npm:^2.31.0"
-    eslint-plugin-jest: "npm:^28.8.3"
-    eslint-plugin-react: "npm:^7.37.2"
-    eslint-plugin-react-hooks: "npm:^5.0.0"
     globals: "npm:^15.11.0"
     jest: "npm:29.7.0"
     jest-environment-jsdom: "npm:29.7.0"
@@ -40168,7 +40193,6 @@ __metadata:
     tslib: "npm:^2.6.2"
     tsx: "npm:^4.16.3"
     typescript: "npm:5.5.4"
-    typescript-eslint: "npm:^8.12.2"
     version-bump-prompt: "npm:^6.1.0"
   dependenciesMeta:
     core-js-pure:
