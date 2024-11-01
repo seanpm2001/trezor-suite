@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { typography } from '@trezor/theme';
 import { Button } from '@trezor/components';
-import { networks , NetworkSymbol } from '@suite-common/wallet-config';
+import { networks, NetworkSymbol } from '@suite-common/wallet-config';
 import { ConnectionStatus } from '@suite-common/wallet-types';
 
 import { SectionItem, StatusLight, Translation } from 'src/components/suite';

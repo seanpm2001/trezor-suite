@@ -13,7 +13,7 @@ import { arrayDistinct, arrayToDictionary, promiseAllSequence } from '@trezor/ut
 import { getOsName } from '@trezor/env-utils';
 import { selectAccountByKey, selectDevices } from '@suite-common/wallet-core';
 import { getUtxoOutpoint } from '@suite-common/wallet-utils';
-import { Account , AddressDisplayOptions } from '@suite-common/wallet-types';
+import { Account, AddressDisplayOptions } from '@suite-common/wallet-types';
 import { notificationsActions } from '@suite-common/toast-notifications';
 import { getDeviceInstances } from '@suite-common/suite-utils';
 

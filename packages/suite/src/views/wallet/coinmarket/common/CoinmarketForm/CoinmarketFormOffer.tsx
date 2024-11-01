@@ -1,5 +1,5 @@
 import { Button, TextButton } from '@trezor/components';
-import { CryptoId , ExchangeTrade } from 'invity-api';
+import { CryptoId, ExchangeTrade } from 'invity-api';
 import styled from 'styled-components';
 import { spacings, spacingsPx, typography } from '@trezor/theme';
 import { useCoinmarketFormContext } from 'src/hooks/wallet/coinmarket/form/useCoinmarketCommonForm';

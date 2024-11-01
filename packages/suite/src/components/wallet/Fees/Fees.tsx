@@ -10,7 +10,7 @@ import {
 } from 'react-hook-form';
 import { Icon, Paragraph, SelectBar, Tooltip, motionEasing, variables } from '@trezor/components';
 import {
-    FormState ,
+    FormState,
     FeeInfo,
     PrecomposedLevels,
     PrecomposedLevelsCardano,

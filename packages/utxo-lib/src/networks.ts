@@ -278,8 +278,9 @@ export function isNetworkType(type: NetworkTypes, network?: Network) {
             },
             network,
         );
-    } catch (e) {
         return false;
+    } catch (e) {
+        /* empty */
     }
 
     return !!NETWORK_TYPES[type].find(

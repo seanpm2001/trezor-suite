@@ -1,5 +1,5 @@
-import { Paragraph , Column } from '@trezor/components';
-import { Bip43PathTemplate , AccountType , NetworkType } from '@suite-common/wallet-config';
+import { Paragraph, Column } from '@trezor/components';
+import { Bip43PathTemplate, AccountType, NetworkType } from '@suite-common/wallet-config';
 import { Translation } from 'src/components/suite';
 import {
     getAccountTypeDesc,
