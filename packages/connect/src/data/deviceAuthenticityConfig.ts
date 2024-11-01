@@ -119,11 +119,11 @@ export const deviceAuthenticityConfig: DeviceAuthenticityConfig = {
         },
     },
     T3W1: {
-        rootPubKeys: ['you shall not pass'], // TODO T3W1
-        caPubKeys: ['you shall not pass'], // TODO T3W1
+        rootPubKeys: ['you shall not pass'],
+        caPubKeys: ['you shall not pass'],
         debug: {
-            rootPubKeys: ['you shall not pass'], // TODO T3W1
-            caPubKeys: ['you shall not pass'], // TODO T3W1
+            rootPubKeys: ['you shall not pass'],
+            caPubKeys: ['you shall not pass'],
         },
     },
 };
