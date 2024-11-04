@@ -10,6 +10,10 @@ export const reactConfig = [
         },
         settings: { react: { version: 'detect' } },
         rules: {
+            // Additions
+            'react/jsx-filename-extension': ['error', { extensions: ['.tsx'] }],
+            'react/jsx-curly-brace-presence': ['warn', { props: 'never', children: 'never' }],
+
             // Offs
             'react/react-in-jsx-scope': 'off', // We are not importing React in every file
             'react/prop-types': 'off', // This rule is not needed when using TypeScript
@@ -21,6 +25,10 @@ export const reactConfig = [
     // React Hooks
     {
         plugins: { 'react-hooks': pluginReactHooks },
-        rules: pluginReactHooks.configs.recommended.rules,
+        rules: {
+            ...pluginReactHooks.configs.recommended.rules,
+            'react-hooks/rules-of-hooks': 'error',
+            'react-hooks/exhaustive-deps': 'error',
+        },
     },
 ];
