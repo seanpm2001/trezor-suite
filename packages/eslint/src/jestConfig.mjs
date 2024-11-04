@@ -7,7 +7,6 @@ export const jestConfig = [
             // Additions
             // Enforce arrow functions only is afaik not possible. But this helps.
             'func-style': ['error', 'declaration', { allowArrowFunctions: true }],
-            'no-console': ['error', { allow: ['warn', 'error'] }],
 
             // Offs
             'jest/valid-title': 'off', // This rule does not use Typescript and produces false positives

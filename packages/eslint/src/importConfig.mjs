@@ -19,7 +19,7 @@ export const importConfig = [
         },
         rules: {
             // Additional
-            'import/no-default-export': 'error',
+            'import/no-default-export': 'error', // We don't want to use default exports, always use named exports
             'import/no-anonymous-default-export': [
                 'error',
                 {
