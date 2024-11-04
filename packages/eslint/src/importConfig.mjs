@@ -18,8 +18,7 @@ export const importConfig = [
             },
         },
         rules: {
-            // Offs
-            'import/no-unresolved': 'off', // Does not work with Babel react-native to react-native-web
+            // Additional
             'import/no-default-export': 'error',
             'import/no-anonymous-default-export': [
                 'error',
@@ -27,6 +26,25 @@ export const importConfig = [
                     allowArray: true,
                     allowLiteral: true,
                     allowObject: true,
+                },
+            ],
+            'import/order': [
+                1,
+                {
+                    groups: [['builtin', 'external'], 'internal', ['sibling', 'parent']],
+                    pathGroups: [
+                        {
+                            pattern: 'react*',
+                            group: 'external',
+                            position: 'before',
+                        },
+                        { pattern: '@trezor/**', group: 'internal' }, // Translates to /packages/** */
+                        { pattern: '@suite-native/**', group: 'internal' },
+                        { pattern: '@suite-common/**', group: 'internal' },
+                        { pattern: 'src/**', group: 'internal', position: 'after' },
+                    ],
+                    pathGroupsExcludedImportTypes: ['internal', 'react'],
+                    'newlines-between': 'always',
                 },
             ],
             'import/no-extraneous-dependencies': [
@@ -49,6 +67,9 @@ export const importConfig = [
                     includeTypes: true,
                 },
             ],
+
+            // Offs
+            'import/no-unresolved': 'off', // Does not work with Babel react-native to react-native-web
         },
     },
 ];
