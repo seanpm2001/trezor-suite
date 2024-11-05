@@ -12,6 +12,7 @@ export default [
             ],
             'no-restricted-syntax': 'off', // Todo: this should be fixed in codebase and this line removed
             'import/order': 'off', // Todo: fix and solve
+            'import/no-default-export': 'off', // Todo: shall be solved one day, usually its legacy Components
         },
     },
 ];
