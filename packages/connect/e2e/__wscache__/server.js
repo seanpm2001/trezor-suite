@@ -36,7 +36,7 @@ const createServer = () => {
         try {
             const data = fn(params, request);
             ws.send(JSON.stringify({ ...data, id: request.id }));
-        } catch (e) {
+        } catch {
             // empty
         }
     };

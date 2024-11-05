@@ -166,6 +166,7 @@ describe('Worker', () => {
                 return new TinyWorker(() => {
                     self.onmessage = () => {
                         // @ts-expect-error undefined "x"
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         const r = 1 / x;
                     };
 

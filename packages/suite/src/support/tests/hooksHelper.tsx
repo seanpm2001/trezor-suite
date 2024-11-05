@@ -27,7 +27,7 @@ export const waitForLoader = (text = /Loading/i) => {
         if (loading) {
             return waitForElementToBeRemoved(() => screen.queryByText(text), { timeout: 5000 });
         }
-    } catch (e) {
+    } catch {
         return true;
     }
 };

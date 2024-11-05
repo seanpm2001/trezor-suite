@@ -102,7 +102,7 @@ const signTransaction = async (page: Page, iteration: number) => {
             });
             await TrezorUserEnvLink.send({ type: 'emulator-press-yes' });
             await popup.waitForTimeout(501);
-        } catch (err) {
+        } catch {
             confirmOnTrezorScreenStilVisible = false;
         }
     }
