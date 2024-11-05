@@ -8,13 +8,8 @@ export const localRulesConfig = [
         rules: {
             'local-rules/no-override-ds-component': [
                 'error',
-                { packageName: '@trezor/components' },
+                { packageNames: ['@trezor/components', '@trezor/product-components'] },
             ],
-            // Todo: figure out hot to re-enable this rule
-            // 'local-rules/no-override-ds-component': [
-            //     'error',
-            //     { packageName: '@trezor/product-components' },
-            // ],
         },
     },
 ];
