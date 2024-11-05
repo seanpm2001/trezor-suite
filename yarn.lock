@@ -12168,6 +12168,7 @@ __metadata:
   dependencies:
     "@jest/types": "npm:^29.6.3"
     "@trezor/eslint": "workspace:*"
+    "@trezor/protobuf": "workspace:*"
     "@trezor/transport": "workspace:*"
     "@trezor/transport-bridge": "workspace:*"
     "@trezor/trezor-user-env-link": "workspace:^"
