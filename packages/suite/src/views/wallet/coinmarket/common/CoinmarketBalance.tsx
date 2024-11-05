@@ -54,7 +54,7 @@ export const CoinmarketBalance = ({
     });
 
     if (showOnlyAmount) {
-        if (typeof balance === 'undefined' || isNaN(Number(balance))) return null;
+        if (balance === undefined || isNaN(Number(balance))) return null;
 
         return (
             <CoinmarketBalanceWrapper>

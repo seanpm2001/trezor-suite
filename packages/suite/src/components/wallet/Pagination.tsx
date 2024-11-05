@@ -99,7 +99,7 @@ export const Pagination = ({
                     <PageItem
                         key={i}
                         data-testid={`@wallet/accounts/pagination/${i}`}
-                        data-test-activated={i === currentPage ?? 'true'}
+                        data-test-activated={i === currentPage}
                         onClick={() => onPageSelected(i)}
                         $isActive={i === currentPage}
                     >
