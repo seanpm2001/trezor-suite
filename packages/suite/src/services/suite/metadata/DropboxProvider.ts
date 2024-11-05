@@ -48,7 +48,7 @@ class DropboxProvider extends AbstractMetadataProvider {
             await this.auth.refreshAccessToken(['']);
 
             return true;
-        } catch (err) {
+        } catch {
             return false;
         }
     }
@@ -237,6 +237,7 @@ class DropboxProvider extends AbstractMetadataProvider {
             return this.handleProviderError(err);
         }
     }
+
     /**
      * Specific implementation in every provider. Returns standardized error
      */

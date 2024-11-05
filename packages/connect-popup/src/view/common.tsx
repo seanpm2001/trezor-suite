@@ -78,7 +78,7 @@ export const getIframeElement = () => {
             if (frames[i].location.host === window.location.host) {
                 iframe = frames[i];
             }
-        } catch (error) {
+        } catch {
             // do nothing, try next entry
         }
     }
@@ -146,7 +146,7 @@ export const initMessageChannelWithIframe = async (
             // otherwise close BroadcastChannel and try to use MessageChannel fallback
             broadcast.close();
             broadcast.removeEventListener('message', handler);
-        } catch (error) {
+        } catch {
             // silent error. use MessageChannel as fallback communication
         }
     }

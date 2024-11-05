@@ -67,7 +67,7 @@ export class TorControlPort {
                     let cookieString;
                     try {
                         cookieString = await getCookieString(this.options.torDataDir);
-                    } catch (error) {
+                    } catch {
                         reject(new Error('TOR control port control_auth_cookie cannot be read'));
                     }
                     const serverNonce = authchallengeResponse[2];
@@ -117,7 +117,7 @@ export class TorControlPort {
         }
         try {
             return !!this.write('GETINFO');
-        } catch (error) {
+        } catch {
             return false;
         }
     }

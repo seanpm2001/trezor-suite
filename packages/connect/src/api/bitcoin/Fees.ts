@@ -94,7 +94,7 @@ export class FeeLevels {
                     Math.max(this.coinInfo.minFee, parseInt(response.feePerUnit, 10)),
                 ).toString(),
             };
-        } catch (error) {
+        } catch {
             // silent
         }
 
@@ -146,7 +146,7 @@ export class FeeLevels {
             });
 
             this.longTermFeeRate = findLowest(this.blocks);
-        } catch (error) {
+        } catch {
             // do not throw
         }
 
