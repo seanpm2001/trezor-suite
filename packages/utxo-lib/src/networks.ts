@@ -280,7 +280,7 @@ export function isNetworkType(type: NetworkTypes, network?: Network) {
         );
 
         return false;
-    } catch (e) {
+    } catch {
         /* empty */
     }
 
