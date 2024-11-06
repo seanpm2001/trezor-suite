@@ -5,7 +5,6 @@ import { render } from '@testing-library/react';
 import { Store } from 'redux';
 import userEvent from '@testing-library/user-event';
 
-
 import { configureMockStore } from '@suite-common/test-utils';
 
 import suiteReducer, { SuiteState } from 'src/reducers/suite/suiteReducer';

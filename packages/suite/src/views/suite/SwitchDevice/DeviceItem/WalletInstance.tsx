@@ -31,7 +31,6 @@ import { ContentType } from '../types';
 import { ViewOnly } from './ViewOnly';
 import { EjectButton } from './EjectButton';
 
-
 const RelativeContainer = styled.div`
     position: relative;
     border-radius: 16px;
