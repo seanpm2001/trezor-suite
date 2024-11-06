@@ -39,6 +39,7 @@
         "@trezor/node-utils": "workspace:*",
         "@trezor/trezor-user-env-link": "workspace:*",
         "@trezor/utils": "workspace:*",
+        "@trezor/eslint": "workspace:*",
         "@types/react": "18.2.79",
         "babel-loader": "^9.1.3",
         "copy-webpack-plugin": "^12.0.2",
