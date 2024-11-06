@@ -7,7 +7,6 @@ export default [
             'no-underscore-dangle': 'off', // underscore is used
             camelcase: 'off', // camelcase is used
             'jest/valid-expect': 'off', // because of cypress tests
-            'import/order': 'off', // Todo: fix and solve
         },
     },
 ];
