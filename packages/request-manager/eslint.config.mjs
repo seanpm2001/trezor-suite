@@ -6,7 +6,6 @@ export default [
         files: ['**/e2e/**/*'],
         rules: {
             'no-console': 'off', // used in e2e tests
-            'import/order': 'off', // Todo: fix and solve
         },
     },
 ];

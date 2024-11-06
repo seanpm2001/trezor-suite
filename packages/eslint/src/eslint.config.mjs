@@ -96,7 +96,6 @@ export default [
         rules: {
             // '@typescript-eslint/no-shadow': 'off',
             'import/no-default-export': 'off',
-            'import/order': 'off',
             // 'no-console': 'off',
             // 'react/jsx-no-undef': 'off',
             // 'no-catch-shadow': 'off',
