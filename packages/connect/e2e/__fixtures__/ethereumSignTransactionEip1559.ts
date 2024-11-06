@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
 // @ts-ignore
 import commonFixtures from '../../../../submodules/trezor-common/tests/fixtures/ethereum/sign_tx_eip1559.json';
 

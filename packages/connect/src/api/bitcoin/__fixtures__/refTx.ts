@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
 import { networks } from '@trezor/utxo-lib';
 
 // @ts-ignore

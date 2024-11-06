@@ -36,7 +36,6 @@ export const typescriptConfig = [
             // Offs
             '@typescript-eslint/no-require-imports': 'off', // We just use require a lot (mostly for dynamic imports)
             '@typescript-eslint/no-explicit-any': 'off', // Todo: write description
-            '@typescript-eslint/ban-ts-comment': 'off', // Todo: just temporary, reconsider to remove it
             '@typescript-eslint/no-empty-object-type': 'off', // Todo: we shall solve this, this is bad practice
             '@typescript-eslint/triple-slash-reference': 'off', // Todo: solve before merge
         },

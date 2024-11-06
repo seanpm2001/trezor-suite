@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
 // @ts-ignore
 import * as Messages from '@trezor/protobuf/src/messages';
 
