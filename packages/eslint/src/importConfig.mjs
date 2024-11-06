@@ -1,6 +1,5 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-
 import pluginImport from 'eslint-plugin-import';
 
 const __filename = fileURLToPath(import.meta.url);
