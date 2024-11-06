@@ -12189,7 +12189,6 @@ __metadata:
   resolution: "@trezor/transport-test@workspace:packages/transport-test"
   dependencies:
     "@jest/types": "npm:^29.6.3"
-    "@trezor/protobuf": "workspace:*"
     "@trezor/eslint": "workspace:*"
     "@trezor/protobuf": "workspace:*"
     "@trezor/transport": "workspace:*"
