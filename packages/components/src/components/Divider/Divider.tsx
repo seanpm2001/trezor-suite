@@ -1,5 +1,7 @@
 import styled from 'styled-components';
+
 import { Color, Elevation, mapElevationToBorder, spacings } from '@trezor/theme';
+
 import { useElevation } from '../ElevationContext/ElevationContext';
 import {
     FrameProps,

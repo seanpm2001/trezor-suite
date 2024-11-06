@@ -1,8 +1,10 @@
 import styled, { useTheme } from 'styled-components';
 
 import { Tooltip, Icon, useElevation } from '@trezor/components';
-import { Translation } from 'src/components/suite';
 import { Elevation, borders, mapElevationToBackground, spacingsPx } from '@trezor/theme';
+
+import { Translation } from 'src/components/suite';
+
 import { ContentType } from '../types';
 
 const EjectContainer = styled.div<{ $elevation: Elevation }>`

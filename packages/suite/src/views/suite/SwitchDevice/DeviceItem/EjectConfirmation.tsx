@@ -1,12 +1,16 @@
+import { MouseEventHandler, ReactNode } from 'react';
+
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'src/hooks/suite';
+
 import { H3, Button, Text } from '@trezor/components';
-import { Translation } from 'src/components/suite';
 import { deviceActions } from '@suite-common/wallet-core';
 import { analytics, EventType } from '@trezor/suite-analytics';
 import { AcquiredDevice } from '@suite-common/suite-types';
-import { MouseEventHandler, ReactNode } from 'react';
 import { spacings, spacingsPx } from '@trezor/theme';
+
+import { Translation } from 'src/components/suite';
+import { useDispatch, useSelector } from 'src/hooks/suite';
+
 import { selectSuiteSettings } from '../../../../reducers/suite/suiteReducer';
 
 const Container = styled.div`

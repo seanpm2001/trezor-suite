@@ -1,8 +1,10 @@
 import { ReactNode } from 'react';
+
 import styled, { css, DefaultTheme, useTheme } from 'styled-components';
 
-import { variables } from '../../config';
 import { Elevation, borders, spacingsPx, typography, spacings } from '@trezor/theme';
+
+import { variables } from '../../config';
 import {
     FrameProps,
     FramePropsKeys,
