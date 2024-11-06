@@ -14,6 +14,8 @@ export default [
                 'error',
                 { additionalTestBlockFunctions: ['conditionalTest'] },
             ],
+            'import/order': 'off', // Todo: fix and solve
+            'import/no-default-export': 'off', // Todo: shall be solved one day, but now its heavily used
         },
     },
 ];

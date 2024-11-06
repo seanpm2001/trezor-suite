@@ -1,4 +1,5 @@
 import * as mdx from 'eslint-plugin-mdx';
+
 import { eslint } from '@trezor/eslint';
 
 export default [
@@ -12,6 +13,12 @@ export default [
             'import/no-default-export': 'off',
             'no-console': 'off',
             'no-restricted-syntax': 'off',
+        },
+    },
+    {
+        files: ['**/*.mdx'],
+        rules: {
+            'react/no-unescaped-entities': 'off',
         },
     },
 

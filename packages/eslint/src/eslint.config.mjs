@@ -68,7 +68,7 @@ export default [
     {
         // we are using explicit blacklist because this will enforce new rules in newly created packages
         files: [
-            '**/packages/analytics/**/*',
+            'packages/analytics/**/*',
             'packages/blockchain-link/**/*',
             'packages/components/**/*',
             'packages/product-components/**/*',
@@ -82,7 +82,7 @@ export default [
             'packages/connect-plugin-ethereum/**/*',
             'packages/connect-plugin-stellar/**/*',
             'packages/request-manager/**/*',
-            'packages/suite/**/*',
+            '**/packages/suite/**/*',
             'packages/suite-build/**/*',
             'packages/suite-data/**/*',
             'packages/suite-desktop-api/**/*',
