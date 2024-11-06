@@ -8,7 +8,9 @@ Message system was implemented to allow sending emergency messages to Trezor Sui
 
 [Notion for production deployment](https://www.notion.so/satoshilabs/Message-system-production-release-c0ac4275461f4755bc9050ff2de57425)
 
-## Types of in-app messages
+## Possibility of message system
+
+### Use actions (messages)
 
 There are multiple ways of displaying message to a user:
 
@@ -20,6 +22,10 @@ There are multiple ways of displaying message to a user:
     -   messages on specific places in app (e.g. settings page, banner in account page)
 -   feature
     -   disabling some feature with an explanation message
+
+### Use (Experiments)
+
+The ability to create A/B testing.
 
 ## Implementation
 
@@ -80,7 +86,7 @@ If changes made to the message system are incompatible with the previous version
 
 Structure of config, types and optionality of specific keys can be found in the schema or in generated types. Example config is commented below.
 
-```javascript
+```json
 {
     // Version of message system implementation. Bump if new version is not backward compatible.
     "version": 1,
@@ -118,11 +124,7 @@ Structure of config, types and optionality of specific keys can be found in the 
                     - Options: gte, lt, ranges, tildes, carets,... are supported, see semver lib for more info.
                     */
                     "os": {
-                        "macos": [
-                            "10.14",
-                            "10.18",
-                            "11"
-                        ],
+                        "macos": ["10.14", "10.18", "11"],
                         "linux": "*",
                         "windows": "!",
                         "android": "*",
@@ -137,18 +139,12 @@ Structure of config, types and optionality of specific keys can be found in the 
                         "revision": "7281ac61483e38d974625c2505bfe5efd519aacb"
                     },
                     "browser": {
-                        "firefox": [
-                            "82",
-                            "83"
-                        ],
+                        "firefox": ["82", "83"],
                         "chrome": "*",
                         "chromium": "!"
                     },
                     "transport": {
-                        "bridge": [
-                            "2.0.30",
-                            "2.0.27"
-                        ],
+                        "bridge": ["2.0.30", "2.0.27"],
                         "webusbplugin": "*"
                     },
                     /*
@@ -255,16 +251,40 @@ Structure of config, types and optionality of specific keys can be found in the 
                 },
                 // Used only for context.
                 "context": {
-                    "domain": [
-                        "coins.receive",
-                        "coins.btc"
-                  ]
+                    "domain": ["coins.receive", "coins.btc"]
                 }
-                 // Used only for feature
-                "feature": [
+            }
+        }
+    ],
+    // Used for AB testing
+    "experiments": [
+        {
+            // Same as for actions, check conditions above
+            "conditions": [
+                {
+                    "environment": {
+                        "desktop": ">=24.5.1",
+                        "mobile": "!",
+                        "web": ">=24.5.1"
+                    }
+                }
+            ],
+            // Detail of an experiment
+            "experiment": {
+                // Used as a selector for the test
+                "id": "3bed56a4-ecd8-4e0f-2910-014b484c2aff",
+                // Array of testing groups - minimum length of items is two
+                // The sum of group percentages must equal 100 in total
+                "groups": [
                     {
-                        "domain": "coinjoin",
-                        "flag": false
+                        // Name of variant - any string
+                        "variant": "A",
+                        // The percentage range a user can be assigned to (0-100)
+                        "percentage": 30
+                    },
+                    {
+                        "variant": "B",
+                        "percentage": 70
                     }
                 ]
             }
@@ -279,7 +299,7 @@ When updating message system config, sequence number must always be higher than 
 
 Updated config is automatically uploaded by CI job to the corresponding S3 bucket based on the current branch.
 
-#### Priorities of messages
+#### Priorities of actions (messages)
 
 Based on the priority of the message, the message is displayed to the user. 0 is the lowest priority, 100 is the highest priority.
 Current priorities of existing banners can be found [here](https://github.com/trezor/trezor-suite/blob/145a43d21ee94461d3f013c1dc23241dd27b0224/packages/suite/src/components/suite/Banners/index.tsx).
@@ -287,6 +307,14 @@ Current priorities of existing banners can be found [here](https://github.com/tr
 #### Targeting Linux version
 
 Unfortunately, it is not possible to target specific distributions and versions of Linux. It is possible to only target all Linux users using `*` or exclude all Linux users using `!`.
+
+#### Experiment implementation
+
+The experiment is based on the `instanceId` used by analytics. It will remain active regardless of user consent. However, no data will be sent to analytics without user consent.
+
+##### Component experiment
+
+To create an experiment for components, use ExperimentWrapper.tsx. It requires the `id` of the test and the `components` to be tested as properties. Check the implementation details for more information [here](https://github.com/trezor/trezor-suite/blob/feat/ab-testing-on-message-system/packages/suite/src/components/suite/Experiment/ExperimentWrapper.tsx).
 
 ### Application steps
 
