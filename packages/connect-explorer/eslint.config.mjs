@@ -21,18 +21,11 @@ export default [
             'react/no-unescaped-entities': 'off',
         },
     },
-
-    // Typescript
     {
         rules: {
+            'import/no-default-export': 'off', // Todo: shall be fixed
             '@typescript-eslint/no-restricted-imports': 'off',
             '@typescript-eslint/no-shadow': 'off',
-        },
-    },
-
-    // React
-    {
-        rules: {
             'react/jsx-filename-extension': [
                 'error',
                 {
