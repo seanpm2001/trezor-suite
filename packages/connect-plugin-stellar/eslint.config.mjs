@@ -4,8 +4,7 @@ export default [
     ...eslint,
     {
         rules: {
-            'no-console': 'off',
-            'no-restricted-syntax': 'off', // Todo: fix and solve
+            'import/no-default-export': 'off', // Todo: fix and solve
         },
     },
 ];

@@ -4,6 +4,10 @@ import { eslint } from '@trezor/eslint';
 
 export default [
     ...eslint,
+    {
+        ignores: ['.next/**/*'],
+    },
+
     // Mdx
     {
         ...mdx.flat,
@@ -23,7 +27,9 @@ export default [
     },
     {
         rules: {
+            'no-console': 'off',
             'import/no-default-export': 'off', // Todo: shall be fixed
+            'no-restricted-syntax': 'off', // Todo: shall be fixed
             '@typescript-eslint/no-restricted-imports': 'off',
             '@typescript-eslint/no-shadow': 'off',
             'react/jsx-filename-extension': [

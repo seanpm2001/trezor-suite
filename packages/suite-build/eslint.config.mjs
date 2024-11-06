@@ -5,7 +5,7 @@ export default [
     {
         rules: {
             'no-console': 'off',
-            'no-restricted-syntax': 'off', // Todo: fix and solve
+            'import/no-default-export': 'off',
         },
     },
 ];

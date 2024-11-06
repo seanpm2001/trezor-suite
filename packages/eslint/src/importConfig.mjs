@@ -61,6 +61,7 @@ export const importConfig = [
                         '**/*.stories.*',
                         '**/*webpack.config*',
                         '**/webpack/**',
+                        '**/.storybook/**',
                     ],
 
                     includeTypes: true,

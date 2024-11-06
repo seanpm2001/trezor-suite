@@ -11,7 +11,7 @@ export const reactConfig = [
         settings: { react: { version: 'detect' } },
         rules: {
             // Additions
-            'react/jsx-filename-extension': ['error', { extensions: ['.tsx'] }],
+            'react/jsx-filename-extension': ['error', { extensions: ['.tsx', '.jsx'] }],
             'react/jsx-curly-brace-presence': ['warn', { props: 'never', children: 'never' }],
 
             // Offs
