@@ -25,7 +25,11 @@ import {
     getCoinmarketNetworkDecimals,
 } from 'src/utils/wallet/coinmarket/coinmarketUtils';
 import { useDidUpdate } from '@trezor/react-utils';
-import { FORM_OUTPUT_AMOUNT, FORM_OUTPUT_MAX } from 'src/constants/wallet/coinmarket/form';
+import {
+    FORM_OUTPUT_AMOUNT,
+    FORM_OUTPUT_MAX,
+    FORM_SEND_CRYPTO_CURRENCY_SELECT,
+} from 'src/constants/wallet/coinmarket/form';
 import {
     CoinmarketAccountOptionsGroupOptionProps,
     CoinmarketCryptoListProps,
@@ -67,7 +71,9 @@ export const CoinmarketFormInputCryptoAmount = <TFieldValues extends CoinmarketA
             : (errors as FieldErrors<CoinmarketBuyFormProps>).cryptoInput;
     const networkSymbol = cryptoSelect?.value && cryptoIdToCoinSymbol(cryptoSelect?.value);
     const decimals = getCoinmarketNetworkDecimals({
-        sendCryptoSelect: cryptoSelect as CoinmarketAccountOptionsGroupOptionProps | undefined,
+        sendCryptoSelect: !isCoinmarketBuyContext(context)
+            ? context.getValues()[FORM_SEND_CRYPTO_CURRENCY_SELECT]
+            : undefined,
         network,
     });
 
