@@ -2,28 +2,28 @@
 
 import { Assert } from '@trezor/schema-utils';
 
-import { AbstractMethod, MethodReturnType } from '../../../core/AbstractMethod';
-import { getFirmwareRange } from '../../common/paramsValidator';
-import { getMiscNetwork } from '../../../data/coinInfo';
+import { MethodReturnType } from '../../../core/AbstractMethod';
 import { validatePath, fromHardened, getSerializedPath } from '../../../utils/pathUtils';
 import { PROTO, ERRORS } from '../../../constants';
 import { UI, createUiMessage } from '../../../events';
 import { Bundle } from '../../../types';
 import { GetAddress as GetAddressSchema } from '../../../types/api/getAddress';
+import { BinanceAbstractMethod } from './binanceAbstractMethods';
 
 type Params = PROTO.BinanceGetAddress & {
     address?: string;
 };
 
-export default class BinanceGetAddress extends AbstractMethod<'binanceGetAddress', Params[]> {
+export default class BinanceGetAddress extends BinanceAbstractMethod<
+    'binanceGetAddress',
+    Params[]
+> {
     hasBundle?: boolean;
     progress = 0;
 
     init() {
         this.noBackupConfirmationMode = 'always';
         this.requiredPermissions = ['read'];
-        this.requiredDeviceCapabilities = ['Capability_Binance'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('BNB'), this.firmwareRange);
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = !!this.payload.bundle;

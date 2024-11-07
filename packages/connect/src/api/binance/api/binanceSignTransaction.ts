@@ -2,13 +2,11 @@
 
 import { AssertWeak } from '@trezor/schema-utils';
 
-import { AbstractMethod } from '../../../core/AbstractMethod';
-import { getFirmwareRange } from '../../common/paramsValidator';
-import { getMiscNetwork } from '../../../data/coinInfo';
 import { validatePath } from '../../../utils/pathUtils';
 import * as helper from '../binanceSignTx';
 import { BinanceSignTransaction as BinanceSignTransactionSchema } from '../../../types/api/binance';
 import type { BinancePreparedTransaction } from '../../../types/api/binance';
+import { BinanceAbstractMethod } from './binanceAbstractMethods';
 
 type Params = {
     path: number[];
@@ -16,14 +14,12 @@ type Params = {
     chunkify?: boolean;
 };
 
-export default class BinanceSignTransaction extends AbstractMethod<
+export default class BinanceSignTransaction extends BinanceAbstractMethod<
     'binanceSignTransaction',
     Params
 > {
     init() {
         this.requiredPermissions = ['read', 'write'];
-        this.requiredDeviceCapabilities = ['Capability_Binance'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('BNB'), this.firmwareRange);
 
         const { payload } = this;
         // validate incoming parameters
