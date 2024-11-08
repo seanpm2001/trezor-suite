@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import { BigNumber } from '@trezor/utils/src/bigNumber';
 import { useFormatters } from '@suite-common/formatters';
 import { variables } from '@trezor/components';
-import { DISCREET_PLACEHOLDER, useShouldRedactNumbers } from '@suite-common/wallet-utils';
 
 import { Translation, HiddenPlaceholder, FormattedDate } from 'src/components/suite';
 import { Account } from 'src/types/wallet';
 import { AggregatedAccountHistory, GraphRange } from 'src/types/wallet/graph';
 import { sumFiatValueMap } from 'src/utils/wallet/graph';
 
+import { NumberOfTransactions } from './NumberOfTransactions';
 import { InfoCard } from './InfoCard';
 
 const InfoCardsWrapper = styled.div`
@@ -54,13 +54,6 @@ interface SummaryCardProps {
 const DateWrapper = styled.span`
     white-space: nowrap;
 `;
-
-const NumberOfTransactions = ({ value }: { value: number }) => (
-    <Translation
-        id="TR_N_TRANSACTIONS"
-        values={{ value: useShouldRedactNumbers() ? DISCREET_PLACEHOLDER : value }}
-    />
-);
 
 export const SummaryCards = ({
     selectedRange,

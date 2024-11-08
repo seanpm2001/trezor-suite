@@ -11,14 +11,17 @@ import { spacingsPx } from '@trezor/theme';
 import { WalletLayout, CoinjoinAccountDiscoveryProgress } from 'src/components/wallet';
 import { useSelector } from 'src/hooks/suite';
 import { AppState } from 'src/types/suite';
+import { HiddenPlaceholder, Translation } from 'src/components/suite';
 
 import { NoTransactions } from './components/NoTransactions';
 import { AccountEmpty } from './components/AccountEmpty';
+import { InfoCard } from './components/InfoCard';
 import { TransactionList } from './TransactionList/TransactionList';
 import { TransactionSummary } from './components/TransactionSummary';
 import { CoinjoinExplanation } from './CoinjoinExplanation/CoinjoinExplanation';
 import { CoinjoinSummary } from './CoinjoinSummary/CoinjoinSummary';
 import { TradeBox } from './TradeBox/TradeBox';
+import { NumberOfTransactions } from './components/NumberOfTransactions';
 
 const AccountLayout = styled(WalletLayout)`
     display: flex;
@@ -92,6 +95,17 @@ export const Transactions = () => {
             <Layout selectedAccount={selectedAccount}>
                 {!networksWithoutTxSummary.includes(account.networkType) && (
                     <TransactionSummary account={account} />
+                )}
+                {account.networkType === 'solana' && (
+                    <InfoCard
+                        title={<Translation id="TR_ALL" />}
+                        isLoading={false}
+                        value={
+                            <HiddenPlaceholder>
+                                <NumberOfTransactions value={accountTransactions.length} />
+                            </HiddenPlaceholder>
+                        }
+                    />
                 )}
                 <TradeBox account={account} />
                 <TransactionList

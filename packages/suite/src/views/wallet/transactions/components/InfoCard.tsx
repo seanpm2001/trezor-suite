@@ -51,7 +51,7 @@ const StyledFormattedValue = styled(FormattedCryptoAmount)`
 type InfoCardProps = {
     title: ReactNode;
     value: ReactNode;
-    secondaryValue: ReactNode;
+    secondaryValue?: ReactNode;
     symbol?: Account['symbol'];
     isNumeric?: boolean;
     isLoading?: boolean;
