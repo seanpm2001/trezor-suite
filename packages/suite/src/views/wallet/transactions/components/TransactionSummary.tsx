@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import { getUnixTime } from 'date-fns';
 
 import { calcTicks, calcTicksFromData } from '@suite-common/suite-utils';
-import { variables, Button, Card } from '@trezor/components';
+import { variables, Button, Card, Row, Column } from '@trezor/components';
+import { spacings } from '@trezor/theme';
 
 import { Account } from 'src/types/wallet';
 import {
@@ -18,31 +19,6 @@ import { selectLocalCurrency } from 'src/reducers/wallet/settingsReducer';
 
 import { TransactionSummaryDropdown } from './TransactionSummaryDropdown';
 import { SummaryCards } from './SummaryCards';
-
-const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-`;
-
-const ContentWrapper = styled.div`
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-`;
-
-const GraphWrapper = styled.div`
-    flex-direction: row;
-    display: flex;
-    height: 320px;
-    overflow: visible;
-`;
-
-const Actions = styled.div`
-    display: flex;
-    margin-bottom: 20px;
-    justify-content: space-between;
-    align-items: center;
-`;
 
 const ErrorMessage = styled.div`
     display: flex;
@@ -103,27 +79,31 @@ export const TransactionSummary = ({ account }: TransactionSummaryProps) => {
     const onSelectedRange = () => dispatch(updateGraphData([account], { newAccountsOnly: true }));
 
     return (
-        <Wrapper>
-            <Actions>
+        <Column alignItems="stretch">
+            <Row
+                margin={{ bottom: spacings.lg }}
+                justifyContent="space-between"
+                alignItems="center"
+            >
                 <GraphRangeSelector onSelectedRange={onSelectedRange} align="bottom-left" />
                 <TransactionSummaryDropdown />
-            </Actions>
-            <ContentWrapper>
+            </Row>
+            <Column width="100%" alignItems="stretch">
                 {error ? (
                     <Card>
-                        <GraphWrapper>
+                        <Row height="320px" overflow="visible" alignItems="stretch">
                             <ErrorMessage>
                                 <Translation id="TR_COULD_NOT_RETRIEVE_DATA" />
                                 <Button onClick={onRefresh} icon="refresh" variant="tertiary">
                                     <Translation id="TR_RETRY" />
                                 </Button>
                             </ErrorMessage>
-                        </GraphWrapper>
+                        </Row>
                     </Card>
                 ) : (
                     <HiddenPlaceholder enforceIntensity={8}>
                         <Card>
-                            <GraphWrapper>
+                            <Row height="320px" overflow="visible" alignItems="stretch">
                                 <TransactionsGraph
                                     hideToolbar
                                     variant="one-asset"
@@ -139,7 +119,7 @@ export const TransactionSummary = ({ account }: TransactionSummaryProps) => {
                                     sentValueFn={data => data.sent}
                                     balanceValueFn={data => data.balance}
                                 />
-                            </GraphWrapper>
+                            </Row>
                         </Card>
                     </HiddenPlaceholder>
                 )}
@@ -152,7 +132,7 @@ export const TransactionSummary = ({ account }: TransactionSummaryProps) => {
                     symbol={account.symbol}
                     isLoading={isLoading}
                 />
-            </ContentWrapper>
-        </Wrapper>
+            </Column>
+        </Column>
     );
 };
