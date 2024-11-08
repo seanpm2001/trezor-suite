@@ -13,7 +13,7 @@ import { Dispatch } from '../../../../../../../types/suite';
 export const updateVariants = ['tertiary', 'info', 'purple'] as const;
 export type UpdateVariant = Extract<UIVariant, (typeof updateVariants)[number]> | 'purple';
 
-export type UpdateStatusDevice = 'up-to-date' | 'update-available';
+export type UpdateStatusDevice = 'up-to-date' | 'update-available' | 'disconnected';
 
 export type UpdateStatusSuite =
     | 'up-to-date'
@@ -25,6 +25,7 @@ export type UpdateStatusSuite =
 export type UpdateStatus = UpdateStatusDevice | UpdateStatusSuite;
 
 export const mapUpdateStatusToIcon: Record<UpdateStatus, IconName> = {
+    disconnected: 'plugs', // Todo: better icon
     'update-downloaded-manual': 'arrowDown',
     'update-downloaded-auto-restart-to-update': 'arrowsClockwiseFilled',
     'up-to-date': 'check',
@@ -33,6 +34,7 @@ export const mapUpdateStatusToIcon: Record<UpdateStatus, IconName> = {
 };
 
 export const mapUpdateStatusToVariant: Record<UpdateStatus, UpdateVariant> = {
+    disconnected: 'tertiary',
     'update-downloaded-manual': 'info',
     'update-downloaded-auto-restart-to-update': 'info',
     'up-to-date': 'tertiary',
@@ -43,6 +45,7 @@ export const mapUpdateStatusToVariant: Record<UpdateStatus, UpdateVariant> = {
 type OnClickCallbackCallback = ((params: { dispatch: Dispatch }) => void) | null;
 
 export const mapDeviceUpdateToClick: Record<UpdateStatusDevice, OnClickCallbackCallback> = {
+    disconnected: null,
     'up-to-date': null,
     'update-available': ({ dispatch }) => dispatch(goto('firmware-index')),
 };

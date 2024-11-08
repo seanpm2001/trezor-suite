@@ -53,7 +53,7 @@ export const Sidebar = () => {
 
     const showUpdateBannerNotification =
         (updateStatusSuite !== 'up-to-date' && !closedNotificationSuite) ||
-        (updateStatusDevice !== 'up-to-date' && !closedNotificationDevice);
+        (!['up-to-date', 'disconnected'].includes(updateStatusDevice) && !closedNotificationDevice);
 
     return (
         <Wrapper>
