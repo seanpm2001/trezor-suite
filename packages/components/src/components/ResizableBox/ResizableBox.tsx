@@ -3,6 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createCooldown } from '@trezor/utils';
 import { ZIndexValues, zIndices } from '@trezor/theme';
 
+import { getSafeWindowSize } from '../../utils/getSafeWindowSize';
+
 type Direction = 'top' | 'left' | 'right' | 'bottom';
 type Directions = Array<Direction>;
 
@@ -290,11 +292,12 @@ export const ResizableBox = ({
 
         window.onresize = () => {
             if (resizeCooldown() === true) {
+                const { windowHeight, windowWidth } = getSafeWindowSize();
                 if (updateHeightOnWindowResize) {
-                    setNewHeight(getMaxResult(maxHeight, window.innerHeight));
+                    setNewHeight(getMaxResult(maxHeight, windowHeight));
                 }
                 if (updateWidthOnWindowResize) {
-                    setNewWidth(getMaxResult(maxWidth, window.innerWidth));
+                    setNewWidth(getMaxResult(maxWidth, windowWidth));
                 }
             }
         };
