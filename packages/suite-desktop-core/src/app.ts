@@ -144,7 +144,7 @@ const init = async () => {
             interceptor,
             mainThreadEmitter,
         });
-    await loadBackgroundModules(undefined);
+    const backgroundModulesResponse = await loadBackgroundModules(undefined);
 
     // Daemon mode with no UI
     const { wasOpenedAtLogin } = app.getLoginItemSettings();
@@ -222,9 +222,9 @@ const init = async () => {
     // create handler for handshake/load-modules
     const loadModulesResponse = (clientData: HandshakeClient) =>
         loadModules(clientData)
-            .then(payload => ({
+            .then(modulesResponse => ({
                 success: true as const,
-                payload,
+                payload: { ...modulesResponse, ...backgroundModulesResponse },
             }))
             .catch(err => ({
                 success: false as const,

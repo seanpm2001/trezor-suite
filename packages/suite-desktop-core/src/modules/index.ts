@@ -51,7 +51,6 @@ const MODULES: Module[] = [
     externalLinks,
     windowControls,
     theme,
-    httpReceiverModule,
     metadata,
     customProtocols,
     autoUpdater,
@@ -68,7 +67,7 @@ const MODULES: Module[] = [
     ...(isDevEnv ? [] : [csp, fileProtocol]),
 ];
 
-const MODULES_BACKGROUND: ModuleBackground[] = [bridge, trezorConnect, tray];
+const MODULES_BACKGROUND: ModuleBackground[] = [bridge, trezorConnect, httpReceiverModule, tray];
 
 // define events internally sent between modules
 interface MainThreadMessages {
@@ -205,17 +204,29 @@ export const initModules = (dependencies: Dependencies) => {
                 [customProtocols.SERVICE_NAME]: protocol,
                 [autoUpdater.SERVICE_NAME]: desktopUpdate,
                 [userData.SERVICE_NAME]: { dir: userDir },
-                [httpReceiverModule.SERVICE_NAME]: { url: httpReceiver },
             }) => ({
                 protocol,
                 desktopUpdate,
                 paths: { userDir, binDir: path.join(global.resourcesPath, 'bin') },
-                urls: { httpReceiver },
             }),
         );
 
     return { loadModules, quitModules };
 };
 
-export const initBackgroundModules = (dependencies: Dependencies) =>
-    initModulesInner(dependencies, true, MODULES_BACKGROUND);
+export const initBackgroundModules = (dependencies: Dependencies) => {
+    const { loadModules: loadModulesInner, quitModules } = initModulesInner(
+        dependencies,
+        true,
+        MODULES_BACKGROUND,
+    );
+
+    const loadModules = (handshake: HandshakeClient) =>
+        loadModulesInner(handshake).then(
+            ({ [httpReceiverModule.SERVICE_NAME]: { url: httpReceiver } }) => ({
+                urls: { httpReceiver },
+            }),
+        );
+
+    return { loadModules, quitModules };
+};
