@@ -19,7 +19,6 @@ import {
     PopupContentScriptLoaded,
 } from '@trezor/connect/src/exports';
 import type { Core } from '@trezor/connect/src/core';
-import { config } from '@trezor/connect/src/data/config';
 import { parseConnectSettings } from '@trezor/connect-iframe/src/connectSettings';
 import { initLogWriterWithSrcPath } from '@trezor/connect-iframe/src/sharedLoggerUtils';
 import { reactEventBus } from '@trezor/connect-ui/src/utils/eventBus';
@@ -401,7 +400,7 @@ const init = async (payload: PopupInit['payload']) => {
     // try to establish connection with iframe
     try {
         if (!payload.systemInfo) {
-            payload.systemInfo = getSystemInfo(config.supportedBrowsers);
+            payload.systemInfo = getSystemInfo();
         }
 
         const isBrowserSupported = await view.initBrowserView(payload.systemInfo);

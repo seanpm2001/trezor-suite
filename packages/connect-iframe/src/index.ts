@@ -22,7 +22,6 @@ import {
 } from '@trezor/connect';
 import { initCoreState } from '@trezor/connect/src/core';
 import { DataManager } from '@trezor/connect/src/data/DataManager';
-import { config } from '@trezor/connect/src/data/config';
 import { initLog, LogWriter } from '@trezor/connect/src/utils/debug';
 import { getOrigin } from '@trezor/connect/src/utils/urlUtils';
 import { suggestBridgeInstaller } from '@trezor/connect/src/data/transportInfo';
@@ -337,7 +336,7 @@ const init = async (payload: IFrameInit['payload'], origin: string) => {
         postMessage(
             createIFrameMessage(IFRAME.LOADED, {
                 useBroadcastChannel: !!_popupMessagePort,
-                systemInfo: getSystemInfo(config.supportedBrowsers),
+                systemInfo: getSystemInfo(),
             }),
         );
     } catch (error) {

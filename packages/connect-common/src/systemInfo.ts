@@ -5,6 +5,7 @@ import {
     getUserAgent,
     getOsFamily,
 } from '@trezor/env-utils';
+import { supportedBrowsers } from './config';
 
 export type InstallerPackage = 'rpm32' | 'rpm64' | 'deb32' | 'deb64' | 'mac' | 'win32' | 'win64';
 
@@ -43,11 +44,10 @@ export const getInstallerPackage = (): InstallerPackage | undefined => {
     }
 };
 
-export const getSystemInfo = (supportedBrowsers: {
-    [key: string]: { version: number };
-}): SystemInfo => {
+export const getSystemInfo = (): SystemInfo => {
     const browserName = getBrowserName();
     const browserVersion = getBrowserVersion();
+    // @ts-expect-error
     const supportedBrowser = browserName ? supportedBrowsers[browserName.toLowerCase()] : undefined;
     const outdatedBrowser = supportedBrowser
         ? supportedBrowser.version > parseInt(browserVersion, 10)
