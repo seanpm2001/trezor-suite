@@ -212,7 +212,7 @@ export const PromoBanner = () => {
                     <Image image="HOLLOW_APP_LOGO" width={44} height={44} />
 
                     <div>
-                        <Translation id="TR_DESKTOP_APP_PROMO_TEXT_FOOTER" />
+                        <Translation id="TR_MOBILE_APP_PROMO_TEXT" />
 
                         <OSIcons>
                             <Icon name="osMac" size={14} />

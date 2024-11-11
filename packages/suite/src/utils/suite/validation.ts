@@ -63,7 +63,7 @@ export const validateLimits =
                     : amountLimits.minCrypto;
             }
             if (amountLimits.minCrypto && Number(value) < minCrypto) {
-                return translationString('TR_VALIDATION_ERROR_MINIMUM_CRYPTO', {
+                return translationString('TR_BUY_VALIDATION_ERROR_MINIMUM_CRYPTO', {
                     minimum: formatter.format(amountLimits.minCrypto.toString(), {
                         isBalance: true,
                         symbol,
@@ -78,7 +78,7 @@ export const validateLimits =
                     : amountLimits.maxCrypto;
             }
             if (amountLimits.maxCrypto && Number(value) > maxCrypto) {
-                return translationString('TR_VALIDATION_ERROR_MAXIMUM_CRYPTO', {
+                return translationString('TR_BUY_VALIDATION_ERROR_MAXIMUM_CRYPTO', {
                     maximum: formatter.format(amountLimits.maxCrypto.toString(), {
                         isBalance: true,
                         symbol,
@@ -111,7 +111,7 @@ export const validateLimitsBigNum =
                     : new BigNumber(amountLimits.minCrypto);
             }
             if (amountLimits.minCrypto && new BigNumber(value).lt(minCrypto)) {
-                return translationString('TR_VALIDATION_ERROR_MINIMUM_CRYPTO', {
+                return translationString('TR_BUY_VALIDATION_ERROR_MINIMUM_CRYPTO', {
                     minimum: formatter.format(amountLimits.minCrypto.toString(), {
                         isBalance: true,
                         symbol,
@@ -128,7 +128,7 @@ export const validateLimitsBigNum =
                     : new BigNumber(amountLimits.maxCrypto);
             }
             if (amountLimits.maxCrypto && new BigNumber(value).gt(maxCrypto)) {
-                return translationString('TR_VALIDATION_ERROR_MAXIMUM_CRYPTO', {
+                return translationString('TR_BUY_VALIDATION_ERROR_MAXIMUM_CRYPTO', {
                     maximum: formatter.format(amountLimits.maxCrypto.toString(), {
                         isBalance: true,
                         symbol,
