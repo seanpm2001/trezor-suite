@@ -2,9 +2,7 @@
 
 import { Assert } from '@trezor/schema-utils';
 
-import { AbstractMethod, MethodReturnType } from '../../../core/AbstractMethod';
-import { getFirmwareRange } from '../../common/paramsValidator';
-import { getMiscNetwork } from '../../../data/coinInfo';
+import { MethodReturnType } from '../../../core/AbstractMethod';
 import { fromHardened, getSerializedPath } from '../../../utils/pathUtils';
 import {
     addressParametersFromProto,
@@ -16,24 +14,22 @@ import { PROTO, ERRORS } from '../../../constants';
 import { UI, createUiMessage } from '../../../events';
 import { Bundle } from '../../../types';
 import { CardanoGetAddress as CardanoGetAddressSchema } from '../../../types/api/cardano';
+import { CardanoAbstractMethod } from './cardanoAbstractMethods';
 
 type Params = PROTO.CardanoGetAddress & {
     address?: string;
 };
 
-export default class CardanoGetAddress extends AbstractMethod<'cardanoGetAddress', Params[]> {
+export default class CardanoGetAddress extends CardanoAbstractMethod<
+    'cardanoGetAddress',
+    Params[]
+> {
     hasBundle?: boolean;
     progress = 0;
 
     init() {
         this.noBackupConfirmationMode = 'always';
         this.requiredPermissions = ['read'];
-        this.requiredDeviceCapabilities = ['Capability_Cardano'];
-        this.firmwareRange = getFirmwareRange(
-            this.name,
-            getMiscNetwork('Cardano'),
-            this.firmwareRange,
-        );
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = !!this.payload.bundle;

@@ -3,29 +3,25 @@
 import { Assert } from '@trezor/schema-utils';
 
 import { PROTO } from '../../../constants';
-import { AbstractMethod, MethodReturnType } from '../../../core/AbstractMethod';
-import { getFirmwareRange } from '../../common/paramsValidator';
-import { getMiscNetwork } from '../../../data/coinInfo';
+import { MethodReturnType } from '../../../core/AbstractMethod';
 import { validatePath, fromHardened, getSerializedPath } from '../../../utils/pathUtils';
 import { UI, createUiMessage } from '../../../events';
 import { Bundle } from '../../../types';
 import { CardanoGetPublicKey as CardanoGetPublicKeySchema } from '../../../types/api/cardano';
+import { CardanoAbstractMethod } from './cardanoAbstractMethods';
 
 interface Params extends PROTO.CardanoGetPublicKey {
     suppressBackupWarning?: boolean;
 }
 
-export default class CardanoGetPublicKey extends AbstractMethod<'cardanoGetPublicKey', Params[]> {
+export default class CardanoGetPublicKey extends CardanoAbstractMethod<
+    'cardanoGetPublicKey',
+    Params[]
+> {
     hasBundle?: boolean;
 
     init() {
         this.requiredPermissions = ['read'];
-        this.requiredDeviceCapabilities = ['Capability_Cardano'];
-        this.firmwareRange = getFirmwareRange(
-            this.name,
-            getMiscNetwork('Cardano'),
-            this.firmwareRange,
-        );
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = !!this.payload.bundle;

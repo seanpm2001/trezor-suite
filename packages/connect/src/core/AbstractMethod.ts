@@ -341,6 +341,9 @@ export abstract class AbstractMethod<Name extends CallMethodPayload['method'], P
     }
 
     checkDeviceCapability() {
+        if (!this.useDevice) {
+            return true;
+        }
         const deviceHasAllRequiredCapabilities = (this.requiredDeviceCapabilities || []).every(
             capability => this.device.features.capabilities.includes(capability),
         );
