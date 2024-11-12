@@ -177,5 +177,9 @@ export const factory = <R extends StrictIpcRenderer<any, IpcRendererEvent>>(
             return Promise.resolve({ success: false, error: 'invalid params' });
         },
         getTraySettings: () => ipcRenderer.invoke('tray/get-settings'),
+
+        // Connect popup
+        connectPopupReady: () => ipcRenderer.invoke('connect-popup/ready'),
+        connectPopupResponse: response => ipcRenderer.invoke('connect-popup/response', response),
     };
 };

@@ -16,6 +16,8 @@ import {
     BridgeSettings,
     TorSettings,
     TraySettings,
+    ConnectPopupResponse,
+    ConnectPopupCall,
 } from './messages';
 
 // Event messages from renderer to main process
@@ -72,6 +74,9 @@ export interface RendererChannels {
     'tray/settings': TraySettings;
 
     'handshake/event': HandshakeEvent;
+
+    // connect
+    'connect-popup/call': ConnectPopupCall;
 }
 
 // Invocation from renderer process
@@ -99,6 +104,8 @@ export interface InvokeChannels {
     'app/auto-start/is-enabled': () => InvokeResult<boolean>;
     'tray/change-settings': (payload: TraySettings) => InvokeResult;
     'tray/get-settings': () => InvokeResult<TraySettings>;
+    'connect-popup/ready': () => void;
+    'connect-popup/response': (response: ConnectPopupResponse) => void;
 }
 
 type DesktopApiListener = ListenerMethod<RendererChannels>;
@@ -161,4 +168,7 @@ export interface DesktopApi {
     // Tray
     changeTraySettings: DesktopApiInvoke<'tray/change-settings'>;
     getTraySettings: DesktopApiInvoke<'tray/get-settings'>;
+    // Connect popup
+    connectPopupReady: DesktopApiInvoke<'connect-popup/ready'>;
+    connectPopupResponse: DesktopApiInvoke<'connect-popup/response'>;
 }

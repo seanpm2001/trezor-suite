@@ -55,7 +55,7 @@ export const initBackground: ModuleInitBackground = ({ mainWindowProxy, mainThre
         });
 
         if (app.commandLine.hasSwitch('expose-connect-ws') || isDevEnv) {
-            exposeConnectWs({ mainThreadEmitter, httpReceiver: receiver });
+            exposeConnectWs({ mainThreadEmitter, httpReceiver: receiver, mainWindowProxy });
         }
 
         logger.info(SERVICE_NAME, 'Starting server');

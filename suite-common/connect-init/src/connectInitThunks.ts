@@ -3,13 +3,16 @@ import TrezorConnect, {
     BLOCKCHAIN_EVENT,
     DEVICE,
     DEVICE_EVENT,
+    ERRORS,
     TRANSPORT_EVENT,
     UI_EVENT,
 } from '@trezor/connect';
 import { getSynchronize } from '@trezor/utils';
-import { deviceConnectThunks } from '@suite-common/wallet-core';
+import { deviceConnectThunks, selectDevice } from '@suite-common/wallet-core';
 import { resolveStaticPath } from '@suite-common/suite-utils';
 import { isDesktop, isNative } from '@trezor/env-utils';
+import { desktopApi } from '@trezor/suite-desktop-api';
+import { serializeError, TypedError } from '@trezor/connect/src/constants/errors';
 
 import { cardanoConnectPatch } from './cardanoConnectPatch';
 
@@ -164,5 +167,70 @@ export const connectInitThunk = createThunk(
             }
             throw new Error(formattedError);
         }
+    },
+);
+
+export const connectPopupCallThunk = createThunk(
+    `${CONNECT_INIT_MODULE}/callThunk`,
+    async (
+        {
+            id,
+            method,
+            payload,
+        }: {
+            id: number;
+            method: string;
+            payload: any;
+        },
+        { dispatch, getState, extra },
+    ) => {
+        try {
+            const device = selectDevice(getState());
+
+            if (!device) {
+                console.error('Device not found');
+                // Need to select device first
+                dispatch(extra.thunks.openSwitchDeviceDialog());
+
+                // TODO: wait for device selection and continue
+                throw ERRORS.TypedError('Device_NotFound');
+            }
+
+            // TODO: go to some popup route
+
+            // @ts-expect-error: method is dynamic
+            const response = await TrezorConnect[method]({
+                device: {
+                    path: device.path,
+                    instance: device.instance,
+                    state: device.state,
+                },
+                ...payload,
+            });
+
+            desktopApi.connectPopupResponse({
+                ...response,
+                id,
+            });
+        } catch (error) {
+            desktopApi.connectPopupResponse({
+                success: false,
+                payload: serializeError(error),
+                id,
+            });
+        }
+    },
+);
+
+export const connectPopupInitThunk = createThunk(
+    `${CONNECT_INIT_MODULE}/initPopupThunk`,
+    (_, { dispatch }) => {
+        if (!desktopApi.available) {
+            return;
+        }
+        desktopApi.on('connect-popup/call', params => {
+            dispatch(connectPopupCallThunk(params));
+        });
+        desktopApi.connectPopupReady();
     },
 );

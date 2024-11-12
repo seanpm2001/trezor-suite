@@ -1,6 +1,8 @@
 import { WebSocketServer } from 'ws';
+import { ipcMain } from 'electron';
 
-import TrezorConnect, { IFRAME, POPUP } from '@trezor/connect';
+import { IFRAME, POPUP } from '@trezor/connect';
+import { createDeferred, Deferred } from '@trezor/utils';
 
 import { createHttpReceiver } from './http-receiver';
 import { Dependencies } from '../modules';
@@ -9,12 +11,16 @@ const LOG_PREFIX = 'connect-ws';
 
 export const exposeConnectWs = ({
     mainThreadEmitter,
+    mainWindowProxy,
     httpReceiver,
 }: {
     mainThreadEmitter: Dependencies['mainThreadEmitter'];
+    mainWindowProxy: Dependencies['mainWindowProxy'];
     httpReceiver: ReturnType<typeof createHttpReceiver>;
 }) => {
     const { logger } = global;
+    const messages: Record<number, Deferred<any, number>> = {};
+    let appInit: Deferred<void> | undefined;
 
     const wss = new WebSocketServer({
         noServer: true,
@@ -61,21 +67,35 @@ export const exposeConnectWs = ({
 
                 const { method, ...rest } = message.payload;
 
-                try {
-                    // focus renderer window
-                    mainThreadEmitter.emit('app/show');
-                    // @ts-expect-error
-                    const response = await TrezorConnect[method](rest);
-                    ws.send(
-                        JSON.stringify({
-                            ...response,
-                            id: message.id,
-                        }),
-                    );
-                } finally {
-                    // blur renderer window
-                    // mainThreadEmitter.emit('');
+                messages[message.id] = createDeferred();
+
+                // focus renderer window
+                mainThreadEmitter.emit('app/show');
+
+                // check window exists, if not wait for it to be created
+                if (!mainWindowProxy.getInstance()) {
+                    logger.info(LOG_PREFIX, 'waiting for window to start');
+                    appInit = createDeferred(10000);
+                    await appInit.promise;
+                    appInit = undefined;
                 }
+
+                // send call to renderer
+                mainWindowProxy.getInstance()?.webContents.send('connect-popup/call', {
+                    id: message.id,
+                    method,
+                    payload: rest,
+                });
+
+                // wait for response
+                const response = await messages[message.id].promise;
+
+                ws.send(
+                    JSON.stringify({
+                        ...response,
+                        id: message.id,
+                    }),
+                );
             }
         });
     });
@@ -88,5 +108,25 @@ export const exposeConnectWs = ({
                 wss.emit('connection', ws, request);
             });
         }
+    });
+
+    ipcMain.handle('connect-popup/response', (_, response) => {
+        logger.info(LOG_PREFIX, 'received response from popup ' + JSON.stringify(response));
+        if (!response || typeof response.id !== 'number') {
+            logger.error(LOG_PREFIX, 'invalid response from popup');
+
+            return;
+        }
+
+        if (!messages[response.id]) {
+            logger.error(LOG_PREFIX, 'no deferred message found');
+
+            return;
+        }
+
+        messages[response.id].resolve(response);
+    });
+    ipcMain.handle('connect-popup/ready', () => {
+        appInit?.resolve();
     });
 };

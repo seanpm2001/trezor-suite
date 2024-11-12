@@ -113,6 +113,11 @@ export const init = () => async (dispatch: Dispatch, getState: GetState) => {
     // 13. start fetching staking data if needed, does need to be waited
     dispatch(periodicCheckStakeDataThunk());
 
-    // 14. backend connected, suite is ready to use
+    // 14. init connect popup handler
+    if (isDesktop()) {
+        dispatch(trezorConnectActions.connectPopupInitThunk());
+    }
+
+    // 15. backend connected, suite is ready to use
     dispatch(onSuiteReady());
 };

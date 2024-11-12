@@ -9,6 +9,9 @@
         { "path": "../wallet-core" },
         { "path": "../../packages/connect" },
         { "path": "../../packages/env-utils" },
+        {
+            "path": "../../packages/suite-desktop-api"
+        },
         { "path": "../../packages/utils" }
     ]
 }
