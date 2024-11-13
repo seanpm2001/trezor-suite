@@ -1,3 +1,5 @@
+import { selectDevice } from '@suite-common/wallet-core';
+
 import { Translation } from 'src/components/suite';
 import { showXpub } from 'src/actions/wallet/publicKeyActions';
 import { selectSelectedAccount } from 'src/reducers/wallet/selectedAccountReducer';
@@ -6,14 +8,18 @@ import { useSelector } from 'src/hooks/suite';
 import { DisplayMode } from 'src/types/suite';
 
 import { ConfirmValueModal, ConfirmValueModalProps } from './ConfirmValueModal/ConfirmValueModal';
+import { ConfirmActionModal } from './DeviceContextModal/ConfirmActionModal';
 
 export const ConfirmXpubModal = (
     props: Pick<ConfirmValueModalProps, 'isConfirmed' | 'onCancel'>,
 ) => {
+    const device = useSelector(selectDevice);
     const account = useSelector(selectSelectedAccount);
     const { accountLabel } = useSelector(selectLabelingDataForSelectedAccount);
 
-    if (!account) return null;
+    if (!device) return null;
+    // TODO: special case for Connect Popup
+    if (!account) return <ConfirmActionModal device={device} />;
 
     const xpub =
         account.descriptorChecksum !== undefined

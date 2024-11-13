@@ -1,5 +1,7 @@
 import { useCallback } from 'react';
 
+import { selectDevice } from '@suite-common/wallet-core';
+
 import { showAddress } from 'src/actions/wallet/receiveActions';
 import { Translation } from 'src/components/suite';
 import {
@@ -11,12 +13,15 @@ import { useCoinmarketInfo } from 'src/hooks/wallet/coinmarket/useCoinmarketInfo
 import { selectAccountIncludingChosenInCoinmarket } from 'src/reducers/wallet/selectedAccountReducer';
 import { cryptoIdToNetworkSymbol } from 'src/utils/wallet/coinmarket/coinmarketUtils';
 
+import { ConfirmActionModal } from './DeviceContextModal/ConfirmActionModal';
+
 interface ConfirmAddressModalProps
     extends Pick<ConfirmValueModalProps, 'isConfirmed' | 'onCancel' | 'value'> {
     addressPath: string;
 }
 
 export const ConfirmAddressModal = ({ addressPath, value, ...props }: ConfirmAddressModalProps) => {
+    const device = useSelector(selectDevice);
     const account = useSelector(selectAccountIncludingChosenInCoinmarket);
     const { modalCryptoId } = useSelector(state => state.wallet.coinmarket);
     const displayMode = useDisplayMode({ type: 'address' });
@@ -27,7 +32,9 @@ export const ConfirmAddressModal = ({ addressPath, value, ...props }: ConfirmAdd
         [addressPath, value],
     );
 
-    if (!account) return null;
+    if (!device) return null;
+    // TODO: special case for Connect Popup
+    if (!account) return <ConfirmActionModal device={device} />;
 
     const getHeading = () => {
         if (modalCryptoId) {

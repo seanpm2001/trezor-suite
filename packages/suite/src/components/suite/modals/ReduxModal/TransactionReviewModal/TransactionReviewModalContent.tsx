@@ -31,6 +31,7 @@ import { selectAccountIncludingChosenInCoinmarket } from 'src/reducers/wallet/se
 import { TransactionReviewSummary } from './TransactionReviewSummary';
 import { TransactionReviewOutputList } from './TransactionReviewOutputList/TransactionReviewOutputList';
 import { TransactionReviewEvmExplanation } from './TransactionReviewEvmExplanation';
+import { ConfirmActionModal } from '../DeviceContextModal/ConfirmActionModal';
 
 const StyledModal = styled(Modal)`
     ${Modal.Body} {
@@ -88,8 +89,10 @@ export const TransactionReviewModalContent = ({
         selectSendFormReviewButtonRequestsCount(state, account?.symbol, decreaseOutputId),
     );
 
-    if (!account || !device || !precomposedTx || !precomposedForm) {
-        return null;
+    if (!device) return null;
+    if (!account || !precomposedTx || !precomposedForm) {
+        // TODO: special case for Connect Popup
+        return <ConfirmActionModal device={device} />;
     }
 
     const network = networks[account.symbol];

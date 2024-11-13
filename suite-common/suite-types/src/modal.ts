@@ -183,4 +183,9 @@ export type UserContextPayload =
       }
     | {
           type: 'passphrase-mismatch-warning';
+      }
+    | {
+          type: 'connect-popup';
+          onConfirm: () => void;
+          method: string;
       };

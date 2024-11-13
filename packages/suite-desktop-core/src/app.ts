@@ -208,8 +208,12 @@ const init = async () => {
 
         app.dock?.show();
         if (isMacOs()) app.show();
-        if (!mainWindow.isVisible()) mainWindow.show();
-        if (mainWindow.isMinimized()) mainWindow.restore();
+        //if (!mainWindow.isVisible())
+        mainWindow.show();
+        //if (mainWindow.isMinimized())
+        mainWindow.restore();
+        app.focus();
+        mainWindow.moveTop();
         mainWindow.focus();
     };
     app.on('second-instance', reactivateWindow);

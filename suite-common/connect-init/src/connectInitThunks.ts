@@ -7,12 +7,12 @@ import TrezorConnect, {
     TRANSPORT_EVENT,
     UI_EVENT,
 } from '@trezor/connect';
-import { getSynchronize } from '@trezor/utils';
+import { createDeferred, getSynchronize } from '@trezor/utils';
 import { deviceConnectThunks, selectDevice } from '@suite-common/wallet-core';
 import { resolveStaticPath } from '@suite-common/suite-utils';
 import { isDesktop, isNative } from '@trezor/env-utils';
 import { desktopApi } from '@trezor/suite-desktop-api';
-import { serializeError, TypedError } from '@trezor/connect/src/constants/errors';
+import { serializeError } from '@trezor/connect/src/constants/errors';
 
 import { cardanoConnectPatch } from './cardanoConnectPatch';
 
@@ -196,7 +196,15 @@ export const connectPopupCallThunk = createThunk(
                 throw ERRORS.TypedError('Device_NotFound');
             }
 
-            // TODO: go to some popup route
+            const confirmation = createDeferred();
+            dispatch(
+                extra.actions.openModal({
+                    type: 'connect-popup',
+                    onConfirm: () => confirmation.resolve(),
+                    method,
+                }),
+            );
+            await confirmation.promise;
 
             // @ts-expect-error: method is dynamic
             const response = await TrezorConnect[method]({
@@ -207,6 +215,8 @@ export const connectPopupCallThunk = createThunk(
                 },
                 ...payload,
             });
+
+            dispatch(extra.actions.onModalCancel());
 
             desktopApi.connectPopupResponse({
                 ...response,

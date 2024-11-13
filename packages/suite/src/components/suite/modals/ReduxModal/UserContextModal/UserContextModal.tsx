@@ -42,6 +42,7 @@ import {
     ConfirmUnverifiedAddressModal,
     ConfirmUnverifiedXpubModal,
     ConfirmUnverifiedProceedModal,
+    ConnectPopupModal,
 } from 'src/components/suite/modals';
 import type { AcquiredDevice } from 'src/types/suite';
 
@@ -206,6 +207,14 @@ export const UserContextModal = ({
             return <UnhideTokenModal onCancel={onCancel} address={payload.address} />;
         case 'passphrase-mismatch-warning':
             return <PassphraseMismatchModal onCancel={onCancel} />;
+        case 'connect-popup':
+            return (
+                <ConnectPopupModal
+                    onCancel={onCancel}
+                    onConfirm={payload.onConfirm}
+                    method={payload.method}
+                />
+            );
         default:
             return null;
     }
