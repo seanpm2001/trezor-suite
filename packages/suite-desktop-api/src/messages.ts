@@ -131,6 +131,8 @@ export type ConnectPopupCall = {
     id: number;
     method: string;
     payload: any;
+    processName?: string;
+    origin?: string;
 };
 
 export type ConnectPopupResponse = {

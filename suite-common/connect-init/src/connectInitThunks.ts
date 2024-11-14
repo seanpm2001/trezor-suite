@@ -177,10 +177,14 @@ export const connectPopupCallThunk = createThunk(
             id,
             method,
             payload,
+            processName,
+            origin,
         }: {
             id: number;
             method: string;
             payload: any;
+            processName?: string;
+            origin?: string;
         },
         { dispatch, getState, extra },
     ) => {
@@ -210,8 +214,11 @@ export const connectPopupCallThunk = createThunk(
             dispatch(
                 extra.actions.openModal({
                     type: 'connect-popup',
+                    onCancel: () => confirmation.reject(ERRORS.TypedError('Method_Cancel')),
                     onConfirm: () => confirmation.resolve(),
                     method: methodInfo.payload.info,
+                    processName,
+                    origin,
                 }),
             );
             await confirmation.promise;

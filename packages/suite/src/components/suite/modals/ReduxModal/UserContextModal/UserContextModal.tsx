@@ -210,9 +210,11 @@ export const UserContextModal = ({
         case 'connect-popup':
             return (
                 <ConnectPopupModal
-                    onCancel={onCancel}
+                    onCancel={payload.onCancel}
                     onConfirm={payload.onConfirm}
                     method={payload.method}
+                    origin={payload.origin}
+                    processName={payload.processName}
                 />
             );
         default:

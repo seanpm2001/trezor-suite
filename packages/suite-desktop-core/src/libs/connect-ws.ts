@@ -6,6 +6,7 @@ import { createDeferred, Deferred } from '@trezor/utils';
 
 import { createHttpReceiver } from './http-receiver';
 import { Dependencies } from '../modules';
+import { findProcessFromIncomingPort } from './find-process-from-port';
 
 const LOG_PREFIX = 'connect-ws';
 
@@ -30,7 +31,20 @@ export const exposeConnectWs = ({
         logger.info(LOG_PREFIX, 'Websocket server is listening');
     });
 
-    wss.on('connection', ws => {
+    wss.on('connection', async (ws, req) => {
+        const ip = req.socket.remoteAddress;
+        const port = req.socket.remotePort;
+        if ((ip !== '127.0.0.1' && ip !== '::1') || !port) {
+            logger.error(LOG_PREFIX, `invalid connection attempt from ${ip}:${port}`);
+            ws.close();
+
+            return;
+        }
+        logger.info(LOG_PREFIX, `new connection from ${ip}:${port}`);
+        const processOnPort = await findProcessFromIncomingPort(port);
+        const { origin } = req.headers;
+        logger.info(LOG_PREFIX, `origin: ${origin}`);
+
         ws.on('error', err => {
             logger.error(LOG_PREFIX, err.message);
         });
@@ -85,6 +99,8 @@ export const exposeConnectWs = ({
                     id: message.id,
                     method,
                     payload: rest,
+                    origin,
+                    processName: processOnPort?.name,
                 });
 
                 // wait for response
