@@ -107,7 +107,7 @@
             ],
             "message": {
                 "id": "c8ca8958-7868-467f-9278-f072edc234ac",
-                "priority": 92,
+                "priority": 91,
                 "dismissible": true,
                 "variant": "info",
                 "category": "banner",
