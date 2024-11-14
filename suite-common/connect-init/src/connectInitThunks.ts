@@ -196,15 +196,26 @@ export const connectPopupCallThunk = createThunk(
                 throw ERRORS.TypedError('Device_NotFound');
             }
 
+            // @ts-expect-error: method is dynamic
+            const methodInfo = await TrezorConnect[method]({
+                ...payload,
+                __info: true,
+            });
+            if (!methodInfo.success) {
+                throw methodInfo;
+            }
+
             const confirmation = createDeferred();
+            dispatch(extra.actions.lockDevice(true));
             dispatch(
                 extra.actions.openModal({
                     type: 'connect-popup',
                     onConfirm: () => confirmation.resolve(),
-                    method,
+                    method: methodInfo.payload.info,
                 }),
             );
             await confirmation.promise;
+            dispatch(extra.actions.lockDevice(false));
 
             // @ts-expect-error: method is dynamic
             const response = await TrezorConnect[method]({
@@ -223,6 +234,7 @@ export const connectPopupCallThunk = createThunk(
                 id,
             });
         } catch (error) {
+            console.error('connectPopupCallThunk', error);
             desktopApi.connectPopupResponse({
                 success: false,
                 payload: serializeError(error),

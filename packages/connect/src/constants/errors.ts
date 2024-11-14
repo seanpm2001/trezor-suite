@@ -78,6 +78,9 @@ export const serializeError = (payload: any) => {
     if (payload && payload.error instanceof Error) {
         return { error: payload.error.message, code: payload.error.code };
     }
+    if (payload instanceof TrezorError) {
+        return { error: payload.message, code: payload.code };
+    }
 
     return payload;
 };
