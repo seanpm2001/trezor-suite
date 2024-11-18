@@ -193,8 +193,6 @@ export const connectPopupCallThunk = createThunk(
 
             if (!device) {
                 console.error('Device not found');
-                // Need to select device first
-                dispatch(extra.thunks.openSwitchDeviceDialog());
 
                 // TODO: wait for device selection and continue
                 throw ERRORS.TypedError('Device_NotFound');

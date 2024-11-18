@@ -15,6 +15,7 @@ import { UI } from '@trezor/connect';
 import { isDeviceAcquired } from '@suite-common/suite-utils';
 import { DiscoveryStatus } from '@suite-common/wallet-constants';
 import { createMiddlewareWithExtraDeps } from '@suite-common/redux-utils';
+import { connectPopupCallThunk } from '@suite-common/connect-init';
 
 import { SUITE, ROUTER, MODAL } from 'src/actions/suite/constants';
 import * as walletSettingsActions from 'src/actions/settings/walletSettingsActions';
@@ -46,12 +47,20 @@ export const prepareDiscoveryMiddleware = createMiddlewareWithExtraDeps(
         }
 
         // consider if discovery should be interrupted
-        let interruptionIntent = action.type === deviceActions.selectDevice.type;
-        if (action.type === ROUTER.LOCATION_CHANGE) {
-            interruptionIntent =
-                getApp(action.payload.url) !== 'wallet' &&
-                getApp(action.payload.url) !== 'dashboard' &&
-                getApp(action.payload.url) !== 'settings';
+        let interruptionIntent = false;
+        if (action.type === deviceActions.selectDevice.type) {
+            interruptionIntent = true;
+        }
+        if (
+            action.type === ROUTER.LOCATION_CHANGE &&
+            getApp(action.payload.url) !== 'wallet' &&
+            getApp(action.payload.url) !== 'dashboard' &&
+            getApp(action.payload.url) !== 'settings'
+        ) {
+            interruptionIntent = true;
+        }
+        if (action.type === MODAL.OPEN_USER_CONTEXT && action.payload.type === 'connect-popup') {
+            interruptionIntent = true;
         }
 
         // discovery interruption ends after DISCOVERY.STOP action
@@ -144,6 +153,7 @@ export const prepareDiscoveryMiddleware = createMiddlewareWithExtraDeps(
         if (
             becomesConnected ||
             action.type === SUITE.APP_CHANGED ||
+            connectPopupCallThunk.fulfilled.match(action) ||
             deviceActions.selectDevice.match(action) ||
             authorizeDeviceThunk.fulfilled.match(action) ||
             walletSettingsActions.changeNetworks.match(action) ||

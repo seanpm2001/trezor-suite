@@ -23,8 +23,7 @@ import { createDeferred, createDeferredManager, DeferredManager } from '@trezor/
 import { parseConnectSettings } from '../connectSettings';
 
 /**
- * Base class for CoreInPopup methods for TrezorConnect factory.
- * This implementation is directly used here in connect-web, but it is also extended in connect-webextension.
+ * CoreInSuiteDesktop implementation for TrezorConnect factory.
  */
 export class CoreInSuiteDesktop implements ConnectFactoryDependencies<ConnectSettingsWeb> {
     public eventEmitter = new EventEmitter();
