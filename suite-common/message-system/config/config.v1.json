@@ -1,7 +1,7 @@
 {
     "version": 1,
     "timestamp": "2024-11-13T00:00:00+00:00",
-    "sequence": 67,
+    "sequence": 68,
     "actions": [
         {
             "conditions": [
@@ -886,37 +886,37 @@
                 "variant": "critical",
                 "category": "banner",
                 "content": {
-                    "en-GB": "Don't do this man, otherwise your funds will not be safu.",
-                    "en": "Don't do this man, otherwise your funds will not be safu.",
-                    "es": "Actualice ahora el firmware del dispositivo: Su Trezor no será reconocido ni utilizable en las nuevas versiones de Trezor Suite.",
-                    "cs": "Don't do this man, otherwise your funds will not be safu.",
-                    "ru": "Пожалуйста, обновите прошивку устройства прямо сейчас: Ваш Trezor не будет распознан и его нельзя будет использовать в новых версия Trezor Suite.",
-                    "ja": "今すぐデバイスのファームウェアをアップデートしてください： お使いのTrezorは、新しいバージョンのTrezor Suiteでは認識されず、使用できません.",
-                    "hu": "Kérjük, frissítse a készülék firmware-ét: A Trezor Suite új verziói nem ismerik fel és nem használhatók.",
-                    "it": "Aggiornare subito il firmware del dispositivo: Il dispositivo Trezor non sarà riconosciuto o utilizzabile nelle nuove versioni di Trezor Suite.",
-                    "fr": "Veuillez mettre à jour le micrologiciel de l'appareil maintenant : Votre Trezor ne sera pas reconnu ou utilisable dans les nouvelles versions de Trezor Suite.",
-                    "de": "Bitte aktualisieren Sie jetzt die Firmware: Ihr Trezor wird in neuen Versionen der Trezor Suite nicht mehr erkannt und kann nicht verwendet werden.",
-                    "tr": "Lütfen cihaz yazılımını şimdi güncelleyin: Trezor'unuz, Trezor Suite'in yeni sürümlerinde tanınmayacak veya kullanılamayacaktır.",
-                    "pt": "Atualize agora o firmware do dispositivo: O seu Trezor não será reconhecido nem utilizável nas novas versões do Trezor Suite.",
-                    "uk": "Будь ласка, оновіть прошивку пристрою зараз: Ваш Trezor не буде визнаний або використаний в нових версіях Trezor Suite."
+                    "en-GB": "Updating firmware will delete your wallet backup. Verify your backup now to ensure you can recover your assets.",
+                    "en": "Updating firmware will delete your wallet backup. Verify your backup now to ensure you can recover your assets.",
+                    "es": "La actualización del firmware eliminará tu copia de seguridad de la cartera. Verifica tu copia de seguridad ahora para asegurarte de que puedes recuperar tus activos.",
+                    "cs": "Aktualizace firmware smaže zálohu vaší peněženky. Ověřte svou zálohu nyní, abyste zajistili, že můžete obnovit svá aktiva.",
+                    "ru": "Обновление прошивки удалит резервную копию вашего кошелька. Проверьте свою резервную копию сейчас, чтобы убедиться, что вы сможете восстановить свои активы.",
+                    "ja": "ファームウェアの更新により、ウォレットのバックアップが削除されます。資産を回復できることを確認するために、今すぐバックアップを確認してください。",
+                    "hu": "A firmware frissítése törölni fogja a pénztárcád biztonsági mentését. Ellenőrizze most a biztonsági mentését, hogy biztosítsa, hogy vissza tudja állítani az eszközeit.",
+                    "it": "L'aggiornamento del firmware cancellerà il backup del tuo portafoglio. Verifica subito il tuo backup per assicurarti di poter recuperare i tuoi asset.",
+                    "fr": "La mise à jour du micrologiciel supprimera votre sauvegarde de portefeuille. Vérifiez votre sauvegarde dès maintenant pour vous assurer de pouvoir récupérer vos actifs.",
+                    "de": "Das Aktualisieren der Firmware löscht Ihr Wallet-Backup. Überprüfen Sie jetzt Ihr Backup, um sicherzustellen, dass Sie Ihre Assets wiederherstellen können.",
+                    "tr": "Firmware güncellemesi cüzdan yedeğinizi silecektir. Varlıklarınızı kurtarabileceğinizden emin olmak için yedeğinizi şimdi doğrulayın.",
+                    "pt": "A atualização do firmware apagará o backup da sua carteira. Verifique o seu backup agora para garantir que pode recuperar os seus ativos.",
+                    "uk": "Оновлення прошивки видалить резервну копію вашого гаманця. Перевірте свою резервну копію зараз, щоб переконатися, що зможете відновити свої активи."
                 },
                 "cta": {
                     "action": "internal-link",
                     "link": "recovery-index",
                     "label": {
-                        "en-GB": "čekni backups",
-                        "en": "čekni backups",
-                        "es": "Actualizar firmware",
-                        "cs": "čekni backups",
-                        "ru": "Обновить прошивку",
-                        "ja": "ファームウェアのアップデート",
-                        "hu": "Firmware frissítése",
-                        "it": "Aggiornamento del firmware",
-                        "fr": "Mettre à jour le micrologiciel",
-                        "de": "Firmware aktualisieren",
-                        "tr": "Firmware Güncelle",
-                        "pt": "Atualizar Firmware",
-                        "uk": "Оновити прошивку"
+                        "en-GB": "Check wallet backup",
+                        "en": "Check wallet backup",
+                        "es": "Verificar copia de seguridad de la cartera",
+                        "cs": "Zkontrolovat zálohu peněženky",
+                        "ru": "Проверить резервную копию кошелька",
+                        "ja": "ウォレットのバックアップを確認",
+                        "hu": "Ellenőrizze a pénztárca biztonsági mentését",
+                        "it": "Verifica il backup del portafoglio",
+                        "fr": "Vérifier la sauvegarde du portefeuille",
+                        "de": "Überprüfen Sie das Wallet-Backup",
+                        "tr": "Cüzdan yedeğini kontrol et",
+                        "pt": "Verificar backup da carteira",
+                        "uk": "Перевірити резервну копію гаманця"
                     }
                 }
             }
