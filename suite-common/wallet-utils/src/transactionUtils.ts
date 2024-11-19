@@ -173,7 +173,11 @@ export const sumTransactions = (transactions: WalletAccountTransaction[]) => {
 
         // count in only if Inputs/Outputs includes my account (EVM does not need to)
         if (tx.type === 'sent') {
-            totalAmount = totalAmount.minus(amount);
+            if (tx.symbol === 'sol') {
+                totalAmount = totalAmount.plus(amount);
+            } else {
+                totalAmount = totalAmount.minus(amount);
+            }
         }
 
         if (tx.type === 'recv' || tx.type === 'joint') {
@@ -188,7 +192,11 @@ export const sumTransactions = (transactions: WalletAccountTransaction[]) => {
             const amountInternal = formatNetworkAmount(internalTx.amount, tx.symbol);
 
             if (internalTx.type === 'sent') {
-                totalAmount = totalAmount.minus(amountInternal);
+                if (tx.symbol === 'sol') {
+                    totalAmount = totalAmount.plus(amountInternal);
+                } else {
+                    totalAmount = totalAmount.minus(amountInternal);
+                }
             }
             if (internalTx.type === 'recv') {
                 totalAmount = totalAmount.plus(amountInternal);
@@ -242,9 +250,15 @@ export const sumTransactionsFiat = (
                 const tokenAmount = formatAmount(token.amount, token.decimals);
 
                 if (transferType === 'sent') {
-                    totalAmount = totalAmount.minus(
-                        toFiatCurrency(tokenAmount, historicTokenRate, -1) ?? 0,
-                    );
+                    if (tx.symbol === 'sol') {
+                        totalAmount = totalAmount.plus(
+                            toFiatCurrency(tokenAmount, historicTokenRate, -1) ?? 0,
+                        );
+                    } else {
+                        totalAmount = totalAmount.minus(
+                            toFiatCurrency(tokenAmount, historicTokenRate, -1) ?? 0,
+                        );
+                    }
                 }
 
                 if (transferType === 'recv') {
@@ -256,7 +270,11 @@ export const sumTransactionsFiat = (
         } else {
             // count in only if Inputs/Outputs includes my account (EVM does not need to)
             if (tx.type === 'sent') {
-                totalAmount = totalAmount.minus(toFiatCurrency(amount, historicRate, -1) ?? 0);
+                if (tx.symbol === 'sol') {
+                    totalAmount = totalAmount.plus(toFiatCurrency(amount, historicRate, -1) ?? 0);
+                } else {
+                    totalAmount = totalAmount.minus(toFiatCurrency(amount, historicRate, -1) ?? 0);
+                }
             }
 
             if (tx.type === 'recv' || tx.type === 'joint') {
@@ -273,7 +291,11 @@ export const sumTransactionsFiat = (
             const amountInternalFiat = toFiatCurrency(amountInternal, historicRate, -1) ?? 0;
 
             if (internalTx.type === 'sent') {
-                totalAmount = totalAmount.minus(amountInternalFiat);
+                if (tx.symbol === 'sol') {
+                    totalAmount = totalAmount.plus(amountInternalFiat);
+                } else {
+                    totalAmount = totalAmount.minus(amountInternalFiat);
+                }
             }
             if (internalTx.type === 'recv') {
                 totalAmount = totalAmount.plus(amountInternalFiat);
