@@ -579,11 +579,13 @@ class SolanaWorker extends BaseWorker<SolanaAPI> {
             return;
         }
 
-        this.state
-            .getAccounts()
-            .forEach(
-                a => a.subscriptionId && this.api?.removeAccountChangeListener(a.subscriptionId),
-            );
+        // This is a temporary fix to avoid the desktop app from crashing when Tor is enabled.
+        // The unsubscribing can be returned after this https://github.com/solana-labs/solana-web3.js/issues/3602 is fixed.
+        // this.state
+        //     .getAccounts()
+        //     .forEach(
+        //         a => a.subscriptionId && this.api?.removeAccountChangeListener(a.subscriptionId),
+        //     );
 
         if (this.state.getSubscription('block')) {
             const interval = this.state.getSubscription('block') as ReturnType<typeof setInterval>;
