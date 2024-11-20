@@ -33,7 +33,6 @@ import { selectAccounts } from '../accounts/accountsReducer';
 import { fetchAndUpdateAccountThunk } from '../accounts/accountsThunks';
 import { BLOCKCHAIN_MODULE_PREFIX, blockchainActions } from './blockchainActions';
 import { selectBlockchainState, selectNetworkBlockchainInfo } from './blockchainReducer';
-import { selectNetworkFeeInfo } from '../fees/feesReducer';
 
 const DEFAULT_ACCOUNT_SYNC_INTERVAL = 60 * 1000;
 
@@ -108,14 +107,6 @@ export const updateFeeInfoThunk = createThunk(
         const network = getNetworkOptional(symbol.toLowerCase());
         if (!network) return;
         const blockchainInfo = selectNetworkBlockchainInfo(getState(), network.symbol);
-        const feeInfo = selectNetworkFeeInfo(getState(), network.symbol);
-
-        if (
-            feeInfo &&
-            feeInfo.blockHeight > 0 &&
-            blockchainInfo.blockHeight - feeInfo.blockHeight < 10
-        )
-            return;
 
         let newFeeInfo;
 

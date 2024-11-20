@@ -7,7 +7,6 @@ import {
     onBlockchainConnectThunk,
     onBlockMinedThunk,
     onBlockchainNotificationThunk,
-    updateFeeInfoThunk,
     onBlockchainDisconnectThunk,
 } from './blockchainThunks';
 
@@ -31,7 +30,6 @@ export const prepareBlockchainMiddleware = createMiddlewareWithExtraDeps(
                 }
                 break;
             case TREZOR_CONNECT_BLOCKCHAIN_ACTIONS.BLOCK:
-                dispatch(updateFeeInfoThunk(action.payload.coin.shortcut));
                 dispatch(onBlockMinedThunk(action.payload));
                 // cardano stuff
                 dispatch(

@@ -9,6 +9,7 @@ import { spacingsPx } from '@trezor/theme';
 import { useSelector } from 'src/hooks/suite';
 import { WalletLayout } from 'src/components/wallet';
 import { useSendForm, SendContext, UseSendFormProps } from 'src/hooks/wallet/useSendForm';
+import { useFees } from 'src/hooks/wallet/useFees';
 import {
     selectTargetAnonymityByAccountKey,
     selectRegisteredUtxosByAccountKey,
@@ -77,6 +78,8 @@ const SendLoaded = ({ children, selectedAccount }: SendLoadedProps) => {
     const sendContextValues = useSendForm({ ...props, selectedAccount });
 
     const { symbol } = selectedAccount.account;
+
+    useFees(symbol);
 
     if (props.sendRaw) {
         return (
