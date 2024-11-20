@@ -102,7 +102,7 @@ export const Transactions = () => {
                         isLoading={false}
                         value={
                             <HiddenPlaceholder>
-                                <NumberOfTransactions value={accountTransactions.length} />
+                                <NumberOfTransactions value={account.history.total} />
                             </HiddenPlaceholder>
                         }
                     />
