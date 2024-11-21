@@ -271,33 +271,6 @@ export default [
     },
     {
         blockchain: {
-            name: 'Dash',
-            worker: 'js/blockbook-worker.js',
-            server: [
-                'https://dash1.trezor.io',
-                'https://dash2.trezor.io',
-                'https://dash3.trezor.io',
-                'https://dash4.trezor.io',
-                'https://dash5.trezor.io',
-            ],
-            debug: true,
-        },
-        data: {
-            address: '',
-            accountInfoOptions: {
-                page: 0,
-                pageSize: 25,
-            },
-            estimateFeeOptions: {
-                blocks: [1, 2, 10],
-            },
-            txid: '',
-            tx: '',
-            subscribe: '',
-        },
-    },
-    {
-        blockchain: {
             name: 'DigiByte',
             worker: 'js/blockbook-worker.js',
             server: ['https://dgb1.trezor.io', 'https://dgb2.trezor.io'],

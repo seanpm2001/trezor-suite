@@ -139,8 +139,6 @@ export const getTitleForNetwork = (symbol: NetworkSymbol) => {
             return 'TR_NETWORK_BITCOIN_CASH';
         case 'btg':
             return 'TR_NETWORK_BITCOIN_GOLD';
-        case 'dash':
-            return 'TR_NETWORK_DASH';
         case 'dgb':
             return 'TR_NETWORK_DIGIBYTE';
         case 'doge':

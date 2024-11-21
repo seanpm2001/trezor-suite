@@ -49,7 +49,6 @@ export const accountTitleFixture = [
     { symbol: 'test', title: 'TR_NETWORK_BITCOIN_TESTNET' },
     { symbol: 'bch', title: 'TR_NETWORK_BITCOIN_CASH' },
     { symbol: 'btg', title: 'TR_NETWORK_BITCOIN_GOLD' },
-    { symbol: 'dash', title: 'TR_NETWORK_DASH' },
     { symbol: 'xrp', title: 'TR_NETWORK_XRP' },
     { symbol: 'txrp', title: 'TR_NETWORK_XRP_TESTNET' },
     { symbol: 'tsep', title: 'TR_NETWORK_ETHEREUM_SEPOLIA' },

@@ -42,9 +42,7 @@ const runFilterReceiveAccouns = ({
     accounts = accountsList,
 }: RunFilterReceiveAccountsTestParams) => {
     const device = getSuiteDevice({
-        unavailableCapabilities: {
-            dash: 'no-support',
-        },
+        unavailableCapabilities: {},
         state: deviceState,
     });
     const unavailableCapabilities = device?.unavailableCapabilities ?? {};

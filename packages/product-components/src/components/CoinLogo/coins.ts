@@ -9,7 +9,6 @@ export const COINS: Record<NetworkSymbol | LegacyNetworkSymbol, string> = {
     bnb: require('../../images/coins/bnb.svg'),
     btc: require('../../images/coins/btc.svg'),
     btg: require('../../images/coins/btg.svg'),
-    dash: require('../../images/coins/dash.svg'),
     dgb: require('../../images/coins/dgb.svg'),
     doge: require('../../images/coins/doge.svg'),
     dsol: require('../../images/coins/dsol.svg'),

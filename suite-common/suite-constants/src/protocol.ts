@@ -6,7 +6,6 @@ export type Protocol =
     | 'litecoin'
     | 'bitcoincash'
     | 'bitcoingold'
-    | 'dash'
     | 'digibyte'
     | 'dogecoin'
     | 'namecoin'
@@ -53,7 +52,6 @@ export const NETWORK_TO_PROTOCOLS: { [key in NetworkSymbol]: Protocol[] } = {
     ltc: ['litecoin', 'ltc'],
     bch: ['bitcoincash', 'bch'],
     btg: ['bitcoingold', 'btg'],
-    dash: ['dash'],
     dgb: ['digibyte', 'dgb'],
     doge: ['dogecoin', 'doge'],
     nmc: ['namecoin', 'nmc'],

@@ -10,7 +10,6 @@ const coinsToActivate = [
     'ltc',
     'eth',
     'etc',
-    'dash',
     'btg',
     'bch',
     'doge',

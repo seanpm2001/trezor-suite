@@ -29,7 +29,6 @@ describe('Coin Settings', () => {
             'xrp',
             'bch',
             'btg',
-            'dash',
             'dgb',
             'doge',
             'nmc',

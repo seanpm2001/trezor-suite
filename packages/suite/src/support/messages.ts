@@ -2761,10 +2761,6 @@ const messages = defineMessagesWithTypeCheck({
         defaultMessage: 'Cardano',
         id: 'TR_NETWORK_CARDANO',
     },
-    TR_NETWORK_DASH: {
-        defaultMessage: 'Dash',
-        id: 'TR_NETWORK_DASH',
-    },
     TR_NETWORK_DIGIBYTE: {
         defaultMessage: 'DigiByte',
         id: 'TR_NETWORK_DIGIBYTE',

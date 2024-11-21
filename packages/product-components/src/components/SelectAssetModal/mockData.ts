@@ -97,13 +97,6 @@ export const selectAssetModalOptions: SelectAssetOptionProps[] = [
         coingeckoId: 'bitcoin-gold',
     },
     {
-        type: 'currency',
-        value: 'dash',
-        label: 'DASH',
-        cryptoName: 'Dash',
-        coingeckoId: 'dash',
-    },
-    {
         type: 'group',
         label: 'TR_COINMARKET_OTHER_CURRENCIES',
     },
