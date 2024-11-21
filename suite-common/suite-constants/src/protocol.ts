@@ -9,7 +9,6 @@ export type Protocol =
     | 'digibyte'
     | 'dogecoin'
     | 'namecoin'
-    | 'vertcoin'
     | 'zcash'
     | 'ethereum'
     | 'ethclassic'
@@ -29,7 +28,6 @@ export type Protocol =
     | 'dgb'
     | 'doge'
     | 'nmc'
-    | 'vtc'
     | 'zec'
     | 'eth'
     | 'etc'
@@ -55,7 +53,6 @@ export const NETWORK_TO_PROTOCOLS: { [key in NetworkSymbol]: Protocol[] } = {
     dgb: ['digibyte', 'dgb'],
     doge: ['dogecoin', 'doge'],
     nmc: ['namecoin', 'nmc'],
-    vtc: ['vertcoin', 'vtc'],
     zec: ['zcash', 'zec'],
     eth: ['ethereum', 'eth'],
     etc: ['ethclassic', 'etc'],

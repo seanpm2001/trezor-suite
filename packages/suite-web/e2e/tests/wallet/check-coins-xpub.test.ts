@@ -25,7 +25,7 @@ describe('Check coins XPUB', () => {
         cy.task('stopEmu');
     });
 
-    const coins: NetworkSymbol[] = ['btc', 'ltc', 'vtc', 'ada'];
+    const coins: NetworkSymbol[] = ['btc', 'ltc', 'ada'];
 
     /**
      * 1. Start in Accounts section

@@ -13,7 +13,6 @@ const coinsToActivate = [
     'btg',
     'bch',
     'doge',
-    'vtc',
     'ada',
     'xrp',
     'dgb',

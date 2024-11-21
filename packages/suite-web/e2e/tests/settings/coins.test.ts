@@ -32,7 +32,6 @@ describe('Coin Settings', () => {
             'dgb',
             'doge',
             'nmc',
-            'vtc',
             'zec',
             'ada',
             // 'sol', FIXME: disabled till available in trezor-user-env

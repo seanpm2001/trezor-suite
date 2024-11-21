@@ -57,8 +57,6 @@ export const palette: Record<string, CSSColor> = {
     coinsUsdcSubdued: '#2775CA4D',
     coinsUsdtBold: '#53AE94',
     coinsUsdtSubdued: '#53AE944D',
-    coinsVtcBold: '#1B9065',
-    coinsVtcSubdued: '#1B90654D',
     coinsWbtcBold: '#F29D40',
     coinsWbtcSubdued: '#F29D404D',
     coinsXlmBold: '#000000',

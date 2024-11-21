@@ -2829,10 +2829,6 @@ const messages = defineMessagesWithTypeCheck({
         defaultMessage: 'unknown',
         id: 'TR_NETWORK_UNKNOWN',
     },
-    TR_NETWORK_VERTCOIN: {
-        defaultMessage: 'Vertcoin',
-        id: 'TR_NETWORK_VERTCOIN',
-    },
     TR_NETWORK_XRP: {
         defaultMessage: 'XRP',
         id: 'TR_NETWORK_XRP',

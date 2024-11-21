@@ -57,7 +57,6 @@ export const accountTitleFixture = [
     { symbol: 'doge', title: 'TR_NETWORK_DOGECOIN' },
     { symbol: 'ltc', title: 'TR_NETWORK_LITECOIN' },
     { symbol: 'nmc', title: 'TR_NETWORK_NAMECOIN' },
-    { symbol: 'vtc', title: 'TR_NETWORK_VERTCOIN' },
     { symbol: 'zec', title: 'TR_NETWORK_ZCASH' },
     { symbol: 'eth', title: 'TR_NETWORK_ETHEREUM' },
     { symbol: 'bnb', title: 'TR_NETWORK_BNB' },
@@ -193,21 +192,6 @@ export const getBip43Type = [
     {
         description: 'litecoin legacy',
         path: "m/44'/2'/0'",
-        result: 'bip44',
-    },
-    {
-        description: 'vertcoin segwit',
-        path: "m/84'/28'/0'",
-        result: 'bip84',
-    },
-    {
-        description: 'vertcoin legacy segwit',
-        path: "m/49'/28'/0'",
-        result: 'bip49',
-    },
-    {
-        description: 'vertcoin legacy',
-        path: "m/44'/28'/0'",
         result: 'bip44',
     },
     {

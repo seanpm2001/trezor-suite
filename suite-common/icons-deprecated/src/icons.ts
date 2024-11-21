@@ -251,7 +251,6 @@ export const cryptoIcons = {
     thol: require('../assets/cryptoIcons/thol.svg'),
     tsep: require('../assets/cryptoIcons/tsep.svg'),
     txrp: require('../assets/cryptoIcons/txrp.svg'),
-    vtc: require('../assets/cryptoIcons/vtc.svg'),
     xrp: require('../assets/cryptoIcons/xrp.svg'),
     zec: require('../assets/cryptoIcons/zec.svg'),
 } as const;

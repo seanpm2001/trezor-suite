@@ -147,8 +147,6 @@ export const getTitleForNetwork = (symbol: NetworkSymbol) => {
             return 'TR_NETWORK_LITECOIN';
         case 'nmc':
             return 'TR_NETWORK_NAMECOIN';
-        case 'vtc':
-            return 'TR_NETWORK_VERTCOIN';
         case 'zec':
             return 'TR_NETWORK_ZCASH';
         case 'eth':

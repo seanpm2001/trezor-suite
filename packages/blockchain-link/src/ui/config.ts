@@ -367,33 +367,6 @@ export default [
     },
     {
         blockchain: {
-            name: 'Vertcoin',
-            worker: 'js/blockbook-worker.js',
-            server: [
-                'https://vtc1.trezor.io',
-                'https://vtc2.trezor.io',
-                'https://vtc3.trezor.io',
-                'https://vtc4.trezor.io',
-                'https://vtc5.trezor.io',
-            ],
-            debug: true,
-        },
-        data: {
-            address: '',
-            accountInfoOptions: {
-                page: 0,
-                pageSize: 25,
-            },
-            estimateFeeOptions: {
-                blocks: [1, 2, 10],
-            },
-            txid: '',
-            tx: '',
-            subscribe: '',
-        },
-    },
-    {
-        blockchain: {
             name: 'ZCash',
             worker: 'js/blockbook-worker.js',
             server: [
