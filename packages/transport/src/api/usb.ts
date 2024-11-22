@@ -317,7 +317,7 @@ export class UsbApi extends AbstractApi {
                     `usb: device.selectConfiguration error ${err}. device: ${this.formatDeviceForLog(device)}`,
                 );
             }
-            try {
+            /*try {
                 // reset fails on ChromeOS and windows
                 this.logger?.debug('usb: device.reset');
                 await this.abortableMethod(() => device?.reset(), { signal });
@@ -329,7 +329,7 @@ export class UsbApi extends AbstractApi {
                     `usb: device.reset error ${err}. device: ${this.formatDeviceForLog(device)}`,
                 );
                 // empty
-            }
+            }*/
         }
         try {
             const interfaceId = this.debugLink ? DEBUGLINK_INTERFACE_ID : INTERFACE_ID;
@@ -367,7 +367,7 @@ export class UsbApi extends AbstractApi {
                 this.logger?.debug(`usb: device.releaseInterface: ${interfaceId}`);
                 if (!this.debugLink) {
                     // NOTE: `device.reset()` interrupts transfers for all interfaces (debugLink and normal)
-                    await device.reset();
+                    // await device.reset();
                 }
                 await device.releaseInterface(interfaceId);
                 this.logger?.debug(

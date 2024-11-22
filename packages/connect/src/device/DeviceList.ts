@@ -195,6 +195,7 @@ export class DeviceList extends TypedEmitter<DeviceListEvents> implements IDevic
     }
 
     private onDeviceConnected(descriptor: Descriptor, transport: Transport) {
+        console.log('onDeviceConnected', descriptor);
         const { path } = descriptor;
         const id = (this.deviceCounter++).toString(16).slice(-8);
         const device = new Device({
@@ -206,9 +207,11 @@ export class DeviceList extends TypedEmitter<DeviceListEvents> implements IDevic
         this.devices[path] = device;
 
         const penalty = this.authPenaltyManager.get();
+        console.log('before handshake');
         this.handshakeLock(async () => {
             if (this.devices[path]) {
                 // device wasn't removed while waiting for lock
+                console.log('handshake');
                 await device.handshake(penalty);
             }
         });

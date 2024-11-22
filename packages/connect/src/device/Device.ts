@@ -555,12 +555,17 @@ export class Device extends TypedEmitter<DeviceEvents> {
             } catch (error) {
                 if (
                     !this.inconsistent &&
-                    (error.message === 'GetFeatures timeout' || error.message === 'Unknown message')
+                    (error.message === 'GetFeatures timeout' ||
+                        error.message === 'Unknown message' ||
+                        error.message.startsWith('assertType: Response of unexpected type'))
                 ) {
                     // handling corner-case T1B1 + bootloader < 1.4.0 (above)
                     // if GetFeatures fails try again
                     // this time add empty "fn" param to force Initialize message
+
+                    // also a workaround for "Response of unexpected type" error, where a previous call was interrupted
                     this.inconsistent = true;
+                    console.log('Retry GetFeatures due to incorrect message');
 
                     return this._runInner(() => Promise.resolve({}), options);
                 }
