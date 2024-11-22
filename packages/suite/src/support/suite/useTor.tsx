@@ -51,6 +51,8 @@ export const useTor = () => {
     useEffect(() => {
         if (isDesktop()) {
             desktopApi.on('tor/bootstrap', (bootstrapEvent: BootstrapTorEvent) => {
+                console.log('tor/bootstrap in useTor');
+                console.log('bootstrapEvent', bootstrapEvent);
                 if (bootstrapEvent.type === 'slow') {
                     dispatch(setTorBootstrapSlow(true));
                 }

@@ -4,7 +4,7 @@ import { EXPERIMENTAL_PASSWORD_MANAGER_KB_URL, TOR_SNOWFLAKE_PROJECT_URL, Url } 
 
 import { Dispatch } from '../../types/suite';
 
-export type ExperimentalFeature = 'password-manager' | 'tor-snowflake';
+export type ExperimentalFeature = 'password-manager' | 'tor-snowflake' | 'tor-external';
 
 export type ExperimentalFeatureConfig = {
     title: TranslationKey;
@@ -34,6 +34,16 @@ export const EXPERIMENTAL_FEATURES: Record<ExperimentalFeature, ExperimentalFeat
                     });
                 }
             }
+        },
+    },
+    'tor-external': {
+        title: 'TR_EXPERIMENTAL_TOR_EXTERNAL',
+        description: 'TR_EXPERIMENTAL_TOR_EXTERNAL_DESCRIPTION',
+        // TODO: create knowledge base page for this!
+        // knowledgeBaseUrl: TOR_SNOWFLAKE_PROJECT_URL,
+        onToggle: async ({ newValue }) => {
+            console.log('onToggle tor-external');
+            console.log('newValue', newValue);
         },
     },
 };

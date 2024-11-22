@@ -18,20 +18,40 @@ import type { Dependencies } from './index';
 
 const load = async ({ mainWindowProxy, store, mainThreadEmitter }: Dependencies) => {
     const { logger } = global;
-    const host = '127.0.0.1';
-    const port = await getFreePort();
-    const controlPort = await getFreePort();
-    const torDataDir = path.join(app.getPath('userData'), 'tor');
-    const initialSettings = store.getTorSettings();
 
-    store.setTorSettings({ ...initialSettings, host, port });
+    const options = {
+        host: '127.0.0.1',
+        port: 9050,
+        controlPort: 9052,
+        torDataDir: '',
+        snowflakeBinaryPath: '',
+    };
+
+    const setOptions = async () => {
+        console.log('setOptions', setOptions);
+        const settings = store.getTorSettings();
+        console.log('settings that are going to be used.', settings);
+        // TODO: check if directory exists!
+        options.snowflakeBinaryPath = settings.snowflakeBinaryPath;
+
+        const useExternalTor = settings && settings.torDataDir && settings.torDataDir.trim() !== '';
+        console.log('useExternalTor', useExternalTor);
+        if (!useExternalTor) {
+            options.controlPort = await getFreePort();
+            options.port = await getFreePort();
+            options.torDataDir = path.join(app.getPath('userData'), 'tor');
+        }
+        store.setTorSettings({ ...settings, port: options.port });
+    };
+
+    await setOptions();
 
     const tor = new TorProcess({
-        host,
-        port,
-        controlPort,
-        torDataDir,
-        snowflakeBinaryPath: initialSettings.snowflakeBinaryPath,
+        host: options.host,
+        port: options.port,
+        controlPort: options.controlPort,
+        torDataDir: options.torDataDir,
+        snowflakeBinaryPath: options.snowflakeBinaryPath,
     });
 
     const setProxy = (rule: string) => {
@@ -45,20 +65,35 @@ const load = async ({ mainWindowProxy, store, mainThreadEmitter }: Dependencies)
     };
 
     const getProxySettings = (shouldEnableTor: boolean) =>
-        shouldEnableTor ? { proxy: `socks://${host}:${port}` } : { proxy: '' };
+        shouldEnableTor ? { proxy: `socks://${options.host}:${options.port}` } : { proxy: '' };
 
-    const handleTorProcessStatus = (status: TorProcessStatus) => {
+    const handleTorProcessStatus = (status: TorProcessStatus, shouldRunTor: boolean) => {
+        console.log('handleTorProcessStatus');
+        console.log('status handleTorProcessStatus', status);
+        const settings = store.getTorSettings();
+        const useExternalTor = settings.torDataDir.trim() !== '';
+
         let type: TorStatus;
-
-        if (!status.process) {
-            type = TorStatus.Disabled;
-        } else if (status.isBootstrapping) {
-            type = TorStatus.Enabling;
-        } else if (status.service) {
-            type = TorStatus.Enabled;
+        if (useExternalTor) {
+            if (shouldRunTor && status.service) {
+                type = TorStatus.Enabled;
+            } else {
+                type = TorStatus.Disabled;
+            }
         } else {
-            type = TorStatus.Disabled;
+            if (!status.process) {
+                type = TorStatus.Disabled;
+            } else if (status.isBootstrapping) {
+                type = TorStatus.Enabling;
+            } else if (status.service) {
+                type = TorStatus.Enabled;
+            } else {
+                type = TorStatus.Disabled;
+            }
         }
+
+        console.log('type in handleProcessStatus', type);
+
         mainThreadEmitter.emit('module/tor-status-update', type);
         mainWindowProxy.getInstance()?.webContents.send('tor/status', {
             type,
@@ -66,6 +101,9 @@ const load = async ({ mainWindowProxy, store, mainThreadEmitter }: Dependencies)
     };
 
     const handleBootstrapEvent = (bootstrapEvent: BootstrapEvent) => {
+        console.log('handleBootstrapEvent in suite-desktop-core modules/tor');
+        console.log('bootstrapEvent', bootstrapEvent);
+
         if (bootstrapEvent.type === 'slow') {
             mainWindowProxy.getInstance()?.webContents.send('tor/bootstrap', {
                 type: 'slow',
@@ -90,20 +128,64 @@ const load = async ({ mainWindowProxy, store, mainThreadEmitter }: Dependencies)
         }
     };
 
-    const setupTor = async (shouldEnableTor: boolean) => {
-        const isTorRunning = (await tor.status()).process;
-        const { snowflakeBinaryPath } = store.getTorSettings();
+    const createFakeBootstrapProcess = () => {
+        let progress = 0;
+        const duration = 3 * 1000; // 3 seconds.
+        const interval = 300; // update progress every 300ms
 
-        if (shouldEnableTor === isTorRunning) {
+        const increment = (100 / duration) * interval;
+
+        const intervalId = setInterval(() => {
+            progress += increment;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(intervalId);
+            }
+            handleBootstrapEvent({
+                type: 'progress',
+                progress: `${progress}`,
+                summary: 'Using External Tor fake progress',
+            });
+        }, interval);
+    };
+
+    const setupTor = async (shouldEnableTor: boolean) => {
+        const isTorBundledRunning = (await tor.status()).process;
+
+        await setOptions();
+        console.log('setupTor in suite-desktop-core modules/tor.ts');
+        console.log('options', options);
+        console.log('options.torDataDir', options.torDataDir);
+        const settings = store.getTorSettings();
+        console.log('settings', settings);
+        // TODO(karliatto): probably fill options with required ones when in external mode.
+        options.torDataDir = settings.torDataDir;
+        // options.
+        const useExternalTor = settings.torDataDir.trim() !== '';
+        console.log('options.snowflakeBinaryPath', options.snowflakeBinaryPath);
+        console.log('shouldEnableTor', shouldEnableTor);
+        console.log('isTorBundledRunning', isTorBundledRunning);
+        // console.log('torConfig', torConfig);
+        console.log('useExternalTor', useExternalTor);
+
+        if (shouldEnableTor === isTorBundledRunning) {
             return;
         }
 
         if (shouldEnableTor === true) {
-            setProxy(`socks5://${host}:${port}`);
+            setProxy(`socks5://${options.host}:${options.port}`);
             tor.torController.on('bootstrap/event', handleBootstrapEvent);
             try {
-                tor.setTorConfig({ snowflakeBinaryPath });
-                await tor.start();
+                tor.setTorConfig({
+                    snowflakeBinaryPath: options.snowflakeBinaryPath,
+                    torDataDir: options.torDataDir,
+                });
+                if (useExternalTor) {
+                    await tor.startExternal();
+                    createFakeBootstrapProcess();
+                } else {
+                    await tor.start();
+                }
             } catch (error) {
                 mainWindowProxy.getInstance()?.webContents.send('tor/bootstrap', {
                     type: 'error',
@@ -114,6 +196,7 @@ const load = async ({ mainWindowProxy, store, mainThreadEmitter }: Dependencies)
                 tor.stop();
                 throw error;
             } finally {
+                console.log('finally in setupTor');
                 tor.torController.removeAllListeners();
             }
         } else {
@@ -130,21 +213,29 @@ const load = async ({ mainWindowProxy, store, mainThreadEmitter }: Dependencies)
 
     ipcMain.handle(
         'tor/change-settings',
-        (ipcEvent, { snowflakeBinaryPath }: { snowflakeBinaryPath: string }) => {
+        (ipcEvent, payload: { snowflakeBinaryPath: string; torDataDir: string }) => {
+            console.log('tor/change-settings handle');
+            // TODO: check if payload contains what it should!!!
+            console.log(
+                'payload in tor/change-settings in suite-desktop-core modules/tor.ts',
+                payload,
+            );
             validateIpcMessage(ipcEvent);
 
             try {
                 store.setTorSettings({
                     running: store.getTorSettings().running,
-                    host,
-                    port,
-                    snowflakeBinaryPath,
+                    host: options.host,
+                    port: options.port,
+                    snowflakeBinaryPath: payload.snowflakeBinaryPath,
+                    torDataDir: payload.torDataDir,
                 });
 
                 return { success: true };
             } catch (error) {
                 return { success: false, error };
             } finally {
+                console.log('store.getTorSettings() after storing it from tor/change-settings');
                 mainWindowProxy
                     .getInstance()
                     ?.webContents.send('tor/settings', store.getTorSettings());
@@ -163,6 +254,8 @@ const load = async ({ mainWindowProxy, store, mainThreadEmitter }: Dependencies)
     });
 
     ipcMain.handle('tor/toggle', async (ipcEvent, shouldEnableTor: boolean) => {
+        console.log('tor/toggle');
+        console.log('shouldEnableTor', shouldEnableTor);
         validateIpcMessage(ipcEvent);
 
         logger.info('tor', `Toggling ${shouldEnableTor ? 'ON' : 'OFF'}`);
@@ -182,9 +275,14 @@ const load = async ({ mainWindowProxy, store, mainThreadEmitter }: Dependencies)
                 `${shouldEnableTor ? 'Enabled' : 'Disabled'} proxy ${proxySettings.proxy}`,
             );
         } catch (error) {
+            console.log('error in tor/toggle', error);
             await setupTor(!shouldEnableTor);
 
             const proxySettings = getProxySettings(!shouldEnableTor);
+            // Once Tor is toggled it renderer should know the new status.
+            const status = await tor.status();
+            console.log('status from tor.status()', status);
+            handleTorProcessStatus(status, shouldEnableTor);
 
             await TrezorConnect.setProxy(proxySettings);
 
@@ -202,7 +300,9 @@ const load = async ({ mainWindowProxy, store, mainThreadEmitter }: Dependencies)
 
         // Once Tor is toggled it renderer should know the new status.
         const status = await tor.status();
-        handleTorProcessStatus(status);
+        // TODO: the status of the Tor daemon when using external will still be true even when disabling it from Suite.
+        console.log('status', status);
+        handleTorProcessStatus(status, shouldEnableTor);
 
         return { success: true };
     });
@@ -225,9 +325,10 @@ const load = async ({ mainWindowProxy, store, mainThreadEmitter }: Dependencies)
     });
 
     ipcMain.on('tor/get-status', async () => {
-        logger.debug('tor', `Getting status (${store.getTorSettings().running ? 'ON' : 'OFF'})`);
+        const shouldRunTor = store.getTorSettings().running;
+        logger.debug('tor', `Getting status (${shouldRunTor ? 'ON' : 'OFF'})`);
         const status = await tor.status();
-        handleTorProcessStatus(status);
+        handleTorProcessStatus(status, shouldRunTor);
     });
 
     if (app.commandLine.hasSwitch('tor')) {

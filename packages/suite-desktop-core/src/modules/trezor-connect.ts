@@ -12,10 +12,26 @@ export const initBackground: ModuleInitBackground = ({ store }: Pick<Dependencie
     logger.info(SERVICE_NAME, `Starting service`);
 
     const setProxy = (ifRunning = false) => {
-        const tor = store.getTorSettings();
-        if (ifRunning && !tor.running) return Promise.resolve();
-        const payload = tor.running ? { proxy: `socks://${tor.host}:${tor.port}` } : { proxy: '' };
-        logger.info(SERVICE_NAME, `${tor.running ? 'Enable' : 'Disable'} proxy ${payload.proxy}`);
+        console.log('setProxy');
+        console.log('setProxy');
+        console.log('setProxy');
+        console.log('setProxy');
+        console.log('setProxy');
+        console.log('setProxy');
+        console.log('setProxy');
+        console.log('setProxy');
+        console.log('setProxy');
+        const torSettings = store.getTorSettings();
+        console.log('torSettings', torSettings);
+        if (ifRunning && !torSettings.running) return Promise.resolve();
+        const payload = torSettings.running
+            ? { proxy: `socks://${torSettings.host}:${torSettings.port}` }
+            : { proxy: '' };
+        console.log('payload', payload);
+        logger.info(
+            SERVICE_NAME,
+            `${torSettings.running ? 'Enable' : 'Disable'} proxy ${payload.proxy}`,
+        );
 
         return TrezorConnect.setProxy(payload);
     };
@@ -23,6 +39,7 @@ export const initBackground: ModuleInitBackground = ({ store }: Pick<Dependencie
     const ipcProxyOptions: IpcProxyHandlerOptions<typeof TrezorConnect> = {
         onCreateInstance: () => ({
             onRequest: async (method, params) => {
+                console.log('onRequest in trezor connect module');
                 logger.debug(SERVICE_NAME, `call ${method}`);
                 if (method === 'init') {
                     const response = await TrezorConnect[method](...params);

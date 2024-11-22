@@ -41,6 +41,7 @@ export class TorControlPort {
     }
 
     connect() {
+        console.log('Tor controlPort connect');
         return new Promise((resolve, reject) => {
             if (this.isSocketConnected) {
                 return resolve(true);
@@ -56,8 +57,11 @@ export class TorControlPort {
             });
 
             this.socket.on('data', async data => {
+                console.log('data from socket in control port', data);
                 const message = data.toString();
+                console.log('message', message);
                 this.onMessageReceived(message);
+                console.log('message in torControlPort socket.on(data..', message);
                 // Section 3.24. AUTHCHALLENGE in https://gitweb.torproject.org/torspec.git/tree/control-spec.txt
                 // https://stem.torproject.org/faq.html#i-m-using-safe-cookie-authentication
                 const authchallengeResponse = message
@@ -65,11 +69,15 @@ export class TorControlPort {
                     .match(
                         /^250 AUTHCHALLENGE SERVERHASH=([a-fA-F0-9]+) SERVERNONCE=([a-fA-F0-9]+)$/,
                     );
+                console.log('authchallengeResponse', authchallengeResponse);
                 if (authchallengeResponse) {
                     let cookieString;
                     try {
+                        console.log('this.options.torDataDir', this.options.torDataDir);
                         cookieString = await getCookieString(this.options.torDataDir);
-                    } catch {
+                        console.log('cookieString', cookieString);
+                    } catch (error) {
+                        console.log('error', error);
                         reject(new Error('TOR control port control_auth_cookie cannot be read'));
                     }
                     const serverNonce = authchallengeResponse[2];
@@ -114,6 +122,7 @@ export class TorControlPort {
     }
 
     ping() {
+        console.log('ping');
         if (!this.isSocketConnected) {
             return false;
         }

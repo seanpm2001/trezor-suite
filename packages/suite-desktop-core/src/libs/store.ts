@@ -65,10 +65,13 @@ export class Store {
             port: 9050,
             host: '127.0.0.1',
             snowflakeBinaryPath: '',
+            torDataDir: '',
         });
     }
 
     public setTorSettings(torSettings: TorSettings) {
+        console.log('setTorSettings!!!');
+        console.log('torSettings', torSettings);
         this.store.set('torSettings', torSettings);
     }
 

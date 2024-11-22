@@ -26,12 +26,17 @@ export class TorController extends EventEmitter {
     constructor(options: TorConnectionOptions) {
         super();
         this.options = options;
+        console.log('options in TorController constructor', options);
         this.controlPort = new TorControlPort(options, this.onMessageReceived.bind(this));
     }
 
     private getIsCircuitEstablished() {
+        console.log('getIsCircuitEstablished');
         // We rely on TOR_CONTROLLER_STATUS but check controlPort is actives as sanity check.
-        return this.controlPort.ping() && this.status === TOR_CONTROLLER_STATUS.CircuitEstablished;
+        const responseFromPing = this.controlPort.ping();
+        console.log('this.status', this.status);
+        console.log('responseFromPing', responseFromPing);
+        return responseFromPing && this.status === TOR_CONTROLLER_STATUS.CircuitEstablished;
     }
 
     private getIsStopped() {
@@ -137,6 +142,7 @@ export class TorController extends EventEmitter {
         ];
 
         let existsSnowflakeBinary = false;
+        console.log('snowflakeBinaryPath', snowflakeBinaryPath);
         if (snowflakeBinaryPath && snowflakeBinaryPath.trim() !== '') {
             // If provided snowflake file does not exists, do not use it.
             existsSnowflakeBinary = await checkFileExists(snowflakeBinaryPath);
@@ -191,9 +197,10 @@ export class TorController extends EventEmitter {
         });
     }
 
-    public waitUntilAlive(): Promise<void> {
-        const errorMessages: string[] = [];
+    private async waitUntilAliveCommon(isExternal = false): Promise<void> {
         this.status = TOR_CONTROLLER_STATUS.Bootstrapping;
+
+        const errorMessages: string[] = [];
         const waitUntilResponse = async (triesCount: number): Promise<void> => {
             if (this.getIsStopped()) {
                 // If TOR is starting and we want to cancel it.
@@ -206,29 +213,43 @@ export class TorController extends EventEmitter {
             }
             try {
                 const isConnected = await this.controlPort.connect();
+                console.log('isConnected in waitUntilAliveCommon', isConnected);
                 const isAlive = this.controlPort.ping();
+                console.log('isAlive in waitUntilAliveCommon ', isAlive);
                 if (isConnected && isAlive && this.getIsCircuitEstablished()) {
                     // It is running so let's not wait anymore.
                     return;
+                } else if (isExternal && isConnected && isAlive) {
+                    return;
                 }
             } catch (error) {
-                // Some error here is expected when waiting but
-                // we do not want to throw until maxTriesWaiting is reach.
-                // Instead we want to log it to know what causes the error.
+                // Log the error message if available
                 if (error && error.message) {
                     console.warn('request-manager:', error.message);
                     errorMessages.push(error.message);
                 }
             }
-            await createTimeoutPromise(this.waitingTime);
 
+            await createTimeoutPromise(this.waitingTime);
             return waitUntilResponse(triesCount + 1);
         };
 
         return waitUntilResponse(1);
     }
 
+    public waitUntilAlive(): Promise<void> {
+        return this.waitUntilAliveCommon();
+    }
+
+    public async waitUntilAliveExternal(): Promise<void> {
+        console.log('waitUntilAliveExternal');
+        await this.waitUntilAliveCommon(true);
+        console.log('after waitUntilAliveCommon in controller !!!');
+        return this.successfullyBootstrapped();
+    }
+
     public getStatus(): Promise<TorControllerStatus> {
+        console.log('getStatus in request-manager tor controller');
         return new Promise(resolve => {
             if (this.getIsCircuitEstablished()) {
                 return resolve(TOR_CONTROLLER_STATUS.CircuitEstablished);

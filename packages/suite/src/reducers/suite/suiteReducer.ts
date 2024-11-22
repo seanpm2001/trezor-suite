@@ -194,6 +194,8 @@ const setFlag = (draft: SuiteState, key: keyof Flags, value: boolean) => {
 
 const suiteReducer = (state: SuiteState = initialState, action: Action): SuiteState =>
     produce(state, draft => {
+        console.log('suiteReducer');
+        console.log('state', state);
         switch (action.type) {
             case STORAGE.LOAD:
                 draft.flags = {
