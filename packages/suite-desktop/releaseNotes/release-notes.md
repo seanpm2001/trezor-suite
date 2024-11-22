@@ -12,3 +12,4 @@
 
 -   Minor fixes, usability enhancements, and performance improvements.
 -   Fixed a bug in the Send form that prevented spending unconfirmed transactions.
+-   Fixed a device detection bug that occurred in certain scenarios.
