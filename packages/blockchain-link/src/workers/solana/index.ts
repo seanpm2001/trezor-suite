@@ -162,7 +162,7 @@ const pushTransaction = async (request: Request<MessageTypes.PushTransaction>) =
         };
         await sendAndConfirmTransaction(transactionWithReconstitutedLastValidBlockHeight, {
             commitment: 'confirmed',
-            maxRetries: 0n,
+            maxRetries: BigInt(0),
             skipPreflight: true,
         });
 
@@ -275,7 +275,7 @@ const getAccountInfo = async (request: Request<MessageTypes.GetAccountInfo>) => 
         const accountDataBytes = getBase64Encoder().encode(accountDataEncoded);
         accountDataLength = BigInt(accountDataBytes.byteLength);
     } else {
-        accountDataLength = 0n;
+        accountDataLength = BigInt(0);
     }
     const rent = await api.rpc.getMinimumBalanceForRentExemption(accountDataLength).send();
 
@@ -368,7 +368,7 @@ const estimateFee = async (request: Request<MessageTypes.EstimateFee>) => {
     const priorityFee = await getPriorityFee(api.rpc, message);
     const accountCreationFee = isCreatingAccount
         ? await api.rpc.getMinimumBalanceForRentExemption(BigInt(getTokenSize())).send()
-        : 0n;
+        : BigInt(0);
 
     const payload = [
         {
