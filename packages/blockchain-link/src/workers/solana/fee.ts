@@ -17,11 +17,11 @@ import { BigNumber } from '@trezor/utils/src/bigNumber';
 
 const COMPUTE_BUDGET_PROGRAM_ID =
     'ComputeBudget111111111111111111111111111111' as Address<'ComputeBudget111111111111111111111111111111'>;
-const DEFAULT_COMPUTE_UNIT_PRICE_MICROLAMPORTS = 100_000n; // micro-lamports, value taken from other wallets
+const DEFAULT_COMPUTE_UNIT_PRICE_MICROLAMPORTS = BigInt(100_000); // micro-lamports, value taken from other wallets
 // sending tokens with token account creation requires ~28K units. However we over-reserve for now
 // since otherwise the transactions don't seem to go through otherwise. This can perhaps be changed
 // if e.g. https://github.com/anza-xyz/agave/pull/187 is merged.
-const DEFAULT_COMPUTE_UNIT_LIMIT = 200_000n;
+const DEFAULT_COMPUTE_UNIT_LIMIT = BigInt(200_000);
 
 export const getBaseFee = async (
     api: Rpc<GetFeeForMessageApi>,
