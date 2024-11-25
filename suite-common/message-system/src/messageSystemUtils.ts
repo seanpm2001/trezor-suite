@@ -310,7 +310,7 @@ export const getValidExperiments = (
     config: MessageSystem | null,
     options: Options,
 ): ExperimentsItem[] => {
-    if (!config) {
+    if (!config?.experiments) {
         return [];
     }
 

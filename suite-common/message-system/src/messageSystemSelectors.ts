@@ -153,7 +153,9 @@ export const selectAllValidMessages = createMemoizedSelector(
 export const selectAllValidExperiments = createMemoizedSelector(
     [selectConfig, selectValidExperiments],
     (config, validExperiments) => {
-        const experiments = config?.experiments
+        if (!config?.experiments) return [];
+
+        const experiments = config.experiments
             .filter(experiment => validExperiments.includes(experiment.experiment.id))
             .map(experiment => experiment.experiment);
 

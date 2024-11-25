@@ -4,7 +4,7 @@
     "title": "Message system",
     "description": "JSON schema of the Trezor Suite messaging system.",
     "type": "object",
-    "required": ["version", "timestamp", "sequence", "actions", "experiments"],
+    "required": ["version", "timestamp", "sequence", "actions"],
     "properties": {
         "version": {
             "description": "A version of the messaging system. In case we would change the format of the config itself.",
@@ -207,8 +207,7 @@
                                         }
                                     },
                                     "additionalProperties": false
-                                },
-                                "additionalProperties": false
+                                }
                             }
                         },
                         "additionalProperties": false

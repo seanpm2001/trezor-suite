@@ -33,7 +33,7 @@ export interface MessageSystem {
      */
     sequence: number;
     actions: Action[];
-    experiments: Experiments[];
+    experiments?: Experiments[];
 }
 export interface Action {
     conditions: Conditions;

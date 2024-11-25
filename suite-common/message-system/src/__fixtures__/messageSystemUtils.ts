@@ -1965,6 +1965,6 @@ export const getValidExperiments = [
         environment: '',
         suiteVersion: '',
         config: getMessageSystemConfig(),
-        result: [getMessageSystemConfig().experiments[1].experiment],
+        result: [getMessageSystemConfig().experiments?.[1].experiment],
     },
 ];
