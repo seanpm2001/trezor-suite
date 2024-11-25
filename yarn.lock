@@ -9432,7 +9432,6 @@ __metadata:
     "@solana-program/compute-budget": "npm:^0.6.1"
     "@solana-program/system": "npm:^0.6.2"
     "@solana-program/token": "npm:^0.4.1"
-    "@solana/buffer-layout": "npm:^4.0.1"
     "@solana/web3.js": "npm:^2.0.0"
     "@suite-common/fiat-services": "workspace:*"
     "@suite-common/metadata-types": "workspace:*"
@@ -11166,7 +11165,6 @@ __metadata:
   resolution: "@trezor/blockchain-link-utils@workspace:packages/blockchain-link-utils"
   dependencies:
     "@mobily/ts-belt": "npm:^3.13.1"
-    "@solana/web3.js": "npm:^2.0.0"
     "@trezor/blockchain-link-types": "workspace:*"
     "@trezor/env-utils": "workspace:*"
     "@trezor/eslint": "workspace:*"
