@@ -266,7 +266,7 @@ const getAccountInfo = async (request: Request<MessageTypes.GetAccountInfo>) => 
         tokens = transformTokenInfo(tokenAccounts.value, tokenMetadata);
     }
 
-    const balance = await api.rpc.getBalance(publicKey).send();
+    const { value: balance } = await api.rpc.getBalance(publicKey).send();
 
     // https://solana.stackexchange.com/a/13102
     let accountDataLength: bigint;
@@ -636,8 +636,6 @@ class SolanaWorker extends BaseWorker<SolanaAPI> {
         const transport = createDefaultRpcTransport({
             url: clusterUrl,
             headers: {
-                // @ts-expect-error
-                Origin: 'https://node.trezor.io', // FIXME: 'Origin' is forbidden by `fetch()` API.
                 'User-Agent': `Trezor Suite ${getSuiteVersion()}`,
             },
         });
