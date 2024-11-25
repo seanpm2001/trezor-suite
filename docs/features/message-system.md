@@ -8,9 +8,9 @@ Message system was implemented to allow sending emergency messages to Trezor Sui
 
 [Notion for production deployment](https://www.notion.so/satoshilabs/Message-system-production-release-c0ac4275461f4755bc9050ff2de57425)
 
-## Possibility of message system
+## Features of message system
 
-### Use actions (messages)
+### Messages
 
 There are multiple ways of displaying message to a user:
 
@@ -20,10 +20,12 @@ There are multiple ways of displaying message to a user:
     -   _TODO: missing implementation_
 -   context
     -   messages on specific places in app (e.g. settings page, banner in account page)
--   feature
-    -   disabling some feature with an explanation message
 
-### Use (Experiments)
+### Feature
+
+Disabling some feature with an explanation message.
+
+### A/B testing
 
 The ability to create A/B testing.
 
@@ -252,7 +254,14 @@ Structure of config, types and optionality of specific keys can be found in the 
                 // Used only for context.
                 "context": {
                     "domain": ["coins.receive", "coins.btc"]
-                }
+                },
+                // Used only for feature
+                "feature": [
+                    {
+                        "domain": "coinjoin",
+                        "flag": false
+                    }
+                ]
             }
         }
     ],
@@ -299,7 +308,7 @@ When updating message system config, sequence number must always be higher than 
 
 Updated config is automatically uploaded by CI job to the corresponding S3 bucket based on the current branch.
 
-#### Priorities of actions (messages)
+#### Priorities of messages
 
 Based on the priority of the message, the message is displayed to the user. 0 is the lowest priority, 100 is the highest priority.
 Current priorities of existing banners can be found [here](https://github.com/trezor/trezor-suite/blob/145a43d21ee94461d3f013c1dc23241dd27b0224/packages/suite/src/components/suite/Banners/index.tsx).
