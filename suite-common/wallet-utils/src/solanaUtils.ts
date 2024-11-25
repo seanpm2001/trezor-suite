@@ -1,5 +1,10 @@
 import { A, F, pipe } from '@mobily/ts-belt';
-import type { Blockhash, CompilableTransactionMessage, TransactionMessage } from '@solana/web3.js';
+import {
+    type SignatureBytes,
+    type Blockhash,
+    type CompilableTransactionMessage,
+    type TransactionMessage,
+} from '@solana/web3.js';
 
 import { BigNumber } from '@trezor/utils/src/bigNumber';
 import type { TokenAccount } from '@trezor/blockchain-link-types';
@@ -30,21 +35,23 @@ export const dummyPriorityFeesForFeeEstimation: PriorityFees = {
 };
 
 async function createTransactionShim(message: CompilableTransactionMessage) {
-    const {
-        compileTransaction,
-        signTransaction,
-        createKeyPairFromPrivateKeyBytes,
-        getBase16Codec,
-        getTransactionEncoder,
-    } = await loadSolanaLib();
+    const { compileTransaction, getBase16Codec, getTransactionEncoder } = await loadSolanaLib();
 
     let transaction = compileTransaction(message);
 
     return {
-        async addSignature(privateKeyHex: string) {
-            const privateKeyBytes = getBase16Codec().encode(privateKeyHex);
-            const keypair = await createKeyPairFromPrivateKeyBytes(privateKeyBytes);
-            transaction = await signTransaction([keypair], transaction);
+        addSignature(signerPubKey: string, signatureHex: string) {
+            if (signerPubKey in transaction.signatures) {
+                const signatureBytes = getBase16Codec().encode(signatureHex) as SignatureBytes;
+                // Currently there's no public interface for adding a signature manually
+                transaction = Object.freeze({
+                    ...transaction,
+                    signatures: Object.freeze({
+                        ...transaction.signatures,
+                        [signerPubKey]: signatureBytes,
+                    }),
+                });
+            }
         },
         serializeMessage() {
             return getBase16Codec().decode(transaction.messageBytes);
@@ -209,7 +216,7 @@ export const buildCreateAssociatedTokenAccountInstruction = async (
 
 type TokenTransferTxWithDestinationAddress = {
     transaction: {
-        addSignature(privateKeyHex: string): Promise<void>;
+        addSignature(signerPubKey: string, signatureHex: string): void;
         serializeMessage(): string;
         serialize(): string;
     };

@@ -408,9 +408,17 @@ export const signSolanaSendFormTransactionThunk = createThunk<
             });
         }
 
-        await tx.addSignature(response.payload.signature);
-        const signedSerializedTx = tx.serialize();
+        try {
+            tx.addSignature(selectedAccount.descriptor, response.payload.signature);
+            const signedSerializedTx = tx.serialize();
 
-        return { serializedTx: signedSerializedTx };
+            return { serializedTx: signedSerializedTx };
+        } catch (e) {
+            return rejectWithValue({
+                error: 'sign-transaction-failed',
+                errorCode: e.code,
+                message: e.error,
+            });
+        }
     },
 );
