@@ -44,6 +44,15 @@ export const EXPERIMENTAL_FEATURES: Record<ExperimentalFeature, ExperimentalFeat
         onToggle: async ({ newValue }) => {
             console.log('onToggle tor-external');
             console.log('newValue', newValue);
+            if (!newValue) {
+                const result = await desktopApi.getTorSettings();
+                if (result.success && result.payload.torDataDir !== '') {
+                    await desktopApi.changeTorSettings({
+                        ...result.payload,
+                        torDataDir: '',
+                    });
+                }
+            }
         },
     },
 };

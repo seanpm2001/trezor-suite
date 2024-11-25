@@ -61,7 +61,7 @@ export const TorSnowflake = () => {
         } else {
             setError(null);
         }
-        setTorSettings(prexvSettings => ({
+        setTorSettings(prevSettings => ({
             ...prevSettings!,
             snowflakeBinaryPath: value,
         }));

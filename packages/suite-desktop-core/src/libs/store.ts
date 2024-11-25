@@ -63,6 +63,7 @@ export class Store {
         return this.store.get('torSettings', {
             running: false,
             port: 9050,
+            controlPort: 9052,
             host: '127.0.0.1',
             snowflakeBinaryPath: '',
             torDataDir: '',

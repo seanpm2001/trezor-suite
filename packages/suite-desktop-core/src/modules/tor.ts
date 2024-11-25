@@ -28,20 +28,33 @@ const load = async ({ mainWindowProxy, store, mainThreadEmitter }: Dependencies)
     };
 
     const setOptions = async () => {
-        console.log('setOptions', setOptions);
+        console.log('setOptions is running');
         const settings = store.getTorSettings();
         console.log('settings that are going to be used.', settings);
         // TODO: check if directory exists!
         options.snowflakeBinaryPath = settings.snowflakeBinaryPath;
 
+        console.log('settings.torDataDir', settings.torDataDir);
         const useExternalTor = settings && settings.torDataDir && settings.torDataDir.trim() !== '';
         console.log('useExternalTor', useExternalTor);
         if (!useExternalTor) {
+            console.log('not using external tor so preparing ports and data dirs');
             options.controlPort = await getFreePort();
             options.port = await getFreePort();
             options.torDataDir = path.join(app.getPath('userData'), 'tor');
+            // options.torDataDir = '';
+        } else {
+            options.torDataDir = settings.torDataDir;
+            // TODO: crete a default CONST for this.
+            options.controlPort = 9052;
+            options.port = 9050;
         }
-        store.setTorSettings({ ...settings, port: options.port });
+        // store.setTorSettings({
+        // ...settings,
+        // port: options.port,
+        // controlPort: options.controlPort,
+        // torDataDir: options.torDataDir,
+        // });
     };
 
     await setOptions();
@@ -150,18 +163,16 @@ const load = async ({ mainWindowProxy, store, mainThreadEmitter }: Dependencies)
     };
 
     const setupTor = async (shouldEnableTor: boolean) => {
+        console.log('setupTor');
         const isTorBundledRunning = (await tor.status()).process;
 
         await setOptions();
         console.log('setupTor in suite-desktop-core modules/tor.ts');
         console.log('options', options);
         console.log('options.torDataDir', options.torDataDir);
-        const settings = store.getTorSettings();
-        console.log('settings', settings);
-        // TODO(karliatto): probably fill options with required ones when in external mode.
-        options.torDataDir = settings.torDataDir;
-        // options.
-        const useExternalTor = settings.torDataDir.trim() !== '';
+        // const settings = store.getTorSettings();
+        // console.log('settings', settings);
+        const useExternalTor = options.torDataDir.trim() !== '';
         console.log('options.snowflakeBinaryPath', options.snowflakeBinaryPath);
         console.log('shouldEnableTor', shouldEnableTor);
         console.log('isTorBundledRunning', isTorBundledRunning);
@@ -227,6 +238,7 @@ const load = async ({ mainWindowProxy, store, mainThreadEmitter }: Dependencies)
                     running: store.getTorSettings().running,
                     host: options.host,
                     port: options.port,
+                    controlPort: options.controlPort,
                     snowflakeBinaryPath: payload.snowflakeBinaryPath,
                     torDataDir: payload.torDataDir,
                 });

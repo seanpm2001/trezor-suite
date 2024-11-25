@@ -5,5 +5,4 @@ export enum TorStatus {
     Enabling = 'Enabling',
     Error = 'Error',
     Misbehaving = 'Misbehaving',
-    // ExternalRunning = 'ExternalRunning',
 }
