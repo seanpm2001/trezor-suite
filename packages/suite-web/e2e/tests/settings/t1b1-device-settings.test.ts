@@ -61,11 +61,11 @@ describe('T1B1 - Device settings', () => {
     /*
      * 1. navigate to settings/device screen and wait for it to load
      * 2. Select & click Choose from gallery in Customization section
-     * 3. Select Doge homescreen
+     * 3. Select Bitcoin homescreen
      * 4. Confirm on device
      * 5. Wait for success notification Settings applied
      */
-    it.skip('change homescreen', () => {
+    it.only('change homescreen', () => {
         //
         // Test preparation
         //
@@ -75,9 +75,11 @@ describe('T1B1 - Device settings', () => {
         cy.passThroughInitialRun();
         cy.discoveryShouldFinish();
 
-        cy.getTestElement('@settings/device/homescreen').scrollIntoView();
+        onNavBar.openSettings();
+        onSettingsMenu.openDeviceSettings();
+        cy.getTestElement('@settings/device/homescreen-gallery').scrollIntoView();
         cy.getTestElement('@settings/device/homescreen-gallery').click();
-        cy.get('#doge').click();
+        cy.getTestElement('@modal/gallery/bw_64x128/bitcoin_full').click();
         cy.getTestElement('@prompts/confirm-on-device');
         cy.wait(2000);
         cy.task('pressYes');
