@@ -7,8 +7,7 @@ import { useSelector } from 'src/hooks/suite';
 import { selectActiveExperimentGroup } from 'src/utils/suite/experiment';
 
 export const useExperiment = (id: string) => {
-    const state = useSelector(state => state);
-    const instanceId = selectAnalyticsInstanceId(state);
+    const instanceId = useSelector(selectAnalyticsInstanceId);
     const experiment = useSelector(selectExperimentById(id));
     const activeExperimentVariant = useMemo(
         () => selectActiveExperimentGroup({ instanceId, experiment }),

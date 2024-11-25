@@ -18,16 +18,17 @@ export const ExperimentWrapper = ({
     components,
 }: ExperimentWrapperProps): ReactElement | null => {
     const { experiment, activeExperimentVariant } = useExperiment(id);
-    const areComponentEmpty = !components.length;
+    const areComponentsEmpty = !components.length;
 
-    if (areComponentEmpty) return null;
+    if (areComponentsEmpty) return null;
 
     const defaultComponent = components[components.length - 1];
     const experimentOrVariantNotFound = !experiment || !activeExperimentVariant;
     const experimentAndComponentsMismatch = experiment?.groups.length !== components.length;
 
-    if (experimentOrVariantNotFound || experimentAndComponentsMismatch)
+    if (experimentOrVariantNotFound || experimentAndComponentsMismatch) {
         return defaultComponent.element;
+    }
 
     const activeComponent = components.find(
         component => component.variant === activeExperimentVariant.variant,
