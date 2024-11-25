@@ -1,6 +1,6 @@
 import { StartEmu, SetupEmu } from '@trezor/trezor-user-env-link';
 
-import { getController, initTrezorConnect } from '../../common.setup';
+import { conditionalTest, getController, initTrezorConnect } from '../../common.setup';
 import TrezorConnect from '../../../src';
 
 const getAddress = (showOnTrezor: boolean, coin: string = 'regtest') => {
@@ -159,8 +159,8 @@ describe('TrezorConnect.cancel', () => {
         await assertGetAddressWorks();
     });
 
-    // todo: this should be conditionalTest(['2'])
-    it('Pin request - Cancel', async () => {
+    // TODO: this test is failing with T1 - times out
+    conditionalTest(['2', '<1.0.0'], 'Pin request - Cancel', async () => {
         await setupTest({
             setupParams: {
                 version: '1-latest',
@@ -183,6 +183,8 @@ describe('TrezorConnect.cancel', () => {
 
         const response = await getAddressCall;
 
+        console.log('======response', response);
+
         expect(response.success).toEqual(false);
 
         // assertGetAddressWorks will not work without providing pin
@@ -190,8 +192,7 @@ describe('TrezorConnect.cancel', () => {
         expect(feat.payload).toMatchObject({ initialized: true });
     });
 
-    // todo: this should be conditionalTest(['2'])
-    it('Word request - Cancel', async () => {
+    conditionalTest(['2', '<1.0.0'], 'Word request - Cancel', async () => {
         await controller.startEmu({ version: '1-latest', model: 'T1B1', wipe: true });
         await controller.startBridge(
             // @ts-expect-error

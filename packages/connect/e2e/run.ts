@@ -51,6 +51,13 @@ const getEmulatorOptions = (availableFirmwares: Firmwares) => {
         });
     }
 
+    console.log('===============emulatorStartOpts');
+    console.log(emulatorStartOpts);
+    console.log('===============emulatorStartOpts');
+
+    if (emulatorStartOpts.version?.startsWith('1') && emulatorStartOpts.model !== 'T1B1') {
+        throw new Error('firmware version 1.x is only supported for T1B1 model');
+    }
     return emulatorStartOpts;
 };
 
