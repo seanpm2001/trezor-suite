@@ -29,6 +29,7 @@ export const ContextMessage = ({ context }: ContextMessageProps) => {
                                   {message.cta.label}
                               </Link>
                           ),
+                          textWrap: false,
                       }
                     : undefined
             }
