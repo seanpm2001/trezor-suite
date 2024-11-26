@@ -210,6 +210,8 @@ export const buildCreateAssociatedTokenAccountInstruction = async (
         owner: address(newOwnerAddress),
         payer: createNoopSigner(address(funderAddress)),
     });
+    // @ts-expect-error - we are overriding this due to FW compatibility issue, it expects [] instead of [0]
+    txInstruction.data = new Uint8Array([]);
 
     return [txInstruction, associatedTokenAccountAddress] as const;
 };
