@@ -197,8 +197,8 @@ export const extractAccountBalanceDiff = (
     const postBalance = transaction.meta?.postBalances[pubKeyIndex];
 
     return {
-        preBalance: new BigNumber(preBalance?.toString() ?? 0),
-        postBalance: new BigNumber(postBalance?.toString() ?? 0),
+        preBalance: new BigNumber(preBalance?.toString(10) ?? 0),
+        postBalance: new BigNumber(postBalance?.toString(10) ?? 0),
     };
 };
 
