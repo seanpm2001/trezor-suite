@@ -129,10 +129,6 @@ const pushTransaction = async (request: Request<MessageTypes.PushTransaction>) =
     const rawTx = request.payload.startsWith('0x') ? request.payload.slice(2) : request.payload;
     const api = await request.connect();
 
-    const {
-        value: { lastValidBlockHeight },
-    } = await api.rpc.getLatestBlockhash({ commitment: 'finalized' }).send();
-
     const txByteArray = getBase16Encoder().encode(rawTx);
     const transaction = getTransactionDecoder().decode(txByteArray);
     assertTransactionIsFullySigned(transaction);
@@ -149,18 +145,7 @@ const pushTransaction = async (request: Request<MessageTypes.PushTransaction>) =
     try {
         const signature = getSignatureFromTransaction(transaction);
         const sendAndConfirmTransaction = sendAndConfirmTransactionFactory(api);
-        // FIXME: If possible, it would be preferable to include the last valid block height for
-        // this transaction's blockhash in `MessageTypes.PushTransaction` rather than to fetch a
-        // fresh one above. The one fetched value does not represent the true expiry block height of
-        // the blockhash inside this transaction.
-        const transactionWithReconstitutedLastValidBlockHeight = {
-            ...transactionWithBlockhashLifetime,
-            lifetimeConstraint: {
-                ...transactionWithBlockhashLifetime.lifetimeConstraint,
-                lastValidBlockHeight,
-            },
-        };
-        await sendAndConfirmTransaction(transactionWithReconstitutedLastValidBlockHeight, {
+        await sendAndConfirmTransaction(transactionWithBlockhashLifetime, {
             commitment: 'confirmed',
             maxRetries: BigInt(0),
             skipPreflight: true,
