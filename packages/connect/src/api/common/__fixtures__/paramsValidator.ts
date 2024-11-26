@@ -177,6 +177,7 @@ const DEFAULT_RANGE = {
     T3B1: { min: '2.0.0', max: '0' },
     T3T1: { min: '2.0.0', max: '0' },
     T3W1: { min: '2.0.0', max: '0' },
+    UNKNOWN: { min: '0', max: '0' },
 };
 
 const DEFAULT_COIN_INFO = {
@@ -187,6 +188,7 @@ const DEFAULT_COIN_INFO = {
         T3B1: '2.0.0',
         T3T1: '2.0.0',
         T3W1: '2.0.0',
+        UNKNOWN: '0.0.0',
     },
     shortcut: 'btc',
     type: 'bitcoin',

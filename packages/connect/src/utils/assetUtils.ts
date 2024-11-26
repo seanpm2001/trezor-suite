@@ -12,6 +12,8 @@ export const firmwareAssets: Record<DeviceModelInternal, NodeRequire> = {
     [DeviceModelInternal.T3B1]: require('@trezor/connect-common/files/firmware/t3b1/releases.json'),
     [DeviceModelInternal.T3T1]: require('@trezor/connect-common/files/firmware/t3t1/releases.json'),
     [DeviceModelInternal.T3W1]: require('@trezor/connect-common/files/firmware/t3w1/releases.json'),
+    // @ts-expect-error
+    [DeviceModelInternal.UNKNOWN]: [],
 };
 
 export const tryLocalAssetRequire = (url: string) => {

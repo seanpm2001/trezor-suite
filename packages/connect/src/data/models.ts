@@ -46,4 +46,8 @@ export const models: Record<DeviceModelInternal, ModelConfig> = {
             '4': 'Majestic Bitcoin', // TODO T3W1
         },
     },
+    UNKNOWN: {
+        name: 'Unknown',
+        colors: safe3Model.colors, // just in case
+    },
 };
