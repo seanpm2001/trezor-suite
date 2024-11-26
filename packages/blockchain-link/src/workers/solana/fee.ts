@@ -83,7 +83,7 @@ export const getPriorityFee = async (
         .times(10 ** -6) // microLamports -> Lamports
         .times(computeUnitLimit.toString())
         .decimalPlaces(0, BigNumber.ROUND_UP)
-        .toString();
+        .toString(10);
 
     return {
         computeUnitPrice,
