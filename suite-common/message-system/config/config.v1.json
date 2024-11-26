@@ -1,7 +1,7 @@
 {
     "version": 1,
     "timestamp": "2024-11-22T00:00:00+00:00",
-    "sequence": 70,
+    "sequence": 71,
     "actions": [
         {
             "conditions": [
@@ -1166,45 +1166,6 @@
                     "pt": "A atualização do firmware pode apagar o seu Trezor. Certifique-se de que o backup da carteira está preparado antes de continuar.",
                     "uk": "Оновлення прошивки може видалити ваш Trezor. Переконайтеся, що ваша резервна копія гаманця готова перед продовженням."
                 }
-            }
-        },
-        {
-            "conditions": [
-                {
-                    "environment": {
-                        "desktop": ">=24.10.1",
-                        "mobile": "!",
-                        "web": ">=24.10.1"
-                    }
-                }
-            ],
-            "message": {
-                "id": "f10a4296-7f58-4cb4-91b0-13aa66c4d701",
-                "priority": 1,
-                "dismissible": false,
-                "variant": "info",
-                "category": "feature",
-                "content": {
-                    "en-GB": "Placeholder",
-                    "en": "Placeholder",
-                    "es": "Placeholder",
-                    "cs": "Placeholder",
-                    "de": "Placeholder",
-                    "fr": "Placeholder",
-                    "it": "Placeholder",
-                    "pt": "Placeholder",
-                    "tr": "Placeholder",
-                    "ru": "Placeholder",
-                    "ja": "Placeholder",
-                    "uk": "Placeholder",
-                    "hu": "Placeholder"
-                },
-                "feature": [
-                    {
-                        "domain": "security.firmware.hashCheck",
-                        "flag": false
-                    }
-                ]
             }
         }
     ]
