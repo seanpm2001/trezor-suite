@@ -139,8 +139,25 @@ const pushTransaction = async (request: Request<MessageTypes.PushTransaction>) =
         // TODO: Handle durable nonce transactions.
         throw new Error('Unimplemented: Confirming durable nonce transactions');
     }
-    const transactionWithBlockhashLifetime = transaction as typeof transaction &
+
+    let transactionWithBlockhashLifetime = transaction as typeof transaction &
         TransactionWithBlockhashLifetime;
+
+    // If lifetimeConstraint is not provided, fetch the latest blockhash and lastValidBlockHeight
+    if (message.lifetimeConstraint === undefined) {
+        const {
+            value: { blockhash, lastValidBlockHeight },
+        } = await api.rpc.getLatestBlockhash({ commitment: 'finalized' }).send();
+        transactionWithBlockhashLifetime = {
+            ...transactionWithBlockhashLifetime,
+            lifetimeConstraint: { blockhash, lastValidBlockHeight },
+        };
+    } else {
+        transactionWithBlockhashLifetime = {
+            ...transactionWithBlockhashLifetime,
+            lifetimeConstraint: message.lifetimeConstraint,
+        };
+    }
 
     try {
         const signature = getSignatureFromTransaction(transaction);
