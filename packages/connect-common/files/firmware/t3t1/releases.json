@@ -1,6 +1,20 @@
 [
     {
         "required": false,
+        "version": [2, 8, 6],
+        "min_firmware_version": [2, 7, 2],
+        "min_bootloader_version": [2, 1, 6],
+        "bootloader_version": [2, 1, 8],
+        "translations": ["cs-CZ", "de-DE", "es-ES", "fr-FR", "it-IT", "pt-BR"],
+        "url": "firmware/t3t1/trezor-t3t1-2.8.6.bin",
+        "url_bitcoinonly": "firmware/t3t1/trezor-t3t1-2.8.6-bitcoinonly.bin",
+        "fingerprint": "33f142e844f3d28b1698340e0647e2a4706a8a7729604953eba75fb0e10ee357",
+        "fingerprint_bitcoinonly": "8eadbd41aabfbd0133f03513ef6255c021744435028f4a11f7b2e12cd11e4fa2",
+        "firmware_revision": "688bddc887b8bb660640cc6e40a99036f2e87f1f",
+        "changelog": ["## Added", "286."]
+    },
+    {
+        "required": false,
         "version": [2, 8, 3],
         "min_firmware_version": [2, 7, 2],
         "min_bootloader_version": [2, 1, 6],
