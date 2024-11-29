@@ -305,11 +305,8 @@ const handleMessageInCoreMode = (
     if (data.type === POPUP.HANDSHAKE) {
         handshake(data, getState().settings?.origin || '');
         const core = ensureCore();
-        const transport = core.getTransportInfo();
-        setState({
-            ...data,
-            transport,
-        });
+        const transports = core.getActiveTransports();
+        setState({ ...data, transports });
         reactEventBus.dispatch({ type: 'state-update', payload: getState() });
 
         return;
@@ -329,7 +326,7 @@ const handleMessageInCoreMode = (
             reactEventBus.dispatch({ type: 'state-update', payload: getState() });
 
             const { settings } = getState();
-            const transport = core.getTransportInfo();
+            const transport = core.getActiveTransports()?.[0]; // TODO only the first is reported
             analytics.report({
                 type: EventType.AppReady,
                 payload: {
