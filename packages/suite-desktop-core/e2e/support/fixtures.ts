@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import { test as base, ElectronApplication, Page } from '@playwright/test';
+import { test as base, BrowserContext, ElectronApplication, Page } from '@playwright/test';
 
 import { DashboardActions } from './pageActions/dashboardActions';
 import { launchSuite } from './common';
@@ -9,9 +9,10 @@ import { SuiteGuide } from './pageActions/suiteGuideActions';
 import { TopBarActions } from './pageActions/topBarActions';
 import { WalletActions } from './pageActions/walletActions';
 import { OnboardingActions } from './pageActions/onboardingActions';
+import { PlaywrightProjects } from '../playwright.config';
 
 type Fixtures = {
-    electronApp: ElectronApplication;
+    appContext: ElectronApplication | BrowserContext;
     window: Page;
     dashboardPage: DashboardActions;
     settingsPage: SettingsActions;
@@ -22,18 +23,31 @@ type Fixtures = {
 };
 
 const test = base.extend<Fixtures>({
-    /* eslint-disable no-empty-pattern */
-    electronApp: async ({}, use) => {
-        const suite = await launchSuite();
-        await use(suite.electronApp);
-        await suite.electronApp.close(); // Ensure cleanup after tests
+    appContext: async ({ browser, baseURL }, use, testInfo) => {
+
+        if (testInfo.project.name === PlaywrightProjects.Desktop) {
+            const suite = await launchSuite();
+            await use(suite.electronApp);
+            await suite.electronApp.close(); // Ensure cleanup after tests
+        } else {
+            console.log('Base URL:', baseURL);
+            const appContext = await browser.newContext({ baseURL });
+            await use(appContext);
+        }
     },
-    window: async ({ electronApp }, use, testInfo) => {
-        const window = await electronApp.firstWindow();
-        await window.context().tracing.start({ screenshots: true, snapshots: true });
-        await use(window);
-        const tracePath = `${testInfo.outputDir}/trace.electron.zip`;
-        await window.context().tracing.stop({ path: tracePath });
+    window: async ({ appContext }, use, testInfo) => {
+        if ('firstWindow' in appContext) {
+            const window = await appContext.firstWindow();
+
+            await window.context().tracing.start({ screenshots: true, snapshots: true });
+            await use(window);
+            const tracePath = `${testInfo.outputDir}/trace.electron.zip`;
+            await window.context().tracing.stop({ path: tracePath });
+        } else {
+            const window = await appContext.newPage();
+            await window.goto('/');
+            await use(window);
+        }
     },
     dashboardPage: async ({ window }, use) => {
         const dashboardPage = new DashboardActions(window);

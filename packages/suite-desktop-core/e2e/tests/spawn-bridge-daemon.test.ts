@@ -4,7 +4,7 @@ import { createTimeoutPromise } from '@trezor/utils';
 import { test, expect } from '../support/fixtures';
 import { launchSuite, launchSuiteElectronApp, waitForDataTestSelector } from '../support/common';
 
-test.describe.serial('Bridge', () => {
+test.describe.serial('Bridge', { tag: ['@group=suite', '@desktopOnly'] }, () => {
     test.beforeAll(async () => {
         // We make sure that bridge from trezor-user-env is stopped.
         // So we properly test the electron app starting node-bridge module.

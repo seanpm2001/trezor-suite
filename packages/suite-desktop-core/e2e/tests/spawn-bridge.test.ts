@@ -4,7 +4,7 @@ import { test, expect } from '../support/fixtures';
 import { launchSuite, LEGACY_BRIDGE_VERSION, waitForDataTestSelector } from '../support/common';
 import { OnboardingActions } from '../support/pageActions/onboardingActions';
 
-test.describe.serial('Bridge', () => {
+test.describe.serial('Bridge', { tag: ['@group=suite', '@desktopOnly'] }, () => {
     test.beforeEach(async () => {
         // We make sure that bridge from trezor-user-env is stopped.
         // So we properly test the electron app starting node-bridge module.

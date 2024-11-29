@@ -2,7 +2,7 @@ import { TrezorUserEnvLink } from '@trezor/trezor-user-env-link';
 
 import { test, expect } from '../../support/fixtures';
 
-test.describe.serial('Suite works with Electrum server', () => {
+test.describe.serial('Suite works with Electrum server', { tag: ['@group=settings'] }, () => {
     test.beforeAll(async () => {
         await TrezorUserEnvLink.stopBridge();
         await TrezorUserEnvLink.connect();
