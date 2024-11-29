@@ -20,6 +20,7 @@ function getChecksum(hashFunction, payload) {
         // blake then keccak hash chain
         case 'blake256keccak256':
             var blake = cryptoUtils.blake2b256(payload);
+
             return cryptoUtils.keccak256Checksum(Buffer.from(blake, 'hex'));
         case 'blake256':
             return cryptoUtils.blake256Checksum(payload);
@@ -40,7 +41,7 @@ function getAddressType(address, currency) {
     var hashFunction = currency.hashFunction || 'sha256';
     var decoded = getDecoded(address);
     if (decoded) {
-        var length = decoded.length;
+        var {length} = decoded;
 
         if (length !== expectedLength) {
             return null;
@@ -72,8 +73,10 @@ function getOutputIndex(address, currency, networkType) {
             Object.keys(currency.addressTypes).reduce((all, key) => {
                 return all.concat(currency.addressTypes[key]);
             }, []);
+
         return correctAddressTypes.indexOf(addressType);
     }
+
     return null;
 }
 
@@ -89,6 +92,7 @@ function isValidPayToWitnessScriptHashAddress(address, currency, networkType) {
     try {
         const hrp = currency.segwitHrp[networkType];
         const decoded = bech32.decode(hrp, address);
+
         return decoded && decoded.version === 0 && decoded.program.length === 32;
     } catch (err) {
         return null;
@@ -111,6 +115,7 @@ function isValidPayToTaprootAddress(address, currency, networkType) {
         const hrp = currency.segwitHrp[networkType];
 
         const decoded = bech32.decode(hrp, address, true);
+
         return decoded && decoded.version === 1 && decoded.program.length === 32;
     } catch (err) {
         return null;
@@ -146,13 +151,14 @@ function isValidSegwitAddress(address, currency, networkType) {
 }
 
 module.exports = {
-    isValidAddress: function (address, currency, networkType) {
+    isValidAddress (address, currency, networkType) {
         networkType = networkType || DEFAULT_NETWORK_TYPE;
         const addrType = this.getAddressType(address, currency, networkType);
+
         // Though WITNESS_UNKNOWN is a valid address, it's not spendable - so we mark it as invalid
         return addrType !== undefined && addrType !== addressType.WITNESS_UNKNOWN;
     },
-    getAddressType: function (address, currency, networkType) {
+    getAddressType (address, currency, networkType) {
         networkType = networkType || DEFAULT_NETWORK_TYPE;
         if (isValidPayToPublicKeyHashAddress(address, currency, networkType)) {
             return addressType.P2PKH;
@@ -172,6 +178,7 @@ module.exports = {
         if (isValidSegwitAddress(address, currency, networkType)) {
             return addressType.WITNESS_UNKNOWN;
         }
+
         return undefined;
     },
 };

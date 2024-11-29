@@ -38,11 +38,12 @@ function hextobin(hex) {
     for (var i = 0; i < hex.length / 2; ++i) {
         res[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
     }
+
     return res;
 }
 
 module.exports = {
-    isValidAddress: function (address, currency, networkType) {
+    isValidAddress (address, currency, networkType) {
         networkType = networkType || DEFAULT_NETWORK_TYPE;
         var addressType = 'standard';
         if (!addressRegTest.test(address)) {
@@ -65,10 +66,11 @@ module.exports = {
         return addrChecksum === hashChecksum;
     },
 
-    getAddressType: function (address, currency, networkType) {
+    getAddressType (address, currency, networkType) {
         if (this.isValidAddress(address, currency, networkType)) {
             return addressType.ADDRESS;
         }
+
         return undefined;
     },
 };

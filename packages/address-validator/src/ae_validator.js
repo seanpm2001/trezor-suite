@@ -6,7 +6,7 @@ const ALLOWED_CHARS = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxy
 var regexp = new RegExp('^(ak_)([' + ALLOWED_CHARS + ']+)$'); // Begins with ak_ followed by
 
 module.exports = {
-    isValidAddress: function (address, currency, networkType) {
+    isValidAddress (address, currency, networkType) {
         let match = regexp.exec(address);
         if (match !== null) {
             return this.verifyChecksum(match[2]);
@@ -15,16 +15,18 @@ module.exports = {
         }
     },
 
-    verifyChecksum: function (address) {
+    verifyChecksum (address) {
         var decoded = base58.decode(address);
         decoded.splice(-4, 4); // remove last 4 elements. Why is base 58 adding them?
+
         return decoded.length === 32;
     },
 
-    getAddressType: function (address, currency, networkType) {
+    getAddressType (address, currency, networkType) {
         if (this.isValidAddress(address, currency, networkType)) {
             return addressType.ADDRESS;
         }
+
         return undefined;
     },
 };

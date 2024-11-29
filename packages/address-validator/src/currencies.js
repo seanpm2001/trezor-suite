@@ -1490,8 +1490,9 @@ var CURRENCIES = [
 ];
 
 module.exports = {
-    getByNameOrSymbol: function (currencyNameOrSymbol) {
+    getByNameOrSymbol (currencyNameOrSymbol) {
         var nameOrSymbol = currencyNameOrSymbol.toLowerCase();
+
         return CURRENCIES.find(function (currency) {
             return (
                 currency.name.toLowerCase() === nameOrSymbol ||
@@ -1499,7 +1500,7 @@ module.exports = {
             );
         });
     },
-    getAll: function () {
+    getAll () {
         return CURRENCIES;
     },
 };

@@ -4,7 +4,7 @@ const { addressType } = require('./crypto/utils');
 var DEFAULT_CURRENCY_NAME = 'bitcoin';
 
 module.exports = {
-    validate: function (address, currencyNameOrSymbol, networkType) {
+    validate (address, currencyNameOrSymbol, networkType) {
         var currency = currencies.getByNameOrSymbol(currencyNameOrSymbol || DEFAULT_CURRENCY_NAME);
 
         if (currency && currency.validator) {
@@ -13,7 +13,7 @@ module.exports = {
 
         throw new Error('Missing validator for currency: ' + currencyNameOrSymbol);
     },
-    getAddressType: function (address, currencyNameOrSymbol, networkType) {
+    getAddressType (address, currencyNameOrSymbol, networkType) {
         var currency = currencies.getByNameOrSymbol(currencyNameOrSymbol || DEFAULT_CURRENCY_NAME);
         if (!currency || !currency.validator) {
             throw new Error('getAddressType: No validator for currency' + currencyNameOrSymbol);
@@ -23,10 +23,10 @@ module.exports = {
         }
         throw new Error('getAddressType not defined for currency: ' + currencyNameOrSymbol);
     },
-    getCurrencies: function () {
+    getCurrencies () {
         return currencies.getAll();
     },
-    findCurrency: function (symbol) {
+    findCurrency (symbol) {
         return currencies.getByNameOrSymbol(symbol) || null;
     },
     addressType,
