@@ -1,9 +1,13 @@
 import { useEffect, useMemo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
-import { ExcludedUtxos, FormState } from '@suite-common/wallet-types';
+import { ExcludedUtxos, FormState, UtxoSorting } from '@suite-common/wallet-types';
 import type { AccountUtxo, PROTO } from '@trezor/connect';
 import { getUtxoOutpoint, isSameUtxo } from '@suite-common/wallet-utils';
+import { BigNumber } from '@trezor/utils';
+import { selectAccountTransactionsWithNulls } from '@suite-common/wallet-core';
+
+import { useSelector } from 'src/hooks/suite';
 
 import { useCoinjoinRegisteredUtxos } from './useCoinjoinRegisteredUtxos';
 import {
@@ -28,19 +32,26 @@ export const useUtxoSelection = ({
     setValue,
     watch,
 }: UtxoSelectionContextProps): UtxoSelectionContext => {
+    const accountTransactions = useSelector(state =>
+        selectAccountTransactionsWithNulls(state, account.key),
+    );
+
     // register custom form field (without HTMLElement)
     useEffect(() => {
         register('isCoinControlEnabled');
         register('selectedUtxos');
         register('anonymityWarningChecked');
+        register('utxoSorting');
     }, [register]);
 
     const coinjoinRegisteredUtxos = useCoinjoinRegisteredUtxos({ account });
 
-    // has coin control been enabled manually?
-    const isCoinControlEnabled = watch('isCoinControlEnabled');
-    // fee level
-    const selectedFee = watch('selectedFee');
+    const [isCoinControlEnabled, options, selectedFee, utxoSorting] = watch([
+        'isCoinControlEnabled',
+        'options',
+        'selectedFee',
+        'utxoSorting',
+    ]);
     // confirmation of spending low-anonymity UTXOs - only relevant for coinjoin account
     const anonymityWarningChecked = !!watch('anonymityWarningChecked');
     // manually selected UTXOs
@@ -76,23 +87,76 @@ export const useUtxoSelection = ({
         composeRequest,
     ]);
 
+    const sortUtxos = (utxos: AccountUtxo[]): AccountUtxo[] => {
+        if (!utxoSorting) {
+            return utxos;
+        }
+
+        const sortFromNewestToOldest = (a: AccountUtxo, b: AccountUtxo) => {
+            let valueA: number;
+            let valueB: number;
+
+            if (a.blockHeight > 0 && b.blockHeight > 0) {
+                valueA = a.blockHeight;
+                valueB = b.blockHeight;
+            } else {
+                // Pending transactions do not have blockHeight, so we must use blockTime of the transaction instead.
+                const getBlockTime = (txid: string) => {
+                    const transaction = accountTransactions.find(
+                        transaction => transaction.txid === txid,
+                    );
+
+                    return transaction?.blockTime ?? 0;
+                };
+                valueA = getBlockTime(a.txid);
+                valueB = getBlockTime(b.txid);
+            }
+
+            return new BigNumber(valueB ?? 0).comparedTo(new BigNumber(valueA ?? 0));
+        };
+
+        const sortFromLargestToSmallest = (a: AccountUtxo, b: AccountUtxo) =>
+            new BigNumber(b.amount).comparedTo(new BigNumber(a.amount));
+
+        // Manipulating the array directly would cause a runtime error, so we create a copy.
+        const utxosForSorting = utxos.slice();
+
+        switch (utxoSorting) {
+            case 'newestFirst':
+                return utxosForSorting.sort(sortFromNewestToOldest);
+            case 'oldestFirst':
+                return utxosForSorting.sort(sortFromNewestToOldest).reverse();
+            case 'largestFirst':
+                return utxosForSorting.sort(sortFromLargestToSmallest);
+            case 'smallestFirst':
+                return utxosForSorting.sort(sortFromLargestToSmallest).reverse();
+        }
+    };
+
     const spendableUtxos: AccountUtxo[] = [];
     const lowAnonymityUtxos: AccountUtxo[] = [];
     const dustUtxos: AccountUtxo[] = [];
-    account?.utxo?.forEach(utxo => {
-        switch (excludedUtxos[getUtxoOutpoint(utxo)]) {
-            case 'low-anonymity':
-                lowAnonymityUtxos.push(utxo);
+    // Skip sorting and categorizing UTXOs if coin control is not enabled.
+    const utxos =
+        options?.includes('utxoSelection') && account?.utxo
+            ? sortUtxos(account?.utxo)
+            : account?.utxo;
+    if (utxos?.length) {
+        utxos?.forEach(utxo => {
+            switch (excludedUtxos[getUtxoOutpoint(utxo)]) {
+                case 'low-anonymity':
+                    lowAnonymityUtxos.push(utxo);
 
-                return;
-            case 'dust':
-                dustUtxos.push(utxo);
+                    return;
+                case 'dust':
+                    dustUtxos.push(utxo);
 
-                return;
-            default:
-                spendableUtxos.push(utxo);
-        }
-    });
+                    return;
+                default:
+                    spendableUtxos.push(utxo);
+            }
+        });
+    }
 
     // category displayed on top and controlled by the check-all checkbox
     const topCategory =
@@ -138,6 +202,8 @@ export const useUtxoSelection = ({
     if (!isLowAnonymityUtxoSelected && anonymityWarningChecked) {
         setValue('anonymityWarningChecked', false);
     }
+
+    const selectUtxoSorting = (sorting: UtxoSorting) => setValue('utxoSorting', sorting);
 
     const toggleAnonymityWarning = () =>
         setValue('anonymityWarningChecked', !anonymityWarningChecked);
@@ -204,6 +270,8 @@ export const useUtxoSelection = ({
         selectedUtxos,
         spendableUtxos,
         coinjoinRegisteredUtxos,
+        utxoSorting,
+        selectUtxoSorting,
         toggleAnonymityWarning,
         toggleCheckAllUtxos,
         toggleCoinControl,

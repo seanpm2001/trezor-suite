@@ -5716,6 +5716,22 @@ const messages = defineMessagesWithTypeCheck({
         defaultMessage: 'There are no spendable UTXOs in your account.',
         description: 'Message showing in Coin control section',
     },
+    TR_LARGEST_FIRST: {
+        id: 'TR_LARGEST_FIRST',
+        defaultMessage: 'Largest first',
+    },
+    TR_SMALLEST_FIRST: {
+        id: 'TR_SMALLEST_FIRST',
+        defaultMessage: 'Smallest first',
+    },
+    TR_OLDEST_FIRST: {
+        id: 'TR_OLDEST_FIRST',
+        defaultMessage: 'Oldest first',
+    },
+    TR_NEWEST_FIRST: {
+        id: 'TR_NEWEST_FIRST',
+        defaultMessage: 'Newest first',
+    },
     TR_LOADING_TRANSACTION_DETAILS: {
         id: 'TR_LOADING_TRANSACTION_DETAILS',
         defaultMessage: 'Loading transaction details',
