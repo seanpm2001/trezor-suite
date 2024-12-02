@@ -12,6 +12,9 @@ import {
     selectDeviceEnabledDiscoveryNetworkSymbols,
     toggleEnabledDiscoveryNetworkSymbol,
 } from '@suite-native/discovery';
+import { FeatureFlag, setFeatureFlag } from '@suite-native/feature-flags';
+
+import { selectIsSolanaFeatureEnabled } from './selectors';
 
 const isAnyOfMessageSystemAffectingActions = isAnyOf(
     messageSystemActions.fetchSuccessUpdate,
@@ -41,6 +44,15 @@ export const messageSystemMiddleware = createMiddleware((action, { next, dispatc
         const categorizedValidMessages = categorizeMessages(validMessages);
 
         dispatch(messageSystemActions.updateValidMessages(categorizedValidMessages));
+
+        const isSolanaRemoteFeatureEnabled = selectIsSolanaFeatureEnabled(getState());
+
+        dispatch(
+            setFeatureFlag({
+                featureFlag: FeatureFlag.IsSolanaEnabledByRemote,
+                value: isSolanaRemoteFeatureEnabled,
+            }),
+        );
     }
 
     return action;

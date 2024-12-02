@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { A, F, pipe } from '@mobily/ts-belt';
 
+import { MessageSystemRootState } from '@suite-common/message-system';
+import { createWeakMapSelector, returnStableArrayIfEmpty } from '@suite-common/redux-utils';
 import {
     AccountsRootState,
     DeviceRootState,
@@ -17,16 +19,15 @@ import {
 } from '@suite-native/config';
 import { NetworkSymbol } from '@suite-common/wallet-config';
 import {
-    createSelectIsFeatureFlagEnabled,
     FeatureFlag,
     FeatureFlagsRootState,
     selectIsFeatureFlagEnabled,
+    selectIsSolanaEnabled,
 } from '@suite-native/feature-flags';
 import {
     selectNetworkSymbolsOfAccountsWithTokensAllowed,
     TokensRootState,
 } from '@suite-native/tokens';
-import { createWeakMapSelector, returnStableArrayIfEmpty } from '@suite-common/redux-utils';
 
 type DiscoveryInfo = {
     startTimestamp: number;
@@ -97,10 +98,8 @@ export const selectDiscoveryInfo = (state: DiscoveryConfigSliceRootState) =>
     state.discoveryConfig.discoveryInfo;
 
 const createMemoizedSelector = createWeakMapSelector.withTypes<
-    DeviceRootState & DiscoveryConfigSliceRootState & FeatureFlagsRootState
+    DeviceRootState & DiscoveryConfigSliceRootState & FeatureFlagsRootState & MessageSystemRootState
 >();
-
-const selectIsSolanaEnabled = createSelectIsFeatureFlagEnabled(FeatureFlag.IsSolanaEnabled);
 
 export const selectFeatureFlagEnabledNetworkSymbols = createMemoizedSelector(
     [selectIsSolanaEnabled, selectAreTestnetsEnabled],

@@ -7,9 +7,9 @@ export const FeatureFlag = {
     IsDeviceConnectEnabled: 'isDeviceConnectEnabled',
     IsRippleSendEnabled: 'isRippleSendEnabled',
     IsCardanoSendEnabled: 'isCardanoSendEnabled',
-    IsSolanaSendEnabled: 'isSolanaSendEnabled',
     IsRegtestEnabled: 'isRegtestEnabled',
     IsSolanaEnabled: 'IsSolanaEnabled',
+    IsSolanaEnabledByRemote: 'IsSolanaEnabledByRemote', // should be updated only via message system
     IsConnectPopupEnabled: 'IsConnectPopupEnabled',
 } as const;
 export type FeatureFlag = (typeof FeatureFlag)[keyof typeof FeatureFlag];
@@ -24,9 +24,9 @@ export const featureFlagsInitialState: FeatureFlagsState = {
     [FeatureFlag.IsDeviceConnectEnabled]: isAndroid() || isDebugEnv(),
     [FeatureFlag.IsRippleSendEnabled]: isAndroid() && isDevelopOrDebugEnv(),
     [FeatureFlag.IsCardanoSendEnabled]: isAndroid() && isDevelopOrDebugEnv(),
-    [FeatureFlag.IsSolanaSendEnabled]: isAndroid() && isDevelopOrDebugEnv(),
     [FeatureFlag.IsRegtestEnabled]: isDebugEnv() || isDetoxTestBuild(),
     [FeatureFlag.IsSolanaEnabled]: false,
+    [FeatureFlag.IsSolanaEnabledByRemote]: false,
     [FeatureFlag.IsConnectPopupEnabled]: isDevelopOrDebugEnv(),
 };
 
@@ -34,9 +34,9 @@ export const featureFlagsPersistedKeys: Array<keyof FeatureFlagsState> = [
     FeatureFlag.IsDeviceConnectEnabled,
     FeatureFlag.IsRippleSendEnabled,
     FeatureFlag.IsCardanoSendEnabled,
-    FeatureFlag.IsSolanaSendEnabled,
     FeatureFlag.IsRegtestEnabled,
     FeatureFlag.IsSolanaEnabled,
+    FeatureFlag.IsSolanaEnabledByRemote,
     FeatureFlag.IsConnectPopupEnabled,
 ];
 
@@ -46,6 +46,12 @@ export const featureFlagsSlice = createSlice({
     reducers: {
         toggleFeatureFlag: (state, { payload }: PayloadAction<{ featureFlag: FeatureFlag }>) => {
             state[payload.featureFlag] = !state[payload.featureFlag];
+        },
+        setFeatureFlag: (
+            state,
+            { payload }: PayloadAction<{ featureFlag: FeatureFlag; value: boolean }>,
+        ) => {
+            state[payload.featureFlag] = payload.value;
         },
     },
 });
@@ -57,5 +63,9 @@ export const createSelectIsFeatureFlagEnabled =
 export const selectIsFeatureFlagEnabled = (state: FeatureFlagsRootState, key: FeatureFlag) =>
     state.featureFlags[key];
 
-export const { toggleFeatureFlag } = featureFlagsSlice.actions;
+export const selectIsSolanaEnabled = (state: FeatureFlagsRootState) =>
+    state.featureFlags[FeatureFlag.IsSolanaEnabledByRemote] ||
+    state.featureFlags[FeatureFlag.IsSolanaEnabled];
+
+export const { toggleFeatureFlag, setFeatureFlag } = featureFlagsSlice.actions;
 export const featureFlagsReducer = featureFlagsSlice.reducer;

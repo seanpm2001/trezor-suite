@@ -1,10 +1,12 @@
 import { D, pipe } from '@mobily/ts-belt';
 
+import { MessageSystemRootState } from '@suite-common/message-system';
 import { NetworkSymbol, getNetworkType, networks } from '@suite-common/wallet-config';
 import {
     FeatureFlagsRootState,
     selectIsFeatureFlagEnabled,
     FeatureFlag,
+    selectIsSolanaEnabled,
 } from '@suite-native/feature-flags';
 
 const PRODUCTION_SEND_COINS_WHITELIST = pipe(
@@ -14,7 +16,7 @@ const PRODUCTION_SEND_COINS_WHITELIST = pipe(
 );
 
 export const selectIsNetworkSendFlowEnabled = (
-    state: FeatureFlagsRootState,
+    state: FeatureFlagsRootState & MessageSystemRootState,
     networkSymbol?: NetworkSymbol,
 ) => {
     if (!networkSymbol) return false;
@@ -33,9 +35,9 @@ export const selectIsNetworkSendFlowEnabled = (
 
     if (isCardanoSendEnabled && networkType === 'cardano') return true;
 
-    const isSolanaSendEnabled = selectIsFeatureFlagEnabled(state, FeatureFlag.IsSolanaSendEnabled);
+    const isSolanaEnabled = selectIsSolanaEnabled(state);
 
-    if (isSolanaSendEnabled && networkType === 'solana') return true;
+    if (isSolanaEnabled && networkType === 'solana') return true;
 
     return false;
 };

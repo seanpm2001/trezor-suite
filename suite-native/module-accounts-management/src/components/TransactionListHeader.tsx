@@ -21,6 +21,7 @@ import {
 } from '@suite-native/navigation';
 import { Translation } from '@suite-native/intl';
 import { FeatureFlag, FeatureFlagsRootState, useFeatureFlag } from '@suite-native/feature-flags';
+import { MessageSystemRootState } from '@suite-common/message-system';
 
 import { AccountDetailGraph } from './AccountDetailGraph';
 import { AccountDetailCryptoValue } from './AccountDetailCryptoValue';
@@ -100,8 +101,9 @@ export const TransactionListHeader = memo(
         const isTestnetAccount = useSelector((state: AccountsRootState) =>
             selectIsTestnetAccount(state, accountKey),
         );
-        const isNetworkSendFlowEnabled = useSelector((state: FeatureFlagsRootState) =>
-            selectIsNetworkSendFlowEnabled(state, account?.symbol),
+        const isNetworkSendFlowEnabled = useSelector(
+            (state: FeatureFlagsRootState & MessageSystemRootState) =>
+                selectIsNetworkSendFlowEnabled(state, account?.symbol),
         );
         const isPortfolioTrackerDevice = useSelector(selectIsPortfolioTrackerDevice);
 
