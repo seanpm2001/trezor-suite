@@ -116,6 +116,7 @@ const config: webpack.Configuration = {
                                 'babel-plugin-styled-components',
                                 {
                                     displayName: true,
+                                    fileName: true,
                                     preprocess: true,
                                 },
                             ],
