@@ -38,26 +38,18 @@ const sortFromLargestToSmallest: UtxoSortingFunction = () => (a: AccountUtxo, b:
 const sortFromNewestToOldest: UtxoSortingFunction =
     ({ accountTransactions }) =>
     (a: AccountUtxo, b: AccountUtxo) => {
-        let valueA: number;
-        let valueB: number;
-
         if (a.blockHeight > 0 && b.blockHeight > 0) {
-            valueA = a.blockHeight;
-            valueB = b.blockHeight;
-        } else {
-            // Pending transactions do not have blockHeight, so we must use blockTime of the transaction instead.
-            const getBlockTime = (txid: string) => {
-                const transaction = accountTransactions.find(
-                    transaction => transaction.txid === txid,
-                );
-
-                return transaction?.blockTime ?? 0;
-            };
-            valueA = getBlockTime(a.txid);
-            valueB = getBlockTime(b.txid);
+            return b.blockHeight - a.blockHeight;
         }
 
-        return new BigNumber(valueB ?? 0).comparedTo(new BigNumber(valueA ?? 0));
+        // Pending transactions do not have blockHeight, so we must use blockTime of the transaction instead.
+        const getBlockTime = (txid: string) => {
+            const transaction = accountTransactions.find(transaction => transaction.txid === txid);
+
+            return transaction?.blockTime ?? 0;
+        };
+
+        return new BigNumber(getBlockTime(b.txid)).comparedTo(new BigNumber(getBlockTime(a.txid)));
     };
 
 const utxoSortMap: Record<UtxoSorting, UtxoSortingFunction> = {
