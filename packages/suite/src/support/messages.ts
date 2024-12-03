@@ -1,4 +1,4 @@
-import { defineMessagesWithTypeCheck } from './defineMessagesWithTypeCheck';
+import { defineMessagesWithTypeCheck } from './utils';
 
 export default defineMessagesWithTypeCheck({
     TR_404_DESCRIPTION: {
