@@ -55,11 +55,12 @@ const getEmulatorOptions = (availableFirmwares: Firmwares) => {
             model,
         };
     } else {
-        const version = firmwareArg
-            ? firmwareArg?.endsWith('-latest')
-                ? latest
-                : firmwareArg
-            : latest;
+        let version;
+        if (firmwareArg) {
+            version = firmwareArg.endsWith('-latest') ? latest : firmwareArg;
+        } else {
+            version = latest;
+        }
         emulatorStartOpts = {
             type: 'emulator-start',
             wipe: true,

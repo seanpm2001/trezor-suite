@@ -222,6 +222,7 @@ export class TrezorUserEnvLinkClass extends TypedEmitter<WebsocketClientEvents> 
             model,
             wipe,
         });
+
         return null;
     }
     async startEmuFromBranch({ branch, btcOnly = false, model, wipe }: StartEmuFromBranch) {
@@ -232,6 +233,7 @@ export class TrezorUserEnvLinkClass extends TypedEmitter<WebsocketClientEvents> 
             model,
             wipe,
         });
+
         return null;
     }
 
