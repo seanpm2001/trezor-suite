@@ -202,6 +202,7 @@ export class UsbApi extends AbstractApi {
                     ),
                 { signal, onAbort: () => device?.reset() },
             );
+
             this.logger?.debug(
                 `usb: device.transferIn done. status: ${res.status}, byteLength: ${res.data?.byteLength}.`,
             );
@@ -209,6 +210,10 @@ export class UsbApi extends AbstractApi {
             if (!res.data?.byteLength) {
                 return this.error({ error: ERRORS.INTERFACE_DATA_TRANSFER });
             }
+
+            this.logger?.debug(
+                `usb: device.transferIn done. data: ${Buffer.from(res.data.buffer).toString('hex')}`,
+            );
 
             return this.success(Buffer.from(res.data.buffer));
         } catch (err) {
@@ -228,7 +233,8 @@ export class UsbApi extends AbstractApi {
 
         try {
             // https://wicg.github.io/webusb/#ref-for-dom-usbdevice-transferout
-            this.logger?.debug('usb: device.transferOut');
+            this.logger?.debug(`usb: device.transferOut. data: : ${buffer.toString('hex')}`);
+
             const result = await this.abortableMethod(
                 () =>
                     device.transferOut(
