@@ -210,6 +210,5 @@
   "TR_BUY_DETAIL_SUCCESS_TITLE": "승인됨",
   "TR_BUY_DETAIL_WAITING_FOR_USER_GATE": "제공업체 사이트로 가기",
   "TR_DEVICE_CONNECTED_BOOTLOADER_RECONNECT_IN_NORMAL_NO_BUTTON": "케이블에 연결하는 동안 어느 버튼도 누르지 마십시오.",
-  "TR_ENTER_SEED_WORDS_ON_DEVICE": "보안상의 이유로 장치에 접속할 때마다 해당 문구들을 입력해야 합니다. 반드시 모든 단어를 순서대로 입력하십시오. ",
-  "TR_EXCHANGE_FEES_INFO": "All fees included; the transaction fee is estimated at {feeAmount} ({feeAmountFiat})."
+  "TR_ENTER_SEED_WORDS_ON_DEVICE": "보안상의 이유로 장치에 접속할 때마다 해당 문구들을 입력해야 합니다. 반드시 모든 단어를 순서대로 입력하십시오. "
 }

@@ -3165,7 +3165,7 @@ const messages = defineMessagesWithTypeCheck({
         id: 'TR_SHOW_DETAILS',
     },
     TR_SHOW_DETAILS_IN_BLOCK_EXPLORER: {
-        defaultMessage: 'Show details in blockchain explorer',
+        defaultMessage: 'Show details in Block Explorer',
         id: 'TR_SHOW_DETAILS_IN_BLOCK_EXPLORER',
     },
     TR_SHOW_UNVERIFIED_ADDRESS: {
@@ -6235,7 +6235,7 @@ const messages = defineMessagesWithTypeCheck({
     },
     TR_VERSION_HAS_BEEN_RELEASED: {
         id: 'TR_VERSION_HAS_BEEN_RELEASED',
-        defaultMessage: 'v{version} has released!',
+        defaultMessage: 'Version {version} has been released!',
     },
     TR_WERE_CONSTANTLY_WORKING_TO_IMPROVE: {
         id: 'TR_WERE_CONSTANTLY_WORKING_TO_IMPROVE',
@@ -7432,7 +7432,7 @@ const messages = defineMessagesWithTypeCheck({
     TR_STAKE_INSTANTLY_UNSTAKED_WITH_DAYS: {
         id: 'TR_STAKE_INSTANTLY_UNSTAKED_WITH_DAYS',
         defaultMessage:
-            'You received {amount} {symbol} "Instantly". {days, plural, =0 {} one {The rest will be payed out within # day.} other { The rest will be payed out within # days}}',
+            "You've received {amount} {symbol} instantly. {days, plural, =0 {} one {The remaining is paid out within # day.} other {The remaining is paid out within # days}}",
     },
     TR_STAKING_GETTING_READY: {
         id: 'TR_STAKING_GETTING_READY',
