@@ -1,6 +1,9 @@
 /* eslint-disable import/no-default-export */
 /* eslint-disable import/no-anonymous-default-export */
 import { ExpoConfig, ConfigContext } from 'expo/config';
+import { createHash } from 'crypto';
+import { readFileSync, readdirSync, statSync } from 'fs';
+import { join } from 'path';
 
 import { suiteNativeVersion } from './package.json';
 
@@ -155,6 +158,69 @@ const getPlugins = (): ExpoPlugins => {
     ] as ExpoPlugins;
 };
 
+interface PackageJson {
+    dependencies: Record<string, string>;
+    devDependencies: Record<string, string>;
+}
+
+// This is our fingerprint for runtime version, we may replace it with expo-fingerprint in the future
+// or maybe we can keep it because it should produce less native builds (it hashes only what really matters)
+function generateContentHash(paths: string[]): string {
+    const hash = createHash('sha256');
+
+    for (const path of paths) {
+        try {
+            if (path.endsWith('package.json')) {
+                // Handle package.json dependencies, only deps are relevant for runtime version
+                const packageJson: PackageJson = JSON.parse(readFileSync(path, 'utf8'));
+                const depsString = JSON.stringify({
+                    dependencies: packageJson.dependencies,
+                    devDependencies: packageJson.devDependencies,
+                });
+                hash.update(depsString);
+            } else {
+                const stats = statSync(path);
+                if (stats.isDirectory()) {
+                    // Recursively process directory
+                    const processDir = (dirPath: string) => {
+                        const files = readdirSync(dirPath);
+                        files.forEach(file => {
+                            const fullPath = join(dirPath, file);
+                            const stat = statSync(fullPath);
+                            if (stat.isDirectory()) {
+                                processDir(fullPath);
+                            } else {
+                                hash.update(readFileSync(fullPath));
+                            }
+                        });
+                    };
+                    processDir(path);
+                } else {
+                    // Handle single file
+                    hash.update(readFileSync(path));
+                }
+            }
+        } catch (error) {
+            throw new Error(`Failed to process path ${path}: ${error.message}`);
+        }
+    }
+
+    return hash.digest('hex').substring(0, 8); // Take first 8 characters
+}
+
+// Paths to hash for our custom fingerprint of runtime version
+const pathsToHash = [
+    './package.json',
+    './app.config.ts',
+    './plugins',
+    '../../packages/react-native-usb/android/src',
+    '../../packages/react-native-usb/android/build.gradle',
+    '../../packages/react-native-usb/plugins',
+    '../../packages/react-native-usb/expo-module.config.json',
+];
+
+const runtimeVersionHash = generateContentHash(pathsToHash);
+
 export default ({ config }: ConfigContext): ExpoConfig => {
     const name = appNames[buildType];
     const bundleIdentifier = bundleIdentifiers[buildType];
@@ -169,7 +235,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         slug: appSlugs[buildType],
         owner: appOwners[buildType],
         version: suiteNativeVersion,
-        runtimeVersion: '16',
+        runtimeVersion: runtimeVersionHash,
         ...(buildType === 'production'
             ? {}
             : {
