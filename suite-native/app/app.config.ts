@@ -114,6 +114,7 @@ const getPlugins = (): ExpoPlugins => {
                 },
                 ios: {
                     deploymentTarget: '15.1',
+                    useFrameworks: 'static',
                 },
             },
         ],
@@ -131,6 +132,7 @@ const getPlugins = (): ExpoPlugins => {
                 subdomains: '*',
             },
         ],
+        'react-native-bottom-tabs',
     ];
 
     return [

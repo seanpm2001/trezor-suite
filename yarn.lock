@@ -1867,6 +1867,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@bottom-tabs/react-navigation@npm:^0.7.1":
+  version: 0.7.1
+  resolution: "@bottom-tabs/react-navigation@npm:0.7.1"
+  dependencies:
+    color: "npm:^4.2.3"
+  peerDependencies:
+    "@react-navigation/native": ">=7"
+    react: "*"
+    react-native: "*"
+    react-native-bottom-tabs: "*"
+  checksum: 10/112c599d392ca608bb9562f4d7de182e7a37ac897d22cb5fa921c6264eb6ccb30541cdab1a06e6f1fc361422e248fba6a2c76c686b2fe2360aab9dd625fe648a
+  languageName: node
+  linkType: hard
+
 "@braintree/sanitize-url@npm:^6.0.1":
   version: 6.0.4
   resolution: "@braintree/sanitize-url@npm:6.0.4"
@@ -9640,6 +9654,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.20.0"
     "@babel/plugin-transform-export-namespace-from": "npm:^7.23.4"
+    "@bottom-tabs/react-navigation": "npm:^0.7.1"
     "@config-plugins/detox": "npm:^8.0.0"
     "@gorhom/bottom-sheet": "npm:5.0.5"
     "@mobily/ts-belt": "npm:^3.13.1"
@@ -9657,6 +9672,7 @@ __metadata:
     "@suite-common/analytics": "workspace:*"
     "@suite-common/connect-init": "workspace:*"
     "@suite-common/formatters": "workspace:*"
+    "@suite-common/icons": "workspace:*"
     "@suite-common/message-system": "workspace:*"
     "@suite-common/redux-utils": "workspace:*"
     "@suite-common/suite-constants": "workspace:*"
@@ -9738,6 +9754,7 @@ __metadata:
     react: "npm:18.2.0"
     react-intl: "npm:^6.6.8"
     react-native: "npm:0.76.1"
+    react-native-bottom-tabs: "npm:^0.7.1"
     react-native-gesture-handler: "npm:^2.21.0"
     react-native-keyboard-aware-scroll-view: "npm:0.9.5"
     react-native-mmkv: "npm:2.12.2"
@@ -35197,6 +35214,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-bottom-tabs@npm:^0.7.1":
+  version: 0.7.1
+  resolution: "react-native-bottom-tabs@npm:0.7.1"
+  dependencies:
+    sf-symbols-typescript: "npm:^2.0.0"
+    use-latest-callback: "npm:^0.2.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10/58cac47e9f81c44ebc7cae26406fcc3b13d43f88b122175de2c0328a87cb18bc9e89ba5341ba066c7f87bd3ecd81b5cbf38901f53b68a3836c08ceb6d69873e8
+  languageName: node
+  linkType: hard
+
 "react-native-gesture-handler@npm:^2.21.0":
   version: 2.21.0
   resolution: "react-native-gesture-handler@npm:2.21.0"
@@ -37470,6 +37500,13 @@ __metadata:
   version: 1.2.0
   resolution: "setprototypeof@npm:1.2.0"
   checksum: 10/fde1630422502fbbc19e6844346778f99d449986b2f9cdcceb8326730d2f3d9964dbcb03c02aaadaefffecd0f2c063315ebea8b3ad895914bf1afc1747fc172e
+  languageName: node
+  linkType: hard
+
+"sf-symbols-typescript@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "sf-symbols-typescript@npm:2.0.0"
+  checksum: 10/dde81c01265bdff16f527e1242af03793460c3c5f34ca6950ab1ca73a3bccd54ebabfcd56961658e72f94baac06ad620134a0bc03b0674dd543d4883c7d5e18f
   languageName: node
   linkType: hard
 
