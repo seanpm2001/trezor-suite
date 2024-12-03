@@ -22,8 +22,11 @@ export interface StartEmu {
     model?: Model;
 }
 
-interface StartEmuType extends StartEmu {
-    type?: 'emulator-start';
+interface StartEmuType {
+    type: 'emulator-start';
+    version?: string;
+    wipe: boolean;
+    model: Model;
 }
 
 interface StartEmuFromUrl {
