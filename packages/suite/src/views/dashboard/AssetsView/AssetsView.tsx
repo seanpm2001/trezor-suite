@@ -1,7 +1,7 @@
 import styled, { useTheme } from 'styled-components';
 
 import { BigNumber } from '@trezor/utils/src/bigNumber';
-import { Icon, Button, LoadingContent, Card, Row } from '@trezor/components';
+import { Icon, Button, LoadingContent, Card, Row, Column, Text } from '@trezor/components';
 import { selectCurrentFiatRates } from '@suite-common/wallet-core';
 import { TokenInfo } from '@trezor/blockchain-link-types';
 import { AssetFiatBalance } from '@suite-common/assets';
@@ -165,6 +165,15 @@ export const AssetsView = () => {
 
     const showCards = isMobileLayout || dashboardAssetsGridMode;
 
+    const handleSwitchDeviceClick = () =>
+        dispatch(
+            goto('suite-switch-device', {
+                params: {
+                    cancelable: true,
+                },
+            }),
+        );
+
     return (
         <DashboardSection
             heading={
@@ -213,6 +222,18 @@ export const AssetsView = () => {
                 )
             }
         >
+            {assetsData.length === 0 && (
+                <Row alignItems="center" justifyContent="center" width="100%" height="100%">
+                    <Column alignItems="center" gap={spacings.sm}>
+                        <Text variant="tertiary" typographyStyle="label">
+                            Don't you see anything?
+                        </Text>
+                        <Button size="small" onClick={handleSwitchDeviceClick}>
+                            Check your wallet
+                        </Button>
+                    </Column>
+                </Row>
+            )}
             {showCards ? (
                 <>
                     <GridWrapper>

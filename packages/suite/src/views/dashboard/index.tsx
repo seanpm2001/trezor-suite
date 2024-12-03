@@ -17,6 +17,7 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: ${spacingsPx.xxxxl};
+    height: 100%;
 
     ${breakpointMediaQueries.below_sm} {
         /* for the promo banner */
