@@ -1,7 +1,12 @@
 import { useEffect, useMemo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
-import { ExcludedUtxos, FormState, UtxoSorting } from '@suite-common/wallet-types';
+import {
+    ExcludedUtxos,
+    FormState,
+    UtxoSorting,
+    WalletAccountTransaction,
+} from '@suite-common/wallet-types';
 import type { AccountUtxo, PROTO } from '@trezor/connect';
 import { getUtxoOutpoint, isSameUtxo } from '@suite-common/wallet-utils';
 import { BigNumber } from '@trezor/utils';
@@ -22,6 +27,64 @@ interface UtxoSelectionContextProps
     excludedUtxos: ExcludedUtxos;
     composeRequest: SendContextValues['composeTransaction'];
 }
+
+type UtxoSortingFunction = (context: {
+    accountTransactions: WalletAccountTransaction[];
+}) => (a: AccountUtxo, b: AccountUtxo) => number;
+
+const sortFromLargestToSmallest: UtxoSortingFunction = () => (a: AccountUtxo, b: AccountUtxo) =>
+    new BigNumber(b.amount).comparedTo(new BigNumber(a.amount));
+
+const sortFromNewestToOldest: UtxoSortingFunction =
+    ({ accountTransactions }) =>
+    (a: AccountUtxo, b: AccountUtxo) => {
+        let valueA: number;
+        let valueB: number;
+
+        if (a.blockHeight > 0 && b.blockHeight > 0) {
+            valueA = a.blockHeight;
+            valueB = b.blockHeight;
+        } else {
+            // Pending transactions do not have blockHeight, so we must use blockTime of the transaction instead.
+            const getBlockTime = (txid: string) => {
+                const transaction = accountTransactions.find(
+                    transaction => transaction.txid === txid,
+                );
+
+                return transaction?.blockTime ?? 0;
+            };
+            valueA = getBlockTime(a.txid);
+            valueB = getBlockTime(b.txid);
+        }
+
+        return new BigNumber(valueB ?? 0).comparedTo(new BigNumber(valueA ?? 0));
+    };
+
+const utxoSortMap: Record<UtxoSorting, UtxoSortingFunction> = {
+    largestFirst: sortFromLargestToSmallest,
+    smallestFirst:
+        context =>
+        (...params) =>
+            sortFromLargestToSmallest(context)(...params) * -1,
+
+    newestFirst: sortFromNewestToOldest,
+    oldestFirst:
+        context =>
+        (...params) =>
+            sortFromNewestToOldest(context)(...params) * -1,
+};
+
+const sortUtxos = (
+    utxos: AccountUtxo[],
+    utxoSorting: UtxoSorting | undefined,
+    accountTransactions: WalletAccountTransaction[],
+): AccountUtxo[] => {
+    if (utxoSorting === undefined) {
+        return utxos;
+    }
+
+    return [...utxos].sort(utxoSortMap[utxoSorting]({ accountTransactions }));
+};
 
 export const useUtxoSelection = ({
     account,
@@ -87,60 +150,16 @@ export const useUtxoSelection = ({
         composeRequest,
     ]);
 
-    const sortUtxos = (utxos: AccountUtxo[]): AccountUtxo[] => {
-        if (!utxoSorting) {
-            return utxos;
-        }
-
-        const sortFromNewestToOldest = (a: AccountUtxo, b: AccountUtxo) => {
-            let valueA: number;
-            let valueB: number;
-
-            if (a.blockHeight > 0 && b.blockHeight > 0) {
-                valueA = a.blockHeight;
-                valueB = b.blockHeight;
-            } else {
-                // Pending transactions do not have blockHeight, so we must use blockTime of the transaction instead.
-                const getBlockTime = (txid: string) => {
-                    const transaction = accountTransactions.find(
-                        transaction => transaction.txid === txid,
-                    );
-
-                    return transaction?.blockTime ?? 0;
-                };
-                valueA = getBlockTime(a.txid);
-                valueB = getBlockTime(b.txid);
-            }
-
-            return new BigNumber(valueB ?? 0).comparedTo(new BigNumber(valueA ?? 0));
-        };
-
-        const sortFromLargestToSmallest = (a: AccountUtxo, b: AccountUtxo) =>
-            new BigNumber(b.amount).comparedTo(new BigNumber(a.amount));
-
-        // Manipulating the array directly would cause a runtime error, so we create a copy.
-        const utxosForSorting = utxos.slice();
-
-        switch (utxoSorting) {
-            case 'newestFirst':
-                return utxosForSorting.sort(sortFromNewestToOldest);
-            case 'oldestFirst':
-                return utxosForSorting.sort(sortFromNewestToOldest).reverse();
-            case 'largestFirst':
-                return utxosForSorting.sort(sortFromLargestToSmallest);
-            case 'smallestFirst':
-                return utxosForSorting.sort(sortFromLargestToSmallest).reverse();
-        }
-    };
-
     const spendableUtxos: AccountUtxo[] = [];
     const lowAnonymityUtxos: AccountUtxo[] = [];
     const dustUtxos: AccountUtxo[] = [];
+
     // Skip sorting and categorizing UTXOs if coin control is not enabled.
     const utxos =
         options?.includes('utxoSelection') && account?.utxo
-            ? sortUtxos(account?.utxo)
+            ? sortUtxos(account?.utxo, utxoSorting, accountTransactions)
             : account?.utxo;
+
     if (utxos?.length) {
         utxos?.forEach(utxo => {
             switch (excludedUtxos[getUtxoOutpoint(utxo)]) {
