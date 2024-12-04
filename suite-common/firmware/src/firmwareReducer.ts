@@ -1,3 +1,5 @@
+import { isAnyOf } from '@reduxjs/toolkit';
+
 import { FirmwareStatus, TrezorDevice } from '@suite-common/suite-types';
 import {
     FirmwareType,
@@ -9,6 +11,7 @@ import {
 } from '@trezor/connect';
 import { createReducerWithExtraDeps } from '@suite-common/redux-utils';
 import { deviceActions } from '@suite-common/wallet-core';
+import { isDeviceKnown } from '@suite-common/suite-utils';
 
 import { firmwareActions } from './firmwareActions';
 
@@ -100,6 +103,20 @@ export const prepareFirmwareReducer = createReducerWithExtraDeps(initialState, (
                 // otherwise it could result in confirmation pill being displayed unintentionally.
                 if (!(action.type === DEVICE.BUTTON && state.status === 'initial'))
                     state.uiEvent = action;
+            },
+        )
+        .addMatcher(
+            isAnyOf(deviceActions.connectDevice, deviceActions.connectUnacquiredDevice),
+            (state, { payload: { device } }) => {
+                if (!isDeviceKnown(device)) return;
+
+                // use the automatic hash check to clear device if it hasn't passed hash check done after firmware update
+                // otherwise it'd be stuck in "error" state until next firmware update
+                if (device.authenticityChecks?.firmwareHash?.success) {
+                    state.firmwareHashInvalid = state.firmwareHashInvalid.filter(
+                        deviceId => deviceId !== device.id,
+                    );
+                }
             },
         );
 });
