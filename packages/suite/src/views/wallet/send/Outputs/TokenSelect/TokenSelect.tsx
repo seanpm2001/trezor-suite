@@ -90,7 +90,11 @@ const buildTokenOptions = (
     }
 
     if (accountTokens) {
-        const tokens = getTokens(accountTokens, symbol, coinDefinitions);
+        const tokens = getTokens({
+            tokens: accountTokens,
+            symbol,
+            tokenDefinitions: coinDefinitions,
+        });
 
         if (accountTokens && activeTokenTab === 'tokens') {
             tokens.shownWithBalance.forEach(token =>
