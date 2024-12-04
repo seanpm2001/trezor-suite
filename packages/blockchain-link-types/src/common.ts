@@ -5,6 +5,7 @@ import type {
     AddressAlias,
     TokenTransfer as BlockbookTokenTransfer,
     ContractInfo,
+    MultiTokenValue,
     StakingPool,
 } from './blockbook-api';
 
@@ -54,6 +55,8 @@ export interface ServerInfo {
 }
 
 export type TokenStandard = 'ERC20' | 'ERC1155' | 'ERC721' | 'SPL' | 'BEP20';
+
+export type EvmNftTokenStandard = Extract<TokenStandard, 'ERC1155' | 'ERC721'>;
 
 export type TransferType = 'sent' | 'recv' | 'self' | 'unknown';
 
@@ -188,6 +191,10 @@ export interface TokenInfo {
     accounts?: TokenAccount[]; // token accounts for solana
     policyId?: string; // Cardano policy id
     fingerprint?: string; // Cardano starting with "asset"
+    multiTokenValues?: MultiTokenValue[];
+    ids?: string[];
+    totalReceived?: string;
+    totalSent?: string;
     // transfers: number, // total transactions?
 }
 
