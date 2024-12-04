@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import { SelectedAccountLoaded } from '@suite-common/wallet-types';
-import { selectCoinDefinitions } from '@suite-common/token-definitions';
+import { selectCoinDefinitions, selectNftDefinitions } from '@suite-common/token-definitions';
 import { spacings } from '@trezor/theme';
 import { IconButton, Row } from '@trezor/components';
 import { EventType, analytics } from '@trezor/suite-analytics';
@@ -18,12 +18,14 @@ interface TokensNavigationProps {
     selectedAccount: SelectedAccountLoaded;
     searchQuery: string;
     setSearchQuery: Dispatch<SetStateAction<string>>;
+    isNft: boolean;
 }
 
 export const TokensNavigation = ({
     selectedAccount,
     searchQuery,
     setSearchQuery,
+    isNft = false,
 }: TokensNavigationProps) => {
     const { account } = selectedAccount;
 
@@ -32,17 +34,20 @@ export const TokensNavigation = ({
     const routeName = useSelector(selectRouteName);
 
     const coinDefinitions = useSelector(state =>
-        selectCoinDefinitions(state, selectedAccount.account.symbol),
+        isNft
+            ? selectNftDefinitions(state, selectedAccount.account.symbol)
+            : selectCoinDefinitions(state, selectedAccount.account.symbol),
     );
     const isDebug = useSelector(selectIsDebugModeActive);
     const dispatch = useDispatch();
 
-    const tokens = getTokens(
-        selectedAccount.account.tokens || [],
-        selectedAccount.account.symbol,
-        coinDefinitions,
-    );
-    const showAddToken = ['ethereum'].includes(account.networkType) && isDebug;
+    const tokens = getTokens({
+        tokens: selectedAccount.account.tokens || [],
+        symbol: selectedAccount.account.symbol,
+        tokenDefinitions: coinDefinitions,
+        isNft,
+    });
+    const showAddToken = ['ethereum'].includes(account.networkType) && isDebug && !isNft;
 
     const handleAddToken = () => {
         if (account.symbol) {
@@ -64,9 +69,9 @@ export const TokensNavigation = ({
             <Row alignItems="center" gap={spacings.xxs}>
                 <NavigationItem
                     nameId="TR_NAV_TOKENS"
-                    isActive={routeName === 'wallet-tokens'}
+                    isActive={isNft ? routeName === 'wallet-nfts' : routeName === 'wallet-tokens'}
                     icon="tokens"
-                    goToRoute="wallet-tokens"
+                    goToRoute={isNft ? 'wallet-nfts' : 'wallet-tokens'}
                     preserveParams
                     iconSize="mediumLarge"
                     itemsCount={tokens.shownWithBalance.length || undefined}
@@ -75,9 +80,13 @@ export const TokensNavigation = ({
                 />
                 <NavigationItem
                     nameId="TR_HIDDEN"
-                    isActive={routeName === 'wallet-tokens-hidden'}
+                    isActive={
+                        isNft
+                            ? routeName === 'wallet-nfts-hidden'
+                            : routeName === 'wallet-tokens-hidden'
+                    }
                     icon="hide"
-                    goToRoute="wallet-tokens-hidden"
+                    goToRoute={isNft ? 'wallet-nfts-hidden' : 'wallet-tokens-hidden'}
                     preserveParams
                     iconSize="mediumLarge"
                     itemsCount={tokens.hiddenWithBalance.length || undefined}
