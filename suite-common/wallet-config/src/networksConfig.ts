@@ -59,6 +59,7 @@ export const networks = {
             'rbf',
             'sign-verify',
             'tokens',
+            'nfts',
             'coin-definitions',
             'nft-definitions',
             'staking',
@@ -95,7 +96,7 @@ export const networks = {
             nft: 'https://pol1.trezor.io/nft/',
             address: 'https://pol1.trezor.io/address/',
         },
-        features: ['rbf', 'sign-verify', 'tokens', 'coin-definitions', 'nft-definitions'],
+        features: ['rbf', 'sign-verify', 'tokens', 'nfts', 'coin-definitions', 'nft-definitions'],
         customBackends: ['blockbook'],
         accountTypes: {
             ledger: {
@@ -122,7 +123,7 @@ export const networks = {
             nft: 'https://bsc1.trezor.io/nft/',
             address: 'https://bsc1.trezor.io/address/',
         },
-        features: ['rbf', 'sign-verify', 'tokens', 'coin-definitions', 'nft-definitions'],
+        features: ['rbf', 'sign-verify', 'tokens', 'nfts', 'coin-definitions', 'nft-definitions'],
         customBackends: ['blockbook'],
         accountTypes: {
             ledger: {
@@ -149,7 +150,7 @@ export const networks = {
             nft: 'https://basescan.org/nft/',
             address: 'https://basescan.org/address/',
         },
-        features: ['rbf', 'sign-verify', 'tokens', 'coin-definitions', 'nft-definitions'],
+        features: ['rbf', 'sign-verify', 'tokens', 'nfts', 'coin-definitions', 'nft-definitions'],
         customBackends: ['blockbook'],
         accountTypes: {
             ledger: {
@@ -177,7 +178,7 @@ export const networks = {
             nft: 'https://op1.trezor.io/nft/',
             address: 'https://op1.trezor.io/address/',
         },
-        features: ['rbf', 'sign-verify', 'tokens', 'coin-definitions', 'nft-definitions'],
+        features: ['rbf', 'sign-verify', 'tokens', 'nfts', 'coin-definitions', 'nft-definitions'],
         customBackends: ['blockbook'],
         accountTypes: {
             ledger: {
@@ -277,7 +278,7 @@ export const networks = {
             nft: 'https://etc1.trezor.io/nft/',
             address: 'https://etc1.trezor.io/address/',
         },
-        features: ['sign-verify', 'tokens', 'coin-definitions'],
+        features: ['sign-verify', 'tokens', 'coin-definitions', 'nfts', 'nft-definitions'],
         customBackends: ['blockbook'],
         accountTypes: {},
         coingeckoId: 'ethereum-classic',
@@ -583,7 +584,7 @@ export const networks = {
             nft: 'https://sepolia1.trezor.io/nft/',
             address: 'https://sepolia1.trezor.io/address/',
         },
-        features: ['rbf', 'sign-verify', 'tokens'],
+        features: ['rbf', 'sign-verify', 'tokens', 'nfts', 'nft-definitions'],
         customBackends: ['blockbook'],
         accountTypes: {},
         coingeckoId: undefined,
@@ -603,7 +604,7 @@ export const networks = {
             nft: 'https://holesky1.trezor.io/nft/',
             address: 'https://holesky1.trezor.io/address/',
         },
-        features: ['rbf', 'sign-verify', 'tokens', 'staking'],
+        features: ['rbf', 'sign-verify', 'tokens', 'nfts', 'nft-definitions'],
         customBackends: ['blockbook'],
         accountTypes: {},
         coingeckoId: undefined,
