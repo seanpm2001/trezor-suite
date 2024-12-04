@@ -35,3 +35,10 @@ export const getTokenExplorerUrl = (
 
     return `${explorerUrl}${contractAddress}${queryString}`;
 };
+
+export const getNftExplorerUrl = (network: Network, nft: TokenInfo, id?: string) => {
+    const explorerUrl = network.explorer.nft;
+    const contractAddressWithId = nft.contract + `/${id}`;
+
+    return `${explorerUrl}${contractAddressWithId}`;
+};

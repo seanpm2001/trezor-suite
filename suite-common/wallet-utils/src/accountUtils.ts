@@ -1183,3 +1183,16 @@ export const isTokenMatchesSearch = (token: TokenInfo, search: string) => {
         token.policyId?.toLowerCase().includes(search)
     );
 };
+
+export const isNftMatchesSearch = (token: TokenInfo, search: string) => {
+    return (
+        token.symbol?.toLowerCase().includes(search) ||
+        token.name?.toLowerCase().includes(search) ||
+        token.contract?.toLowerCase().includes(search) ||
+        token.ids
+            ?.map(id => id.toString())
+            .join(', ')
+            .includes(search) ||
+        token.multiTokenValues?.some(value => value.id?.includes(search))
+    );
+};
