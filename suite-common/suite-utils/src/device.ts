@@ -119,7 +119,7 @@ export const isDeviceAccessible = (device?: TrezorDevice) => {
     return device.mode === 'normal' && device.firmware !== 'required';
 };
 
-// for those cases where Device type from connect
+// useful for working with `Device` type straight from connect, which is missing `ExtendedDevice` properties (required on `TrezorDevice`)
 export const isDeviceKnown = (device?: Device): device is KnownDevice =>
     device?.type === 'acquired';
 
