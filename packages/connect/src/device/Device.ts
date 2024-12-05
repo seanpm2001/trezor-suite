@@ -533,6 +533,13 @@ export class Device extends TypedEmitter<DeviceEvents> {
                 if (fn) {
                     await this.initialize(!!options.useCardanoDerivation);
                 } else {
+                    try {
+                        await this.commands?.typedCall('Cancel', 'Success');
+                    } catch (err) {
+                        // eslint-disable-next-line no-console
+                        console.log('Meow this is expected', err);
+                    }
+
                     const getFeaturesTimeout =
                         DataManager.getSettings('env') === 'react-native'
                             ? GET_FEATURES_TIMEOUT_REACT_NATIVE
