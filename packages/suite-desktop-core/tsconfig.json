@@ -31,6 +31,7 @@
         { "path": "../ipc-proxy" },
         { "path": "../node-utils" },
         { "path": "../request-manager" },
+        { "path": "../suite" },
         { "path": "../suite-desktop-api" },
         { "path": "../transport-bridge" },
         { "path": "../urls" },

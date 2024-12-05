@@ -1,6 +1,7 @@
 import { test, expect } from '../../support/fixtures';
 
 test.use({
+    emulatorStartConf: { wipe: true },
     emulatorSetupConf: {
         needs_backup: true,
         mnemonic:

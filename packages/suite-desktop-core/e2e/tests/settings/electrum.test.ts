@@ -1,5 +1,10 @@
 import { test, expect } from '../../support/fixtures';
 
+test.use({
+    emulatorStartConf: { wipe: true },
+    emulatorSetupConf: { needs_backup: true, mnemonic: 'mnemonic_all' },
+});
+
 test.describe.serial(
     'Suite works with Electrum server',
     { tag: ['@group=settings', '@desktopOnly'] },
@@ -21,7 +26,6 @@ test.describe.serial(
             const electrumUrl = '127.0.0.1:50001:t';
 
             await settingsPage.navigateTo();
-            await settingsPage.toggleDebugModeInSettings();
             await settingsPage.coinsTabButton.click();
             await settingsPage.openCoinAdvanceSettings('regtest');
             await settingsPage.changeCoinBackend('electrum', electrumUrl);

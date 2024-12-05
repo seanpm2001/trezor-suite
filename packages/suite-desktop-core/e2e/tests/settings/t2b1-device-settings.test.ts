@@ -8,11 +8,9 @@ import { test, expect } from '../../support/fixtures';
 test.describe.serial('T2B1 - Device settings', { tag: ['@group=settings'] }, () => {
     test.use({
         emulatorStartConf: { version: '2-latest', model: 'T2B1', wipe: true },
-        emulatorSetupConf: {},
     });
 
     test.beforeEach(async ({ onboardingPage, settingsPage }) => {
-        await onboardingPage.disableFirmwareHashCheck();
         await onboardingPage.completeOnboarding();
         await settingsPage.navigateTo();
         await settingsPage.deviceTabButton.click();
@@ -27,11 +25,14 @@ test.describe.serial('T2B1 - Device settings', { tag: ['@group=settings'] }, () 
      * 6. change the device's background
      * 7. change the device's rotation
      */
-    test('change all possible device settings', async ({ trezorUserEnvLink, window: page }) => {
+    test('change all possible device settings', async ({
+        trezorUserEnvLink,
+        window: page,
+        baseURL,
+    }) => {
         const newDeviceName = 'TREVOR!';
 
         // verify firmware modal
-        // await page.pause();
         await page.getByTestId('@settings/device/update-button').click();
         await page.getByTestId('@modal/close-button').click();
 
@@ -46,7 +47,12 @@ test.describe.serial('T2B1 - Device settings', { tag: ['@group=settings'] }, () 
         await expect(page.getByTestId('@menu/device/label')).toHaveText(newDeviceName);
 
         // change background
+        const buttonImageLoad = page.waitForRequest(
+            `${baseURL}/static/images/homescreens/BW_64x128/circleweb.png`,
+        );
         await page.getByTestId('@settings/device/homescreen-gallery').click();
+        // On Web the there is instability, Playwright keeps clicking the button too soon.
+        await buttonImageLoad;
         await page.getByTestId(`@modal/gallery/bw_64x128/circleweb`).click();
         await expect(page.getByTestId('@prompts/confirm-on-device')).toBeVisible();
         await trezorUserEnvLink.pressYes();

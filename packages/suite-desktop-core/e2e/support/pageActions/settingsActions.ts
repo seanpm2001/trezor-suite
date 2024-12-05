@@ -4,7 +4,7 @@ import { BackendType, NetworkSymbol } from '@suite-common/wallet-config';
 
 export class SettingsActions {
     private readonly window: Page;
-    private readonly TIMES_CLICK_TO_SET_DEBUG_MODE = 7;
+    private readonly TIMES_CLICK_TO_SET_DEBUG_MODE = 5;
     readonly settingsMenuButton: Locator;
     readonly settingsHeader: Locator;
     readonly debugTabButton: Locator;
@@ -61,10 +61,6 @@ export class SettingsActions {
 
     async toggleDebugModeInSettings() {
         await expect(this.settingsHeader).toBeVisible();
-        const isDebugModeAlreadyToggled = await this.debugTabButton.isVisible();
-        if (isDebugModeAlreadyToggled) {
-            return;
-        }
         for (let i = 0; i < this.TIMES_CLICK_TO_SET_DEBUG_MODE; i++) {
             await this.settingsHeader.click();
         }

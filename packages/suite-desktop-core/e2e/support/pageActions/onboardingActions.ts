@@ -6,7 +6,7 @@ import { SUITE as SuiteActions } from '@trezor/suite/src/actions/suite/constants
 import { PlaywrightProjects } from '../../playwright.config';
 
 export class OnboardingActions {
-    readonly model: Model | undefined;
+    readonly model: Model;
     readonly testInfo: TestInfo;
     readonly welcomeTitle: Locator;
     readonly analyticsHeading: Locator;
@@ -17,10 +17,11 @@ export class OnboardingActions {
     readonly connectDevicePrompt: Locator;
     readonly authenticityStartButton: Locator;
     readonly authenticityContinueButton: Locator;
+    isModelWithSecureElement = () => ['T2B1', 'T3T1'].includes(this.model);
 
     constructor(
         public window: Page,
-        model: Model | undefined,
+        model: Model,
         testInfo: TestInfo,
     ) {
         this.model = model;
@@ -47,10 +48,13 @@ export class OnboardingActions {
     }
 
     async completeOnboarding() {
+        if (this.testInfo.project.name === PlaywrightProjects.Web) {
+            await this.disableFirmwareHashCheck();
+        }
         await this.optionallyDismissFwHashCheckError();
         await this.analyticsContinueButton.click();
         await this.onboardingContinueButton.click();
-        if (this.model && ['T2B1', 'T3T1'].includes(this.model)) {
+        if (this.isModelWithSecureElement()) {
             await this.authenticityStartButton.click();
             await TrezorUserEnvLink.pressYes();
             await this.authenticityContinueButton.click();
@@ -60,11 +64,7 @@ export class OnboardingActions {
     }
 
     async disableFirmwareHashCheck() {
-        if (this.testInfo.project.name === PlaywrightProjects.Desktop) {
-            // Desktop app starts already with disabled hash check
-            return;
-        }
-
+        // Desktop starts with already disabled firmware hash check. Web needs to disable it.
         await expect(this.welcomeTitle).toBeVisible({ timeout: 10000 });
         // eslint-disable-next-line @typescript-eslint/no-shadow
         await this.window.evaluate(SuiteActions => {

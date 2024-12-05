@@ -11,7 +11,7 @@ export const useCypress = () => {
     const store = useStore();
 
     useEffect(() => {
-        if (typeof window !== 'undefined' && window.Cypress) {
+        if (typeof window !== 'undefined' && (window.Cypress || window.Playwright)) {
             window.store = store;
             window.TrezorConnect = TrezorConnect;
 

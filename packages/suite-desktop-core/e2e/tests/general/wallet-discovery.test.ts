@@ -1,5 +1,10 @@
 import { test, expect } from '../../support/fixtures';
 
+test.use({
+    emulatorStartConf: { wipe: true },
+    emulatorSetupConf: { needs_backup: true, mnemonic: 'mnemonic_all' },
+});
+
 test.beforeEach(async ({ onboardingPage, dashboardPage }) => {
     await onboardingPage.completeOnboarding();
     await dashboardPage.discoveryShouldFinish();

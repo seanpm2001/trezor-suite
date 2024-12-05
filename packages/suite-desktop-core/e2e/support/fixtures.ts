@@ -33,8 +33,8 @@ type Fixtures = {
 
 const test = base.extend<Fixtures>({
     startEmulator: true,
-    emulatorStartConf: { wipe: true },
-    emulatorSetupConf: { needs_backup: true, mnemonic: 'mnemonic_all' },
+    emulatorStartConf: {},
+    emulatorSetupConf: {},
     /* eslint-disable-next-line no-empty-pattern */
     trezorUserEnvLink: async ({}, use) => {
         await use(TrezorUserEnvLink);
@@ -81,7 +81,8 @@ const test = base.extend<Fixtures>({
             await window.context().tracing.stop({ path: tracePath });
         } else {
             await page.context().addInitScript(() => {
-                window.Cypress = true;
+                // Tells the app to attach Redux Store to window object. packages/suite-web/src/support/useCypress.ts
+                window.Playwright = true;
             });
             await page.goto('./');
             await use(page);
@@ -104,7 +105,11 @@ const test = base.extend<Fixtures>({
         await use(walletPage);
     },
     onboardingPage: async ({ window, emulatorStartConf }, use, testInfo) => {
-        const onboardingPage = new OnboardingActions(window, emulatorStartConf.model, testInfo);
+        const onboardingPage = new OnboardingActions(
+            window,
+            emulatorStartConf.model ?? TrezorUserEnvLink.defaultModel,
+            testInfo,
+        );
         await use(onboardingPage);
     },
 });

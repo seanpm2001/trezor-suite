@@ -70,7 +70,7 @@ export class TrezorUserEnvLinkClass extends TypedEmitter<WebsocketClientEvents> 
     private client: WebsocketClient;
     public firmwares?: Firmwares;
     private defaultFirmware?: string;
-    private defaultModel: Model = 'T2T1';
+    public defaultModel: Model = 'T2T1';
 
     public currentEmulatorSetup?: Partial<SetupEmu> = {};
     public currentEmulatorSettings: Partial<ApplySettings> = {};
