@@ -269,14 +269,13 @@ const firmwareCheck = async (
         }),
     );
 
-    if (1 > 0) throw new Error('Oh no FW hash check is velký špatný');
-
     return (
         // @ts-expect-error T1B1
         getFirmwareHashResponse.message !== 'Unknown message' &&
         // @ts-expect-error T2T1
         getFirmwareHashResponse.message !== 'Unexpected message' &&
-        getFirmwareHashResponse.message.hash === hash
+        getFirmwareHashResponse.message.hash === hash &&
+        0 > 1
     );
 };
 
