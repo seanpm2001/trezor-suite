@@ -1,13 +1,14 @@
 import { useArgs } from '@storybook/client-api';
 import { Meta, StoryObj } from '@storybook/react';
 
-import { SelectBar as SelectBarComponent, SelectBarProps } from './SelectBar';
+import { fillTypes, SelectBar as SelectBarComponent, SelectBarProps } from './SelectBar';
+import { IconName } from '../../Icon/Icon';
 
 const options = [
     { label: 'low', value: 'low' },
     { label: 'medium', value: 'medium' },
     { label: 'high', value: 'high' },
-    { label: 'custom', value: 'custom' },
+    { label: 'custom', value: 'custom', icon: 'clock' as IconName },
 ];
 
 const meta: Meta = {
@@ -18,6 +19,7 @@ const meta: Meta = {
         selectedOption: 'low',
         isDisabled: false,
         isFullWidth: undefined,
+        fillType: 'default',
     },
     argTypes: {
         label: {
@@ -49,6 +51,12 @@ const meta: Meta = {
             control: {
                 type: 'boolean',
             },
+        },
+        fillType: {
+            control: {
+                type: 'radio',
+            },
+            options: fillTypes,
         },
     },
     component: SelectBarComponent,

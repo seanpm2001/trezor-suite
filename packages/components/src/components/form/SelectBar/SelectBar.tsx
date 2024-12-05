@@ -22,9 +22,14 @@ import {
     withFrameProps,
 } from '../../../utils/frameProps';
 import { TransientProps } from '../../../utils/transientProps';
+import { Icon, IconName } from '../../Icon/Icon';
+import { Row } from '../../Flex/Flex';
 
 export const allowedSelectBarFrameProps = ['margin', 'width'] as const satisfies FramePropsKeys[];
 type AllowedFrameProps = Pick<FrameProps, (typeof allowedSelectBarFrameProps)[number]>;
+
+export const fillTypes = ['none', 'default'] as const;
+export type FillType = (typeof fillTypes)[number];
 
 const Wrapper = styled.div<TransientProps<AllowedFrameProps> & { $isFullWidth?: boolean }>`
     display: flex;
@@ -63,6 +68,7 @@ const Options = styled.div<{
     $optionsCount: number;
     $isFullWidth?: boolean;
     $elevation: Elevation;
+    $fillType: FillType;
 }>`
     position: relative;
     display: grid;
@@ -70,7 +76,8 @@ const Options = styled.div<{
     grid-auto-flow: column;
     gap: ${spacingsPx.xxs};
     padding: ${spacingsPx.xxs};
-    background: ${mapElevationToBackground};
+    background: ${({ $fillType, theme, $elevation }) =>
+        $fillType === 'default' ? mapElevationToBackground({ theme, $elevation }) : undefined};
     border-radius: ${borders.radii.full};
     width: ${({ $isFullWidth }) => ($isFullWidth ? '100%' : 'auto')};
 
@@ -156,6 +163,7 @@ type ValueTypes = number | string | boolean;
 type Option<V extends ValueTypes> = {
     label: ReactNode;
     value: V;
+    icon?: IconName;
 };
 
 export type SelectBarProps<V extends ValueTypes> = {
@@ -167,6 +175,7 @@ export type SelectBarProps<V extends ValueTypes> = {
     isFullWidth?: boolean;
     className?: string;
     'data-testid'?: string;
+    fillType?: FillType;
 } & AllowedFrameProps;
 
 // Generic type V is determined by selectedOption/options values
@@ -178,6 +187,7 @@ export const SelectBar = <V extends ValueTypes>({
     isDisabled = false,
     isFullWidth,
     className,
+    fillType = 'default',
     'data-testid': dataTest,
     ...rest
 }: SelectBarProps<V>) => {
@@ -247,6 +257,7 @@ export const SelectBar = <V extends ValueTypes>({
                 $optionsCount={options.length}
                 $isFullWidth={isFullWidth}
                 $elevation={elevation}
+                $fillType={fillType}
             >
                 <Puck
                     $optionsCount={options.length}
@@ -256,22 +267,38 @@ export const SelectBar = <V extends ValueTypes>({
                     onKeyDown={handleKeyboardNav}
                 />
 
-                {options.map(option => (
-                    <Option
-                        key={String(option.value)}
-                        onClick={handleOptionClick(option)}
-                        $isDisabled={!!isDisabled}
-                        $isSelected={
-                            selectedOptionIn !== undefined
-                                ? selectedOptionIn === option.value
-                                : false
-                        }
-                        data-testid={`select-bar/${String(option.value)}`}
-                    >
+                {options.map(option => {
+                    const content = option.icon ? (
+                        <Row gap={spacings.xs}>
+                            <Icon
+                                name={option.icon}
+                                size="medium"
+                                variant={selectedOptionIn === option.value ? 'primary' : undefined}
+                            />
+                            <span>{option.label}</span>
+                        </Row>
+                    ) : (
                         <span>{option.label}</span>
-                        <WidthMock>{option.label}</WidthMock>
-                    </Option>
-                ))}
+                    );
+
+                    return (
+                        <Option
+                            key={String(option.value)}
+                            onClick={handleOptionClick(option)}
+                            $isDisabled={!!isDisabled}
+                            $isSelected={
+                                selectedOptionIn !== undefined
+                                    ? selectedOptionIn === option.value
+                                    : false
+                            }
+                            data-testid={`select-bar/${String(option.value)}`}
+                        >
+                            {content}
+
+                            <WidthMock>{content}</WidthMock>
+                        </Option>
+                    );
+                })}
             </Options>
         </Wrapper>
     );
