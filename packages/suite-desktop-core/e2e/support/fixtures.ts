@@ -2,7 +2,12 @@
 
 import { test as base, ElectronApplication, Page } from '@playwright/test';
 
-import { TrezorUserEnvLink, TrezorUserEnvLinkClass } from '@trezor/trezor-user-env-link';
+import {
+    SetupEmu,
+    StartEmu,
+    TrezorUserEnvLink,
+    TrezorUserEnvLinkClass,
+} from '@trezor/trezor-user-env-link';
 
 import { DashboardActions } from './pageActions/dashboardActions';
 import { launchSuite } from './common';
@@ -14,10 +19,8 @@ import { PlaywrightProjects } from '../playwright.config';
 
 type Fixtures = {
     startEmulator: boolean;
-    emulatorConf: {
-        needs_backup: boolean;
-        mnemonic: string;
-    };
+    emulatorStartConf: StartEmu;
+    emulatorSetupConf: SetupEmu;
     trezorUserEnvLink: TrezorUserEnvLinkClass;
     appContext: ElectronApplication | undefined;
     window: Page;
@@ -30,16 +33,21 @@ type Fixtures = {
 
 const test = base.extend<Fixtures>({
     startEmulator: true,
-    emulatorConf: {
-        needs_backup: true,
-        mnemonic: 'mnemonic_all',
-    },
+    emulatorStartConf: { wipe: true },
+    emulatorSetupConf: { needs_backup: true, mnemonic: 'mnemonic_all' },
     /* eslint-disable-next-line no-empty-pattern */
     trezorUserEnvLink: async ({}, use) => {
         await use(TrezorUserEnvLink);
     },
     appContext: async (
-        { trezorUserEnvLink, startEmulator, emulatorConf, locale, colorScheme },
+        {
+            trezorUserEnvLink,
+            startEmulator,
+            emulatorStartConf,
+            emulatorSetupConf,
+            locale,
+            colorScheme,
+        },
         use,
         testInfo,
     ) => {
@@ -48,8 +56,8 @@ const test = base.extend<Fixtures>({
             await trezorUserEnvLink.stopBridge();
             await trezorUserEnvLink.stopEmu();
             await trezorUserEnvLink.connect();
-            await trezorUserEnvLink.startEmu({ wipe: true });
-            await trezorUserEnvLink.setupEmu(emulatorConf);
+            await trezorUserEnvLink.startEmu(emulatorStartConf);
+            await trezorUserEnvLink.setupEmu(emulatorSetupConf);
         }
 
         if (testInfo.project.name === PlaywrightProjects.Desktop) {
@@ -65,12 +73,16 @@ const test = base.extend<Fixtures>({
     },
     window: async ({ appContext, page }, use, testInfo) => {
         if (appContext) {
+            await page.close(); // Close the default chromium page
             const window = await appContext.firstWindow();
             await window.context().tracing.start({ screenshots: true, snapshots: true });
             await use(window);
             const tracePath = `${testInfo.outputDir}/trace.electron.zip`;
             await window.context().tracing.stop({ path: tracePath });
         } else {
+            await page.context().addInitScript(() => {
+                window.Cypress = true;
+            });
             await page.goto('./');
             await use(page);
         }
@@ -91,8 +103,8 @@ const test = base.extend<Fixtures>({
         const walletPage = new WalletActions(window);
         await use(walletPage);
     },
-    onboardingPage: async ({ window }, use) => {
-        const onboardingPage = new OnboardingActions(window);
+    onboardingPage: async ({ window, emulatorStartConf }, use, testInfo) => {
+        const onboardingPage = new OnboardingActions(window, emulatorStartConf.model, testInfo);
         await use(onboardingPage);
     },
 });

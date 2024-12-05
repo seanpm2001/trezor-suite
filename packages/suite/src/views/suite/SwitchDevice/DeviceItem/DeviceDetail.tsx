@@ -4,7 +4,9 @@ import { TruncateWithTooltip, Column } from '@trezor/components';
 
 export const DeviceDetail = ({ label, children }: { label: string; children: ReactNode }) => (
     <Column overflow="hidden" flex="1" alignItems="flex-start">
-        <TruncateWithTooltip>{label}</TruncateWithTooltip>
+        <TruncateWithTooltip>
+            <span data-testid="@menu/device/label">{label}</span>
+        </TruncateWithTooltip>
         {children}
     </Column>
 );

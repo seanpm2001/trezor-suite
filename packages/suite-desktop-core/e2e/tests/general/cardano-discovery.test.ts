@@ -1,7 +1,7 @@
 import { test, expect } from '../../support/fixtures';
 
 test.use({
-    emulatorConf: {
+    emulatorSetupConf: {
         needs_backup: true,
         mnemonic:
             'cloth trim improve bag pigeon party wave mechanic beyond clean cake maze protect left assist carry guitar bridge nest faith critic excuse tooth dutch',

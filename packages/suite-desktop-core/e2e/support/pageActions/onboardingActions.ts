@@ -1,6 +1,13 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { Locator, Page, TestInfo, expect } from '@playwright/test';
+
+import { Model, TrezorUserEnvLink } from '@trezor/trezor-user-env-link';
+import { SUITE as SuiteActions } from '@trezor/suite/src/actions/suite/constants';
+
+import { PlaywrightProjects } from '../../playwright.config';
 
 export class OnboardingActions {
+    readonly model: Model | undefined;
+    readonly testInfo: TestInfo;
     readonly welcomeTitle: Locator;
     readonly analyticsHeading: Locator;
     readonly analyticsContinueButton: Locator;
@@ -8,8 +15,16 @@ export class OnboardingActions {
     readonly onboardingViewOnlySkipButton: Locator;
     readonly viewOnlyTooltipGotItButton: Locator;
     readonly connectDevicePrompt: Locator;
+    readonly authenticityStartButton: Locator;
+    readonly authenticityContinueButton: Locator;
 
-    constructor(public window: Page) {
+    constructor(
+        public window: Page,
+        model: Model | undefined,
+        testInfo: TestInfo,
+    ) {
+        this.model = model;
+        this.testInfo = testInfo;
         this.welcomeTitle = this.window.getByTestId('@welcome/title');
         this.analyticsHeading = this.window.getByTestId('@analytics/consent/heading');
         this.analyticsContinueButton = this.window.getByTestId('@analytics/continue-button');
@@ -17,6 +32,10 @@ export class OnboardingActions {
         this.onboardingViewOnlySkipButton = this.window.getByTestId('@onboarding/viewOnly/skip');
         this.viewOnlyTooltipGotItButton = this.window.getByTestId('@viewOnlyTooltip/gotIt');
         this.connectDevicePrompt = this.window.getByTestId('@connect-device-prompt');
+        this.authenticityStartButton = this.window.getByTestId('@authenticity-check/start-button');
+        this.authenticityContinueButton = this.window.getByTestId(
+            '@authenticity-check/continue-button',
+        );
     }
 
     async optionallyDismissFwHashCheckError() {
@@ -31,7 +50,32 @@ export class OnboardingActions {
         await this.optionallyDismissFwHashCheckError();
         await this.analyticsContinueButton.click();
         await this.onboardingContinueButton.click();
+        if (this.model && ['T2B1', 'T3T1'].includes(this.model)) {
+            await this.authenticityStartButton.click();
+            await TrezorUserEnvLink.pressYes();
+            await this.authenticityContinueButton.click();
+        }
         await this.onboardingViewOnlySkipButton.click();
         await this.viewOnlyTooltipGotItButton.click();
+    }
+
+    async disableFirmwareHashCheck() {
+        if (this.testInfo.project.name === PlaywrightProjects.Desktop) {
+            // Desktop app starts already with disabled hash check
+            return;
+        }
+
+        await expect(this.welcomeTitle).toBeVisible({ timeout: 10000 });
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        await this.window.evaluate(SuiteActions => {
+            window.store.dispatch({
+                type: SuiteActions.DEVICE_FIRMWARE_HASH_CHECK,
+                payload: { isDisabled: true },
+            });
+            window.store.dispatch({
+                type: SuiteActions.SET_DEBUG_MODE,
+                payload: { showDebugMenu: true },
+            });
+        }, SuiteActions);
     }
 }

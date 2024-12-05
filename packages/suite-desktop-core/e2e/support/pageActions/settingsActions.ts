@@ -61,6 +61,10 @@ export class SettingsActions {
 
     async toggleDebugModeInSettings() {
         await expect(this.settingsHeader).toBeVisible();
+        const isDebugModeAlreadyToggled = await this.debugTabButton.isVisible();
+        if (isDebugModeAlreadyToggled) {
+            return;
+        }
         for (let i = 0; i < this.TIMES_CLICK_TO_SET_DEBUG_MODE; i++) {
             await this.settingsHeader.click();
         }
