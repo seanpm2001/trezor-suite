@@ -24,7 +24,7 @@ export type DeviceItemContentVariant = 'simple' | 'walletDetail';
 export type DeviceItemContentMode = 'compact' | 'header';
 
 export type DeviceItemContentProps = {
-    deviceState: NonNullable<TrezorDevice['state']>;
+    deviceState: TrezorDevice['state'] | undefined;
     headerTextVariant?: TypographyStyle;
     variant?: DeviceItemContentVariant;
     isCompact?: boolean;
@@ -61,7 +61,7 @@ export const DeviceItemContent = React.memo(
 
         const device = useSelectorDeepComparison((state: DeviceRootState) => {
             // select only what is needed to avoid unnecessary rerenders
-            const d = selectDeviceByState(state, deviceState);
+            const d = deviceState ? selectDeviceByState(state, deviceState) : undefined;
             if (!d) return null;
 
             return {

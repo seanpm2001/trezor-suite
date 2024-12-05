@@ -11,7 +11,7 @@ import { TrezorDevice } from '@suite-common/suite-types/src/device';
 import { ConnectionDot } from './ConnectionDot';
 
 export type WalletDetailDeviceItemContentProps = {
-    deviceState: NonNullable<TrezorDevice['state']>;
+    deviceState: TrezorDevice['state'] | undefined;
     headerTextVariant?: TypographyStyle;
     header: ReactNode;
     subHeader?: ReactNode;
@@ -38,7 +38,9 @@ export const WalletDetailDeviceItemContent = ({
     isPortfolioTrackerDevice,
 }: WalletDetailDeviceItemContentProps) => {
     const { applyStyle } = useNativeStyles();
-    const device = useSelector((state: DeviceRootState) => selectDeviceByState(state, deviceState));
+    const device = useSelector((state: DeviceRootState) =>
+        deviceState ? selectDeviceByState(state, deviceState) : undefined,
+    );
 
     if (!device) {
         return null;
