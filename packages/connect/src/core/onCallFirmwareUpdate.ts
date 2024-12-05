@@ -269,6 +269,8 @@ const firmwareCheck = async (
         }),
     );
 
+    if (1 > 0) throw new Error('Oh no FW hash check is velký špatný');
+
     return (
         // @ts-expect-error T1B1
         getFirmwareHashResponse.message !== 'Unknown message' &&
