@@ -48,5 +48,4 @@ module.exports = {
     optimization: {
         minimize: false,
     },
-    plugins: [new webpack.NormalModuleReplacementPlugin(/^ws$/, `${SRC}/utils/ws`)],
 };

@@ -1,5 +1,3 @@
-import WebSocket from 'ws';
-
 import type {
     Send,
     BlockContent,
@@ -23,8 +21,8 @@ export class BlockfrostAPI extends BaseWebsocket<BlockfrostEvents> {
     protected createWebsocket() {
         const { url } = this.options;
 
-        // options are not used in web builds (see ./src/utils/ws)
-        return new WebSocket(url, {
+        // options are not used in web builds (see @trezor/websocket/ws-browser)
+        return this.initWebsocket(url, {
             agent: this.options.agent,
             headers: {
                 Origin: 'https://node.trezor.io',

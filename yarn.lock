@@ -11330,6 +11330,7 @@ __metadata:
     "@trezor/type-utils": "workspace:*"
     "@trezor/utils": "workspace:*"
     "@trezor/utxo-lib": "workspace:*"
+    "@trezor/websocket": "workspace:*"
     "@types/web": "npm:^0.0.174"
     events: "npm:^3.3.0"
     fs-extra: "npm:^11.2.0"
@@ -11342,7 +11343,6 @@ __metadata:
     webpack-cli: "npm:^5.1.4"
     webpack-dev-server: "npm:^5.0.4"
     worker-loader: "npm:^3.0.8"
-    ws: "npm:^8.18.0"
   peerDependencies:
     tslib: ^2.6.2
   languageName: unknown
@@ -12578,7 +12578,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@trezor/websocket@workspace:packages/websocket":
+"@trezor/websocket@workspace:*, @trezor/websocket@workspace:packages/websocket":
   version: 0.0.0-use.local
   resolution: "@trezor/websocket@workspace:packages/websocket"
   dependencies:

@@ -1,5 +1,3 @@
-import WebSocket from 'ws';
-
 import { CustomError } from '@trezor/blockchain-link-types/src/constants/errors';
 import type {
     BlockNotification,
@@ -49,8 +47,8 @@ export class BlockbookAPI extends BaseWebsocket<BlockbookEvents> {
         }
 
         // initialize connection,
-        // options are not used in web builds (see ./src/utils/ws)
-        return new WebSocket(url, {
+        // options are not used in web builds (see @trezor/websocket/ws-browser)
+        return this.initWebsocket(url, {
             agent: this.options.agent,
             headers: {
                 Origin: 'https://node.trezor.io',

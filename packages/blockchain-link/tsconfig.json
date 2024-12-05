@@ -14,6 +14,7 @@
         { "path": "../utxo-lib" },
         { "path": "../e2e-utils" },
         { "path": "../eslint" },
-        { "path": "../type-utils" }
+        { "path": "../type-utils" },
+        { "path": "../websocket" }
     ]
 }
