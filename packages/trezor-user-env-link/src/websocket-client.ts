@@ -1,13 +1,10 @@
 /* eslint-disable no-console */
 
-import WebSocket, { RawData } from 'ws';
 import fetch from 'cross-fetch';
 
-import { createDeferred, Deferred, TypedEmitter } from '@trezor/utils';
+import { WebsocketClient as WebsocketClientBase } from '@trezor/websocket';
 
 import { Firmwares } from './types';
-
-const NOT_INITIALIZED = new Error('websocket_not_initialized');
 
 // Making the timeout high because the controller in trezor-user-env
 // must synchronously run actions on emulator and they may take a long time
@@ -22,127 +19,67 @@ const USER_ENV_URL = {
     DASHBOARD: `http://127.0.0.1:9002`,
 };
 
-interface Options {
-    pingTimeout?: number;
-    url?: string;
-    timeout?: number;
-}
-
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export type WebsocketClientEvents = {
-    firmwares: (firmwares: Firmwares) => void;
-    disconnected: () => void;
+    firmwares: Firmwares;
+    disconnected: undefined;
 };
 
-export class WebsocketClient extends TypedEmitter<WebsocketClientEvents> {
-    private messageID: number;
-    private options: Options;
-    private messages: Deferred<any>[];
+export class WebsocketClient extends WebsocketClientBase<WebsocketClientEvents> {
+    protected createWebsocket() {
+        // url validation
+        let { url } = this.options;
+        if (typeof url !== 'string') {
+            throw new Error('websocket_no_url');
+        }
 
-    private ws?: WebSocket;
-    private connectionTimeout?: NodeJS.Timeout;
-    private pingTimeout?: NodeJS.Timeout;
+        if (url.startsWith('https')) {
+            url = url.replace('https', 'wss');
+        }
+        if (url.startsWith('http')) {
+            url = url.replace('http', 'ws');
+        }
 
-    constructor(options: Options = {}) {
-        super();
-        this.messageID = 0;
-        this.messages = [];
-        this.setMaxListeners(Infinity);
-        this.options = {
+        return this.initWebsocket(url, {});
+    }
+
+    protected ping() {
+        // TODO
+        return Promise.resolve();
+    }
+
+    constructor(options: any = {}) {
+        super({
             ...options,
             url: options.url || USER_ENV_URL.WEBSOCKET,
-        };
-    }
-
-    private setConnectionTimeout() {
-        this.clearConnectionTimeout();
-        this.connectionTimeout = setTimeout(
-            this.onTimeout.bind(this),
-            this.options.timeout || DEFAULT_TIMEOUT,
-        );
-    }
-
-    private clearConnectionTimeout() {
-        if (this.connectionTimeout) {
-            clearTimeout(this.connectionTimeout);
-            this.connectionTimeout = undefined;
-        }
-    }
-
-    private setPingTimeout() {
-        if (this.pingTimeout) {
-            clearTimeout(this.pingTimeout);
-        }
-        this.pingTimeout = setTimeout(
-            this.onPing.bind(this),
-            this.options.pingTimeout || DEFAULT_PING_TIMEOUT,
-        );
-    }
-
-    private onTimeout() {
-        const { ws } = this;
-        if (!ws) return;
-        if (ws.listenerCount('open') > 0) {
-            ws.emit('error', 'Websocket timeout');
-            try {
-                ws.close();
-            } catch {
-                // empty
-            }
-        } else {
-            this.messages.forEach(m => m.reject(new Error('websocket_timeout')));
-            ws.close();
-        }
-    }
-
-    private onPing() {
-        // make sure that connection is alive if there are subscriptions
-        if (this.ws && this.isConnected()) {
-            try {
-                this.ws.close();
-            } catch {
-                // empty
-            }
-        }
-    }
-
-    private onError() {
-        this.dispose();
+            timeout: options.timeout || DEFAULT_TIMEOUT,
+            pingTimeout: options.pingTimeout || DEFAULT_PING_TIMEOUT,
+        });
     }
 
     // todo: typesafe interface
-    async send(params: any) {
+    send(params: any) {
         // probably after update to node 18 it started to disconnect after certain
         // period of inactivity.
-        await this.connect();
-        const { ws } = this;
-        if (!ws) throw NOT_INITIALIZED;
-        const id = this.messageID;
-
-        const dfd = createDeferred<{ response: any }>(id);
-        const req = {
-            id,
-            ...params,
-        };
-
-        this.messageID++;
-        this.messages.push(dfd);
-
-        this.setConnectionTimeout();
-        this.setPingTimeout();
-
-        ws.send(JSON.stringify(req));
 
         // todo: proper return type
-        return dfd.promise;
+        return this.sendMessage(params);
     }
 
-    private onmessage(message: RawData) {
+    connect(): Promise<void> {
+        return new Promise<void>(resolve => {
+            super.connect().then(() => {
+                this.once('firmwares', () => resolve());
+            });
+        });
+    }
+
+    protected onMessage(message: string | Buffer) {
+        // Websocket.Data
         try {
             const resp = JSON.parse(message.toString());
             const { id, success } = resp;
-            const dfd = this.messages.find(m => m.id === id);
 
             if (resp.type === 'client') {
                 const { firmwares } = resp;
@@ -150,122 +87,65 @@ export class WebsocketClient extends TypedEmitter<WebsocketClientEvents> {
                 this.emit('firmwares', firmwares);
             }
 
-            if (dfd) {
-                if (!success) {
-                    dfd.reject(
-                        new Error(`websocket_error_message: ${resp.error.message || resp.error}`),
-                    );
-                } else {
-                    dfd.resolve(resp);
-                }
-                this.messages.splice(this.messages.indexOf(dfd), 1);
+            if (!success) {
+                this.messages.reject(
+                    Number(id),
+                    new Error(`websocket_error_message: ${resp.error.message || resp.error}`),
+                );
+            } else {
+                this.messages.resolve(Number(id), resp);
             }
-        } catch (error) {
-            console.error('websocket onmessage error: ', error);
+        } catch {
+            // empty
         }
-
-        if (this.messages.length === 0) {
-            this.clearConnectionTimeout();
-        }
-        this.setPingTimeout();
     }
 
-    public async connect() {
-        if (this.isConnected()) return Promise.resolve();
+    // public async connect() {
+    //     if (this.isConnected()) return Promise.resolve();
 
-        // workaround for karma... proper fix: set allow origin headers in trezor-user-env server. but we are going
-        // to get rid of karma anyway, so this does not matter
-        if (typeof window === 'undefined') {
-            await this.waitForTrezorUserEnv();
-        }
+    //     // workaround for karma... proper fix: set allow origin headers in trezor-user-env server. but we are going
+    //     // to get rid of karma anyway, so this does not matter
+    //     if (typeof window === 'undefined') {
+    //         await this.waitForTrezorUserEnv();
+    //     }
 
-        return new Promise(resolve => {
-            // url validation
-            let { url } = this.options;
-            if (typeof url !== 'string') {
-                throw new Error('websocket_no_url');
-            }
+    //     return new Promise(resolve => {
+    //         // url validation
+    //         let { url } = this.options;
+    //         if (typeof url !== 'string') {
+    //             throw new Error('websocket_no_url');
+    //         }
 
-            if (url.startsWith('https')) {
-                url = url.replace('https', 'wss');
-            }
-            if (url.startsWith('http')) {
-                url = url.replace('http', 'ws');
-            }
+    //         if (url.startsWith('https')) {
+    //             url = url.replace('https', 'wss');
+    //         }
+    //         if (url.startsWith('http')) {
+    //             url = url.replace('http', 'ws');
+    //         }
 
-            // set connection timeout before WebSocket initialization
-            // it will be be cancelled by this.init or this.dispose after the error
-            this.setConnectionTimeout();
+    //         // set connection timeout before WebSocket initialization
+    //         // it will be be cancelled by this.init or this.dispose after the error
+    //         this.setConnectionTimeout();
 
-            // initialize connection
-            const ws = new WebSocket(url);
+    //         // initialize connection
+    //         const ws = new WebSocket(url);
 
-            ws.once('error', error => {
-                console.error('websocket error', error);
-                this.dispose();
-            });
+    //         ws.once('error', error => {
+    //             console.error('websocket error', error);
+    //             this.dispose();
+    //         });
 
-            this.on('firmwares', () => {
-                resolve(this);
-            });
+    //         this.on('firmwares', () => {
+    //             resolve(this);
+    //         });
 
-            this.ws = ws;
+    //         this.ws = ws;
 
-            ws.on('open', () => {
-                this.init();
-            });
-        });
-    }
-
-    private init() {
-        const { ws } = this;
-        if (!ws || !this.isConnected()) {
-            throw Error('Websocket init cannot be called');
-        }
-        // clear timeout from this.connect
-        this.clearConnectionTimeout();
-
-        // remove previous listeners and add new listeners
-        ws.removeAllListeners();
-        ws.on('error', this.onError.bind(this));
-        ws.on('message', this.onmessage.bind(this));
-        ws.on('close', () => {
-            this.emit('disconnected');
-            this.dispose();
-        });
-    }
-
-    public disconnect() {
-        if (this.ws) {
-            this.ws.close();
-        }
-        this.dispose();
-    }
-
-    private isConnected() {
-        const { ws } = this;
-
-        return ws && ws.readyState === WebSocket.OPEN;
-    }
-
-    private dispose() {
-        if (this.pingTimeout) {
-            clearTimeout(this.pingTimeout);
-        }
-        if (this.connectionTimeout) {
-            clearTimeout(this.connectionTimeout);
-        }
-
-        const { ws } = this;
-        if (this.isConnected()) {
-            this.disconnect();
-        }
-        if (ws) {
-            ws.removeAllListeners();
-        }
-
-        this.removeAllListeners();
-    }
+    //         ws.on('open', () => {
+    //             this.init();
+    //         });
+    //     });
+    // }
 
     async waitForTrezorUserEnv() {
         // unfortunately, it can take incredibly long for trezor-user-env to start, we should
