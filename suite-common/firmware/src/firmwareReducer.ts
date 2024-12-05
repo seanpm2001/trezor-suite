@@ -1,5 +1,3 @@
-import { isAnyOf } from '@reduxjs/toolkit';
-
 import { FirmwareStatus, TrezorDevice } from '@suite-common/suite-types';
 import {
     FirmwareType,
@@ -89,6 +87,17 @@ export const prepareFirmwareReducer = createReducerWithExtraDeps(initialState, (
             state.cachedDevice = payload;
         })
         .addCase(deviceActions.addButtonRequest, extra.reducers.addButtonRequestFirmware)
+        .addCase(deviceActions.connectDevice, (state, { payload: { device } }) => {
+            if (!isDeviceKnown(device)) return;
+
+            // use the automatic hash check to clear device if it hasn't passed hash check done after firmware update
+            // otherwise it'd be stuck in "error" state until next firmware update
+            if (device.authenticityChecks?.firmwareHash?.success) {
+                state.firmwareHashInvalid = state.firmwareHashInvalid.filter(
+                    deviceId => deviceId !== device.id,
+                );
+            }
+        })
         .addMatcher(
             action => action.type === extra.actionTypes.storageLoad,
             extra.reducers.storageLoadFirmware,
@@ -103,20 +112,6 @@ export const prepareFirmwareReducer = createReducerWithExtraDeps(initialState, (
                 // otherwise it could result in confirmation pill being displayed unintentionally.
                 if (!(action.type === DEVICE.BUTTON && state.status === 'initial'))
                     state.uiEvent = action;
-            },
-        )
-        .addMatcher(
-            isAnyOf(deviceActions.connectDevice, deviceActions.connectUnacquiredDevice),
-            (state, { payload: { device } }) => {
-                if (!isDeviceKnown(device)) return;
-
-                // use the automatic hash check to clear device if it hasn't passed hash check done after firmware update
-                // otherwise it'd be stuck in "error" state until next firmware update
-                if (device.authenticityChecks?.firmwareHash?.success) {
-                    state.firmwareHashInvalid = state.firmwareHashInvalid.filter(
-                        deviceId => deviceId !== device.id,
-                    );
-                }
             },
         );
 });
