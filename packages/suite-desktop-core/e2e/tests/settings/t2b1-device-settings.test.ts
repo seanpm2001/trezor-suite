@@ -47,11 +47,11 @@ test.describe.serial('T2B1 - Device settings', { tag: ['@group=settings'] }, () 
         await expect(page.getByTestId('@menu/device/label')).toHaveText(newDeviceName);
 
         // change background
-        const buttonImageLoad = page.waitForRequest(
-            `${baseURL}/static/images/homescreens/BW_64x128/circleweb.png`,
+        // On Web the there is instability, Playwright keeps clicking the button too soon.
+        const buttonImageLoad = page.waitForResponse(
+            `${baseURL}static/images/homescreens/BW_64x128/circleweb.png`,
         );
         await page.getByTestId('@settings/device/homescreen-gallery').click();
-        // On Web the there is instability, Playwright keeps clicking the button too soon.
         await buttonImageLoad;
         await page.getByTestId(`@modal/gallery/bw_64x128/circleweb`).click();
         await expect(page.getByTestId('@prompts/confirm-on-device')).toBeVisible();
