@@ -92,6 +92,11 @@ const updateConnectChangelog = async (
                 stable,
                 canary,
             },
+            {
+                package: 'npm @trezor/connect-mobile',
+                stable,
+                canary,
+            },
         ];
 
         const connectExplorerTable = [{ package: 'connect.trezor.io/', stable, canary }];

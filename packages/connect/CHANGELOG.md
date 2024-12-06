@@ -3,6 +3,7 @@
 |       npm @trezor/connect        | 9.4.5  | 9.4.6-beta.1 |
 |     npm @trezor/connect-web      | 9.4.5  | 9.4.6-beta.1 |
 | npm @trezor/connect-webextension | 9.4.5  | 9.4.6-beta.1 |
+|    npm @trezor/connect-mobile    | 9.4.5  | 9.4.6-beta.1 |
 
 |     Deployment     | Stable |    Canary    |
 | :----------------: | :----: | :----------: |
