@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useFormatters } from '@suite-common/formatters';
 import { CryptoIconWithPercentage, Icon } from '@suite-native/icons';
 import { useSelectorDeepComparison } from '@suite-common/redux-utils';
-import { NetworkSymbol } from '@suite-common/wallet-config';
+import { type NetworkSymbol } from '@suite-common/wallet-config';
 import { AccountsListItemBase, StakingBadge } from '@suite-native/accounts';
 import { Badge, Box, Text } from '@suite-native/atoms';
 import { CryptoAmountFormatter, FiatAmountFormatter } from '@suite-native/formatters';
@@ -43,15 +43,17 @@ type NavigationType = TabToStackCompositeNavigationProp<
     RootStackParamList
 >;
 
-const CryptoAmount = React.memo(({ network }: { network: NetworkSymbol }) => {
+type AssetItemSubComponentProps = { symbol: NetworkSymbol };
+
+const CryptoAmount = React.memo(({ symbol }: AssetItemSubComponentProps) => {
     const cryptoValue = useSelector((state: AssetsRootState) =>
-        selectAssetCryptoValue(state, network),
+        selectAssetCryptoValue(state, symbol),
     );
 
     return (
         <CryptoAmountFormatter
             value={cryptoValue}
-            network={network}
+            symbol={symbol}
             // Every asset crypto amount is rounded to 8 decimals to prevent UI overflow.
 
             decimals={8}
@@ -59,20 +61,20 @@ const CryptoAmount = React.memo(({ network }: { network: NetworkSymbol }) => {
     );
 });
 
-const FiatAmount = React.memo(({ symbol }: { symbol: NetworkSymbol }) => {
+const FiatAmount = React.memo(({ symbol }: AssetItemSubComponentProps) => {
     const fiatValue = useSelector((state: AssetsRootState) => selectAssetFiatValue(state, symbol));
 
     return <FiatAmountFormatter symbol={symbol} value={fiatValue} />;
 });
 
-const PercentageIcon = React.memo(({ network }: { network: NetworkSymbol }) => {
+const PercentageIcon = React.memo(({ symbol }: AssetItemSubComponentProps) => {
     const assetPercentages = useSelector((state: AssetsRootState) =>
-        selectAssetFiatValuePercentage(state, network),
+        selectAssetFiatValuePercentage(state, symbol),
     );
 
     return (
         <CryptoIconWithPercentage
-            iconName={network}
+            iconName={symbol}
             percentage={assetPercentages?.fiatPercentage}
             percentageOffset={assetPercentages?.fiatPercentageOffset}
         />
@@ -109,7 +111,7 @@ export const AssetItem = React.memo(({ cryptoCurrencySymbol, onPress }: AssetIte
         <AccountsListItemBase
             disabled={!onPress}
             onPress={handleAssetPress}
-            icon={<PercentageIcon network={cryptoCurrencySymbol} />}
+            icon={<PercentageIcon symbol={cryptoCurrencySymbol} />}
             title={<NetworkNameFormatter value={cryptoCurrencySymbol} />}
             badges={
                 <>
@@ -130,7 +132,7 @@ export const AssetItem = React.memo(({ cryptoCurrencySymbol, onPress }: AssetIte
                 </>
             }
             mainValue={<FiatAmount symbol={cryptoCurrencySymbol} />}
-            secondaryValue={<CryptoAmount network={cryptoCurrencySymbol} />}
+            secondaryValue={<CryptoAmount symbol={cryptoCurrencySymbol} />}
         />
     );
 });

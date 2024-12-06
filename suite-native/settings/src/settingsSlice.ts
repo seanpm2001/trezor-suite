@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { PROTO } from '@trezor/connect';
 import { FiatCurrencyCode } from '@suite-common/suite-config';
-import { getNetwork, NetworkSymbol } from '@suite-common/wallet-config';
+import { getNetwork, type NetworkSymbol } from '@suite-common/wallet-config';
 
 export interface AppSettingsState {
     isOnboardingFinished: boolean;
@@ -63,13 +63,13 @@ export const selectViewOnlyCancelationTimestamp = (state: SettingsSliceRootState
 
 export const selectIsAmountInSats = (
     state: SettingsSliceRootState,
-    networkSymbol: NetworkSymbol | null | undefined,
+    symbol: NetworkSymbol | null | undefined,
 ) => {
-    if (!networkSymbol) {
+    if (!symbol) {
         return false;
     }
 
-    const network = getNetwork(networkSymbol);
+    const network = getNetwork(symbol);
     const isAmountUnitSupported = network && network.features.includes('amount-unit');
 
     return isAmountUnitSupported && selectAreSatsAmountUnit(state);

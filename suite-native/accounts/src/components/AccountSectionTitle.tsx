@@ -45,7 +45,7 @@ export const AccountSectionTitle: React.FC<AccountSectionTitleProps> = ({
                     />
                     <CryptoAmountFormatter
                         value={cryptoBalanceWithStaking}
-                        network={account.symbol}
+                        symbol={account.symbol}
                         numberOfLines={1}
                         adjustsFontSizeToFit
                     />

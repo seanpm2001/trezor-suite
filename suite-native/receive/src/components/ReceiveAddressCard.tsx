@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { Box, Card } from '@suite-native/atoms';
 import { AddressQRCode } from '@suite-native/qr-code';
-import { networks, NetworkSymbol } from '@suite-common/wallet-config';
+import { getNetwork, type NetworkSymbol } from '@suite-common/wallet-config';
 import {
     selectIsDeviceInViewOnlyMode,
     selectIsPortfolioTrackerDevice,
@@ -16,7 +16,7 @@ type ReceiveAddressCardProps = {
     address: string;
     isReceiveApproved: boolean;
     isUnverifiedAddressRevealed: boolean;
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
     onShowAddress: () => void;
     isTokenAddress?: boolean;
 };
@@ -26,13 +26,13 @@ export const ReceiveAddressCard = ({
     isUnverifiedAddressRevealed,
     isReceiveApproved,
     onShowAddress,
-    networkSymbol,
+    symbol,
     isTokenAddress = false,
 }: ReceiveAddressCardProps) => {
     const isPortfolioTrackerDevice = useSelector(selectIsPortfolioTrackerDevice);
     const isDeviceInViewOnlyMode = useSelector(selectIsDeviceInViewOnlyMode);
 
-    const { networkType, name: networkName } = networks[networkSymbol];
+    const { networkType, name: networkName } = getNetwork(symbol);
 
     const getCardAlertProps = () => {
         if (isReceiveApproved && !isPortfolioTrackerDevice && !isDeviceInViewOnlyMode) {
@@ -41,7 +41,7 @@ export const ReceiveAddressCard = ({
                 alertVariant: 'success',
             } as const;
         }
-        if (networkSymbol === 'ada' && isUnverifiedAddressRevealed) {
+        if (symbol === 'ada' && isUnverifiedAddressRevealed) {
             return {
                 alertTitle: (
                     <Translation id="moduleReceive.receiveAddressCard.alert.longCardanoAddress" />

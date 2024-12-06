@@ -38,7 +38,7 @@ export const AddCoinAccountScreen = ({
             // Timeout is needed so AccountTypeDecisionBottomSheet has time to hide otherwise app crashes
             setTimeout(() => {
                 addCoinAccount({
-                    networkSymbol: networkSymbolWithTypeToBeAdded[0],
+                    symbol: networkSymbolWithTypeToBeAdded[0],
                     accountType: networkSymbolWithTypeToBeAdded[1],
                     flowType,
                 });
@@ -57,13 +57,13 @@ export const AddCoinAccountScreen = ({
         >
             <Card>
                 <VStack spacing="sp24">
-                    {supportedNetworkSymbols.map(networkSymbol => (
+                    {supportedNetworkSymbols.map(symbol => (
                         <SelectableNetworkItem
-                            key={networkSymbol}
-                            symbol={networkSymbol}
+                            key={symbol}
+                            symbol={symbol}
                             onPress={() =>
                                 onSelectedNetworkItem({
-                                    networkSymbol,
+                                    symbol,
                                     flowType,
                                 })
                             }

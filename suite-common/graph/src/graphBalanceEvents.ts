@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { A, pipe } from '@mobily/ts-belt';
 import { fromUnixTime, getUnixTime } from 'date-fns';
 
-import { NetworkSymbol } from '@suite-common/wallet-config';
+import { type NetworkSymbol } from '@suite-common/wallet-config';
 import { fetchTransactionsFromNowUntilTimestamp } from '@suite-common/wallet-core';
 import { AccountKey, Timestamp, TokenAddress } from '@suite-common/wallet-types';
 import { AccountBalanceHistory as AccountMovementHistory } from '@trezor/blockchain-link';
@@ -75,12 +75,12 @@ export const groupBalanceMovementEvents = (
  */
 export const mergeGroups = ({
     groups,
-    networkSymbol,
+    symbol,
     tokenAddress,
     accountKey,
 }: {
     groups: BalanceMovementEvent[][];
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
     accountKey: AccountKey;
     tokenAddress?: TokenAddress;
 }) =>
@@ -111,7 +111,7 @@ export const mergeGroups = ({
                     sent: 0,
                     sentTransactionsCount: 0,
                     receivedTransactionsCount: 0,
-                    networkSymbol,
+                    symbol,
                     tokenAddress,
                     accountKey,
                 },
@@ -199,6 +199,6 @@ export const getAccountMovementEvents = async ({
                 balanceMovement.payload.sent !== 0 || balanceMovement.payload.received !== 0,
         ),
         formattedBalances => groupBalanceMovementEvents(formattedBalances, GROUPING_THRESHOLD),
-        groups => mergeGroups({ groups, networkSymbol: coin, tokenAddress, accountKey }),
+        groups => mergeGroups({ groups, symbol: coin, tokenAddress, accountKey }),
     ) as GroupedBalanceMovementEvent[];
 };

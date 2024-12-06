@@ -7,7 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSelector } from 'react-redux';
 
-import { NetworkSymbol } from '@suite-common/wallet-config';
+import { type NetworkSymbol } from '@suite-common/wallet-config';
 import { Text, Button, Card, HStack, VStack } from '@suite-native/atoms';
 import {
     CryptoToFiatAmountFormatter,
@@ -28,7 +28,7 @@ type FeesFooterProps = {
     accountKey: AccountKey;
     isSubmittable: boolean;
     onSubmit: () => void;
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
     totalAmount: string;
     fee: string;
     tokenContract?: TokenAddress;
@@ -51,13 +51,7 @@ const buttonWrapperStyle = prepareNativeStyle(() => ({
     width: '100%',
 }));
 
-const MainnetSummary = ({
-    amount,
-    networkSymbol,
-}: {
-    amount: string;
-    networkSymbol: NetworkSymbol;
-}) => {
+const MainnetSummary = ({ amount, symbol }: { amount: string; symbol: NetworkSymbol }) => {
     return (
         <HStack justifyContent="space-between" alignItems="center">
             <Text variant="callout">
@@ -68,13 +62,13 @@ const MainnetSummary = ({
                     variant="callout"
                     color="textDefault"
                     value={amount}
-                    symbol={networkSymbol}
+                    symbol={symbol}
                 />
                 <CryptoAmountFormatter
                     variant="hint"
                     color="textSubdued"
                     value={amount}
-                    network={networkSymbol}
+                    symbol={symbol}
                     isBalance={false}
                 />
             </VStack>
@@ -86,13 +80,13 @@ const TokenSummary = ({
     accountKey,
     tokenAmount,
     mainnetFee,
-    networkSymbol,
+    symbol,
     tokenContract,
 }: {
     accountKey: AccountKey;
     tokenAmount: string;
     mainnetFee: string;
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
     tokenContract?: TokenAddress;
 }) => {
     const tokenSymbol = useSelector((state: TokensRootState) =>
@@ -125,7 +119,7 @@ const TokenSummary = ({
                     variant="hint"
                     color="textSubdued"
                     value={mainnetFee}
-                    network={networkSymbol}
+                    symbol={symbol}
                     isBalance={false}
                 />
             </VStack>
@@ -139,7 +133,7 @@ export const FeesFooter = ({
     onSubmit,
     totalAmount,
     fee,
-    networkSymbol,
+    symbol,
     tokenContract,
 }: FeesFooterProps) => {
     const { applyStyle } = useNativeStyles();
@@ -165,11 +159,11 @@ export const FeesFooter = ({
                             accountKey={accountKey}
                             tokenAmount={totalAmount}
                             mainnetFee={fee}
-                            networkSymbol={networkSymbol}
+                            symbol={symbol}
                             tokenContract={tokenContract}
                         />
                     ) : (
-                        <MainnetSummary amount={totalAmount} networkSymbol={networkSymbol} />
+                        <MainnetSummary amount={totalAmount} symbol={symbol} />
                     )}
                 </Animated.View>
             </Card>

@@ -76,7 +76,7 @@ const TransactionListHeaderContent = ({
         return (
             <AccountDetailCryptoValue
                 value={account.balance}
-                networkSymbol={account.symbol}
+                symbol={account.symbol}
                 isBalance={false}
             />
         );

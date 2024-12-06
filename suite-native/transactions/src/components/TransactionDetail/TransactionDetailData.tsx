@@ -90,7 +90,7 @@ export const TransactionDetailData = ({
                         <Box alignItems="flex-end">
                             <CryptoAmountFormatter
                                 value={transaction.fee}
-                                network={transaction.symbol}
+                                symbol={transaction.symbol}
                                 variant="hint"
                                 color="textDefault"
                                 isBalance={false}

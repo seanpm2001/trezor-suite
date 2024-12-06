@@ -1,4 +1,4 @@
-import { networks, NetworkSymbol } from '@suite-common/wallet-config';
+import { getNetwork, type NetworkSymbol } from '@suite-common/wallet-config';
 import {
     CryptoAmountFormatter,
     FiatBalanceFormatter,
@@ -12,23 +12,23 @@ import { AccountImportOverviewCard } from './AccountImportOverviewCard';
 
 type AssetsOverviewProps = {
     balance: string;
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
 };
 
-export const AccountImportOverview = ({ balance, networkSymbol }: AssetsOverviewProps) => {
+export const AccountImportOverview = ({ balance, symbol }: AssetsOverviewProps) => {
     const fiatBalanceValue = useFiatFromCryptoValue({
         cryptoValue: balance,
-        symbol: networkSymbol,
+        symbol,
     });
 
     return (
         <AccountImportOverviewCard
-            icon={<RoundedIcon symbol={networkSymbol} iconSize="large" />}
-            coinName={networks[networkSymbol].name}
+            icon={<RoundedIcon symbol={symbol} iconSize="large" />}
+            coinName={getNetwork(symbol).name}
             cryptoAmount={
                 <CryptoAmountFormatter
                     value={balance}
-                    network={networkSymbol}
+                    symbol={symbol}
                     isDiscreetText={false}
                     isBalance={false}
                     variant="label"
@@ -36,7 +36,7 @@ export const AccountImportOverview = ({ balance, networkSymbol }: AssetsOverview
             }
         >
             <VStack spacing="sp24">
-                {!isTestnet(networkSymbol) && <FiatBalanceFormatter value={fiatBalanceValue} />}
+                {!isTestnet(symbol) && <FiatBalanceFormatter value={fiatBalanceValue} />}
                 <TextInputField
                     testID="@account-import/coin-synced/label-input"
                     name="accountLabel"

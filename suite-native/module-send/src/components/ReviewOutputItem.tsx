@@ -1,7 +1,6 @@
 import { LayoutChangeEvent, View } from 'react-native';
 
 import { ReviewOutputType } from '@suite-common/wallet-types';
-import { NetworkSymbol } from '@suite-common/wallet-config';
 import { TxKeyPath, useTranslate } from '@suite-native/intl';
 
 import { StatefulReviewOutput } from '../types';
@@ -9,7 +8,6 @@ import { ReviewOutputCard } from './ReviewOutputCard';
 import { ReviewOutputItemContent } from './ReviewOutputItemContent';
 
 type ReviewOutputItemProps = {
-    networkSymbol: NetworkSymbol;
     reviewOutput: StatefulReviewOutput;
     onLayout: (event: LayoutChangeEvent) => void;
 };
@@ -28,11 +26,7 @@ const isTranslationDefined = (
     return type in outputLabelTranslationMap;
 };
 
-export const ReviewOutputItem = ({
-    reviewOutput,
-    networkSymbol,
-    onLayout,
-}: ReviewOutputItemProps) => {
+export const ReviewOutputItem = ({ reviewOutput, onLayout }: ReviewOutputItemProps) => {
     const { state, type, value } = reviewOutput;
     const { translate } = useTranslate();
 
@@ -42,11 +36,7 @@ export const ReviewOutputItem = ({
     return (
         <View onLayout={onLayout}>
             <ReviewOutputCard title={title} outputState={state}>
-                <ReviewOutputItemContent
-                    outputType={type}
-                    networkSymbol={networkSymbol}
-                    value={value}
-                />
+                <ReviewOutputItemContent outputType={type} value={value} />
             </ReviewOutputCard>
         </View>
     );

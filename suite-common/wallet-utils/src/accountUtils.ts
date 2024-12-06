@@ -466,12 +466,12 @@ export const findAccountsByDescriptor = (descriptor: string, accounts: Account[]
     accounts.filter(a => a.descriptor === descriptor);
 
 export const findAccountsByAddress = (
-    networkSymbol: NetworkSymbol,
+    symbol: NetworkSymbol,
     address: string,
     accounts: Account[],
 ) =>
     accounts
-        .filter(account => account.symbol === networkSymbol)
+        .filter(account => account.symbol === symbol)
         .filter(a => {
             if (a.addresses) {
                 return (

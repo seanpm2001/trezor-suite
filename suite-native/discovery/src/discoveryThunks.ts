@@ -30,12 +30,12 @@ import {
     tryGetAccountIdentity,
 } from '@suite-common/wallet-utils';
 import {
-    AccountType,
-    Network,
-    NetworkSymbol,
+    type AccountType,
+    type Network,
+    type NetworkSymbol,
     getNetwork,
     getNetworkType,
-    NetworkAccount,
+    type NetworkAccount,
     normalizeNetworkAccounts,
     isNetworkSymbol,
 } from '@suite-common/wallet-config';
@@ -315,7 +315,7 @@ const discoverAccountsByDescriptorThunk = createThunk(
 
             const isAccountAlreadyDiscovered = selectIsAccountAlreadyDiscovered(getState(), {
                 deviceState,
-                networkSymbol: bundleItem.coin,
+                symbol: bundleItem.coin,
                 path: bundleItem.path,
             });
 
@@ -471,7 +471,7 @@ const discoverNetworkBatchThunk = createThunk(
 
             const isAccountAlreadyDiscovered = selectIsAccountAlreadyDiscovered(getState(), {
                 deviceState,
-                networkSymbol: network.symbol,
+                symbol: network.symbol,
                 path: accountPath,
             });
 

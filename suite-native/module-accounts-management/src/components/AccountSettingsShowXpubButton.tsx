@@ -44,7 +44,7 @@ export const AccountSettingsShowXpubButton = ({ accountKey }: { accountKey: stri
             <XpubQRCodeBottomSheet
                 isVisible={isXpubVisible}
                 onClose={handleClose}
-                networkSymbol={account.symbol}
+                symbol={account.symbol}
                 qrCodeData={account.descriptor}
             />
         </>

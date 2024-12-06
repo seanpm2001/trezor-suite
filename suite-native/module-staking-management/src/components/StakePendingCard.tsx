@@ -92,7 +92,7 @@ export const StakePendingCard = ({
                     <Box style={applyStyle(valuesContainerStyle)}>
                         <CryptoAmountFormatter
                             value={totalStakePending}
-                            network={symbol}
+                            symbol={symbol}
                             decimals={8}
                             color="textDefault"
                             variant="highlight"

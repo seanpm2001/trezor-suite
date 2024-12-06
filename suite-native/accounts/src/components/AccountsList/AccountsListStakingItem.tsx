@@ -38,7 +38,7 @@ export const AccountsListStakingItem = ({
             secondaryValue={
                 <CryptoAmountFormatter
                     value={stakingCryptoBalance}
-                    network={account.symbol}
+                    symbol={account.symbol}
                     numberOfLines={1}
                     adjustsFontSizeToFit
                 />

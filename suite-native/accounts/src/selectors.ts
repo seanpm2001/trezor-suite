@@ -7,7 +7,7 @@ import {
     getSimpleCoinDefinitionsByNetwork,
     selectTokenDefinitions,
 } from '@suite-common/token-definitions';
-import { NetworkSymbol } from '@suite-common/wallet-config';
+import { type NetworkSymbol } from '@suite-common/wallet-config';
 import {
     AccountsRootState,
     DeviceRootState,
@@ -66,17 +66,17 @@ export const selectFilteredDeviceAccountsGroupedByNetworkAccountType = createMem
 export const selectIsAccountAlreadyDiscovered = (
     state: AccountsRootState,
     {
-        networkSymbol,
+        symbol,
         path,
         deviceState,
-    }: { networkSymbol: NetworkSymbol; path: string; deviceState: StaticSessionId },
+    }: { symbol: NetworkSymbol; path: string; deviceState: StaticSessionId },
 ) =>
     pipe(
         state,
         selectAccounts,
         A.any(
             account =>
-                account.symbol === networkSymbol &&
+                account.symbol === symbol &&
                 account.path === path &&
                 account.deviceState === deviceState,
         ),

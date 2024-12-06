@@ -6,11 +6,12 @@ import { isRejected } from '@reduxjs/toolkit';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 
 import {
-    AccountType,
-    NetworkSymbol,
+    type AccountType,
+    type NetworkSymbol,
     networks,
     NORMAL_ACCOUNT_TYPE,
     networkSymbolCollection,
+    getNetwork,
 } from '@suite-common/wallet-config';
 import { Account } from '@suite-common/wallet-types';
 import {
@@ -121,37 +122,34 @@ export const useAddCoinAccount = () => {
         return availableTypes;
     }, []);
 
-    const getAvailableAccountTypesForNetworkSymbol = ({
-        networkSymbol,
-    }: {
-        networkSymbol: NetworkSymbol;
-    }) => availableNetworkAccountTypes.get(networkSymbol) ?? [NORMAL_ACCOUNT_TYPE];
+    const getAvailableAccountTypesForNetworkSymbol = ({ symbol }: { symbol: NetworkSymbol }) =>
+        availableNetworkAccountTypes.get(symbol) ?? [NORMAL_ACCOUNT_TYPE];
 
     const getAccountTypeToBeAddedName = () =>
         networkSymbolWithTypeToBeAdded
             ? translate(accountTypeTranslationKeys[networkSymbolWithTypeToBeAdded[1]].titleKey)
             : '';
 
-    const setDefaultAccountToBeAdded = (networkSymbol: NetworkSymbol) => {
-        const defaultType = getAvailableAccountTypesForNetworkSymbol({ networkSymbol })[0];
-        setNetworkSymbolWithTypeToBeAdded([networkSymbol, defaultType]);
+    const setDefaultAccountToBeAdded = (symbol: NetworkSymbol) => {
+        const defaultType = getAvailableAccountTypesForNetworkSymbol({ symbol })[0];
+        setNetworkSymbolWithTypeToBeAdded([symbol, defaultType]);
     };
 
     const navigateToSuccessorScreen = ({
         flowType,
-        networkSymbol,
+        symbol,
         accountType,
         accountIndex,
     }: {
         flowType: AddCoinFlowType;
-        networkSymbol: NetworkSymbol;
+        symbol: NetworkSymbol;
         accountType: AccountType;
         accountIndex: number;
     }) => {
         switch (flowType) {
             case 'accounts':
                 navigation.replace(RootStackRoutes.AccountDetail, {
-                    networkSymbol,
+                    networkSymbol: symbol,
                     accountType,
                     accountIndex,
                     closeActionType: 'close',
@@ -161,7 +159,7 @@ export const useAddCoinAccount = () => {
             case 'home':
             case 'receive':
                 navigation.replace(RootStackRoutes.ReceiveModal, {
-                    networkSymbol,
+                    networkSymbol: symbol,
                     accountType,
                     accountIndex,
                     closeActionType: 'close',
@@ -213,11 +211,11 @@ export const useAddCoinAccount = () => {
     };
 
     const addCoinAccount = async ({
-        networkSymbol,
+        symbol,
         flowType,
         accountType = NORMAL_ACCOUNT_TYPE,
     }: {
-        networkSymbol: NetworkSymbol;
+        symbol: NetworkSymbol;
         flowType: AddCoinFlowType;
         accountType?: AccountType;
     }) => {
@@ -229,7 +227,7 @@ export const useAddCoinAccount = () => {
         }
 
         const accounts = deviceAccounts.filter(
-            account => account.symbol === networkSymbol && account.accountType === accountType,
+            account => account.symbol === symbol && account.accountType === accountType,
         );
 
         const firstHiddenEmptyAccount = pipe(
@@ -245,7 +243,7 @@ export const useAddCoinAccount = () => {
             return;
         }
 
-        const network = networks[networkSymbol];
+        const network = getNetwork(symbol);
 
         //If the account already exists, but is invisible, make it visible
         if (firstHiddenEmptyAccount) {
@@ -254,7 +252,7 @@ export const useAddCoinAccount = () => {
 
         navigateToSuccessorScreen({
             flowType,
-            networkSymbol,
+            symbol,
             accountType,
             accountIndex: firstHiddenEmptyAccount?.index ?? accounts.length,
         });
@@ -300,10 +298,10 @@ export const useAddCoinAccount = () => {
     };
 
     const onSelectedNetworkItem = ({
-        networkSymbol,
+        symbol,
         flowType,
     }: {
-        networkSymbol: NetworkSymbol;
+        symbol: NetworkSymbol;
         flowType: AddCoinFlowType;
     }) => {
         if (isDeviceInViewOnlyMode) {
@@ -312,22 +310,22 @@ export const useAddCoinAccount = () => {
             return;
         }
 
-        if (!enabledDiscoveryNetworkSymbols.includes(networkSymbol)) {
+        if (!enabledDiscoveryNetworkSymbols.includes(symbol)) {
             clearNetworkWithTypeToBeAdded();
             navigation.replace(AddCoinAccountStackRoutes.AddCoinDiscoveryRunning, {
-                networkSymbol,
+                networkSymbol: symbol,
                 flowType,
             });
 
             return;
         }
 
-        const types = getAvailableAccountTypesForNetworkSymbol({ networkSymbol });
+        const types = getAvailableAccountTypesForNetworkSymbol({ symbol });
 
         if (types.length > 1) {
-            setDefaultAccountToBeAdded(networkSymbol);
+            setDefaultAccountToBeAdded(symbol);
         } else {
-            addCoinAccount({ networkSymbol, flowType });
+            addCoinAccount({ symbol, flowType });
         }
     };
 

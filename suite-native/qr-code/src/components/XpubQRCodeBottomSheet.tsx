@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Box, Button, BottomSheet, BottomSheetProps, VStack } from '@suite-native/atoms';
-import { networks, NetworkSymbol } from '@suite-common/wallet-config';
+import { getNetworkType, type NetworkSymbol } from '@suite-common/wallet-config';
 import { prepareNativeStyle, useNativeStyles } from '@trezor/styles';
 import { useCopyToClipboard } from '@suite-native/helpers';
 import { isAddressBasedNetwork } from '@suite-common/wallet-utils';
@@ -12,7 +12,7 @@ import { XpubQRCodeCard } from './XpubQRCodeCard';
 type XpubQRCodeBottomSheetProps = Pick<BottomSheetProps, 'isVisible'> & {
     onClose: () => void;
     qrCodeData?: string;
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
 };
 
 const buttonStyle = prepareNativeStyle(utils => ({
@@ -23,10 +23,10 @@ export const XpubQRCodeBottomSheet = ({
     isVisible,
     onClose,
     qrCodeData,
-    networkSymbol,
+    symbol,
 }: XpubQRCodeBottomSheetProps) => {
     const { translate } = useTranslate();
-    const { networkType } = networks[networkSymbol];
+    const networkType = getNetworkType(symbol);
     const isAddressBased = isAddressBasedNetwork(networkType);
     const { applyStyle } = useNativeStyles();
     const copyToClipboard = useCopyToClipboard();

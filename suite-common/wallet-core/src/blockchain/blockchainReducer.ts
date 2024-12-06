@@ -2,10 +2,10 @@ import { PayloadAction } from '@reduxjs/toolkit';
 
 import { createReducerWithExtraDeps, createWeakMapSelector } from '@suite-common/redux-utils';
 import {
-    BackendType,
+    type BackendType,
     getNetworkOptional,
     networksCollection,
-    NetworkSymbol,
+    type NetworkSymbol,
 } from '@suite-common/wallet-config';
 import { Blockchain, BlockchainNetworks } from '@suite-common/wallet-types';
 import {
@@ -232,10 +232,8 @@ const createMemoizedSelector = createWeakMapSelector.withTypes<BlockchainRootSta
 
 export const selectBlockchainState = (state: BlockchainRootState) => state.wallet.blockchain;
 
-export const selectNetworkBlockchainInfo = (
-    state: BlockchainRootState,
-    networkSymbol: NetworkSymbol,
-) => state.wallet.blockchain[networkSymbol];
+export const selectNetworkBlockchainInfo = (state: BlockchainRootState, symbol: NetworkSymbol) =>
+    state.wallet.blockchain[symbol];
 
 export const selectBlockchainHeightBySymbol = createMemoizedSelector(
     [selectNetworkBlockchainInfo],

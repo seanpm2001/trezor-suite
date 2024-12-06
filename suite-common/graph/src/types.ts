@@ -1,4 +1,4 @@
-import { NetworkSymbol } from '@suite-common/wallet-config';
+import { type NetworkSymbol } from '@suite-common/wallet-config';
 import { AccountKey, TokenAddress } from '@suite-common/wallet-types';
 import { BigNumber } from '@trezor/utils';
 
@@ -42,7 +42,7 @@ export type GroupedBalanceMovementEventPayload = {
     sent: number;
     sentTransactionsCount: number;
     receivedTransactionsCount: number;
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
     tokenAddress?: TokenAddress;
     accountKey: AccountKey;
 };

@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 
 import { SelectableNetworkItem } from '@suite-native/accounts';
 import { HeaderedCard, VStack } from '@suite-native/atoms';
-import { NetworkSymbol } from '@suite-common/wallet-config';
+import { type NetworkSymbol } from '@suite-common/wallet-config';
 import {
     selectPortfolioTrackerMainnetNetworkSymbols,
     selectPortfolioTrackerTestnetNetworkSymbols,
@@ -11,7 +11,7 @@ import {
 import { Translation } from '@suite-native/intl';
 
 type SelectableAssetListProps = {
-    onSelectItem: (networkSymbol: NetworkSymbol) => void;
+    onSelectItem: (symbol: NetworkSymbol) => void;
 };
 
 const NetworkItemSection = ({

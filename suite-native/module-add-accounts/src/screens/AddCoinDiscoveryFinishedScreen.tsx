@@ -12,7 +12,7 @@ import { Card, Button, Text, TextDivider, Box } from '@suite-native/atoms';
 import { GoBackIcon, Screen, ScreenSubHeader } from '@suite-native/navigation';
 import { Account } from '@suite-common/wallet-types';
 import { Translation } from '@suite-native/intl';
-import { networks } from '@suite-common/wallet-config';
+import { getNetwork } from '@suite-common/wallet-config';
 import { prepareNativeStyle, useNativeStyles } from '@trezor/styles';
 
 import { useAddCoinAccount } from '../hooks/useAddCoinAccount';
@@ -40,12 +40,12 @@ export const AddCoinDiscoveryFinishedScreen = ({ route }) => {
     const handleSelectedAccount = (account: Account) =>
         navigateToSuccessorScreen({
             flowType,
-            networkSymbol,
+            symbol: networkSymbol,
             accountType: account.accountType,
             accountIndex: account.index,
         });
 
-    const handleAddAccount = () => onSelectedNetworkItem({ networkSymbol, flowType });
+    const handleAddAccount = () => onSelectedNetworkItem({ symbol: networkSymbol, flowType });
 
     const handleTypeSelectionTap = () => handleAccountTypeSelection(flowType);
 
@@ -54,7 +54,7 @@ export const AddCoinDiscoveryFinishedScreen = ({ route }) => {
             // Timeout is needed so AccountTypeDecisionBottomSheet has time to hide otherwise app crashes
             setTimeout(() => {
                 addCoinAccount({
-                    networkSymbol: networkSymbolWithTypeToBeAdded[0],
+                    symbol: networkSymbolWithTypeToBeAdded[0],
                     accountType: networkSymbolWithTypeToBeAdded[1],
                     flowType,
                 });
@@ -78,7 +78,7 @@ export const AddCoinDiscoveryFinishedScreen = ({ route }) => {
                         id={titleKey}
                         values={{
                             count: accounts.length.toString(),
-                            coin: networks[networkSymbol].name,
+                            coin: getNetwork(networkSymbol).name,
                         }}
                     />
                 </Text>

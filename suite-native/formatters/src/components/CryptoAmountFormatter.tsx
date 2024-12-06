@@ -4,7 +4,7 @@ import { G } from '@mobily/ts-belt';
 
 import { TextProps } from '@suite-native/atoms';
 import { useFormatters } from '@suite-common/formatters';
-import { networks, NetworkSymbol } from '@suite-common/wallet-config';
+import { getNetwork, type NetworkSymbol } from '@suite-common/wallet-config';
 
 import { FormatterProps } from '../types';
 import { EmptyAmountText } from './EmptyAmountText';
@@ -14,7 +14,7 @@ import { EmptyAmountSkeleton } from './EmptyAmountSkeleton';
 
 type CryptoToFiatAmountFormatterProps = FormatterProps<string | null | number> &
     TextProps & {
-        network: NetworkSymbol;
+        symbol: NetworkSymbol;
         isBalance?: boolean;
         isDiscreetText?: boolean;
         decimals?: number;
@@ -25,7 +25,7 @@ type CryptoToFiatAmountFormatterProps = FormatterProps<string | null | number> &
 export const CryptoAmountFormatter = React.memo(
     ({
         value,
-        network,
+        symbol,
         isBalance = true,
         isDiscreetText = true,
         variant = 'hint',
@@ -42,14 +42,14 @@ export const CryptoAmountFormatter = React.memo(
 
         if (G.isNullable(value)) return <EmptyAmountText />;
 
-        const maxDisplayedDecimals = decimals ?? networks[network].decimals;
+        const maxDisplayedDecimals = decimals ?? getNetwork(symbol).decimals;
 
         const stringValue = G.isNumber(value) ? value.toString() : value;
 
         let formattedValue = formatter.format(stringValue, {
             isBalance,
             maxDisplayedDecimals,
-            symbol: network,
+            symbol,
             isEllipsisAppended: false,
         });
 

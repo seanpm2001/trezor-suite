@@ -9,7 +9,7 @@ import {
     selectFilterKnownTokens,
     TokenDefinitionsRootState,
 } from '@suite-common/token-definitions';
-import { networks, NetworkSymbol } from '@suite-common/wallet-config';
+import { getNetwork, type NetworkSymbol } from '@suite-common/wallet-config';
 import {
     AccountsRootState,
     PORTFOLIO_TRACKER_DEVICE_STATE,
@@ -36,7 +36,7 @@ import { AccountImportSummaryScreen } from './AccountImportSummaryScreen';
 import { TokenInfoCard } from './TokenInfoCard';
 
 type AccountImportConfirmFormScreenProps = {
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
     accountInfo: AccountInfo;
 };
 
@@ -47,25 +47,23 @@ type NavigationProp = StackToStackCompositeNavigationProps<
 >;
 
 export const AccountImportConfirmFormScreen = ({
-    networkSymbol,
+    symbol,
     accountInfo,
 }: AccountImportConfirmFormScreenProps) => {
     const dispatch = useDispatch();
     const navigation = useNavigation<NavigationProp>();
     const navigateToInitialScreen = useNavigateToInitialScreen();
-    const showImportError = useShowImportError(networkSymbol, navigation);
+    const showImportError = useShowImportError(symbol, navigation);
 
     const knownTokens = useSelector((state: TokenDefinitionsRootState) =>
-        selectFilterKnownTokens(state, networkSymbol, accountInfo.tokens ?? []),
+        selectFilterKnownTokens(state, symbol, accountInfo.tokens ?? []),
     );
 
     const deviceNetworkAccounts = useSelector((state: AccountsRootState) =>
-        selectAccountsByNetworkAndDeviceState(state, PORTFOLIO_TRACKER_DEVICE_STATE, networkSymbol),
+        selectAccountsByNetworkAndDeviceState(state, PORTFOLIO_TRACKER_DEVICE_STATE, symbol),
     );
 
-    const defaultAccountLabel = `${networks[networkSymbol].name} #${
-        deviceNetworkAccounts.length + 1
-    }`;
+    const defaultAccountLabel = `${getNetwork(symbol).name} #${deviceNetworkAccounts.length + 1}`;
 
     const form = useAccountLabelForm(defaultAccountLabel);
     const {
@@ -79,14 +77,14 @@ export const AccountImportConfirmFormScreen = ({
                 importAccountThunk({
                     accountInfo,
                     accountLabel,
-                    coin: networkSymbol,
+                    symbol,
                 }),
             ).unwrap();
 
             analytics.report({
                 type: EventType.AssetsSync,
                 payload: {
-                    assetSymbol: networkSymbol,
+                    assetSymbol: symbol,
                     tokenSymbols: knownTokens.map(token => token.symbol as TokenSymbol),
                     tokenAddresses: knownTokens.map(token => token.contract as TokenAddress),
                 },
@@ -102,7 +100,7 @@ export const AccountImportConfirmFormScreen = ({
         ({ item }: { item: TokenInfo }) => (
             <Box marginBottom="sp12">
                 <TokenInfoCard
-                    symbol={networkSymbol}
+                    symbol={symbol}
                     tokenSymbol={item.symbol as TokenSymbol}
                     balance={item.balance}
                     decimals={item.decimals}
@@ -111,7 +109,7 @@ export const AccountImportConfirmFormScreen = ({
                 />
             </Box>
         ),
-        [networkSymbol],
+        [symbol],
     );
 
     return (
@@ -135,10 +133,7 @@ export const AccountImportConfirmFormScreen = ({
                     ListEmptyComponent={null}
                     ListHeaderComponent={
                         <>
-                            <AccountImportOverview
-                                balance={accountInfo.balance}
-                                networkSymbol={networkSymbol}
-                            />
+                            <AccountImportOverview balance={accountInfo.balance} symbol={symbol} />
                             {knownTokens.length > 0 && (
                                 <Box marginTop="sp16" marginBottom="sp8">
                                     <Text variant="titleSmall">

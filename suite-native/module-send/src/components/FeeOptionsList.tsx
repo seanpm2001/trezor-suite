@@ -2,7 +2,7 @@ import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';
 
 import { D, pipe } from '@mobily/ts-belt';
 
-import { NetworkSymbol } from '@suite-common/wallet-config';
+import { type NetworkSymbol } from '@suite-common/wallet-config';
 import { AccountKey, GeneralPrecomposedLevels, TokenAddress } from '@suite-common/wallet-types';
 import { VStack } from '@suite-native/atoms';
 
@@ -11,7 +11,7 @@ import { NativeSupportedFeeLevel } from '../types';
 
 type FeeOptionsListProps = {
     feeLevels: GeneralPrecomposedLevels;
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
     accountKey: AccountKey;
     tokenContract?: TokenAddress;
 };
@@ -31,7 +31,7 @@ const getTransactionBytes = (feeLevels: Partial<GeneralPrecomposedLevels>) => {
 
 export const FeeOptionsList = ({
     feeLevels,
-    networkSymbol,
+    symbol,
     accountKey,
     tokenContract,
 }: FeeOptionsListProps) => {
@@ -54,7 +54,7 @@ export const FeeOptionsList = ({
                         feeLevel={feeLevel}
                         accountKey={accountKey}
                         tokenContract={tokenContract}
-                        networkSymbol={networkSymbol}
+                        symbol={symbol}
                         transactionBytes={transactionBytes}
                         isInteractive={isMultipleOptionsDisplayed}
                     />

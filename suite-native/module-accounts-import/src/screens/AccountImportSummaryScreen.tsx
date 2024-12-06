@@ -50,7 +50,9 @@ export const AccountImportSummaryScreen = ({
     }, []);
 
     const isAccountImportSupported =
-        portfolioTrackerSupportedNetworks.some(symbol => symbol === networkSymbol) ||
+        portfolioTrackerSupportedNetworks.some(
+            supportedSymbol => supportedSymbol === networkSymbol,
+        ) ||
         (networkSymbol === 'regtest' && isRegtestEnabled);
 
     if (!isAccountImportSupported) {
@@ -65,7 +67,5 @@ export const AccountImportSummaryScreen = ({
         return <AccountAlreadyImportedScreen account={account} />;
     }
 
-    return (
-        <AccountImportConfirmFormScreen networkSymbol={networkSymbol} accountInfo={accountInfo} />
-    );
+    return <AccountImportConfirmFormScreen symbol={networkSymbol} accountInfo={accountInfo} />;
 };

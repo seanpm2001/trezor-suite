@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 
 import { useSelectorDeepComparison } from '@suite-common/redux-utils';
-import { NetworkSymbol } from '@suite-common/wallet-config';
+import { type NetworkSymbol } from '@suite-common/wallet-config';
 import { selectIsDeviceAuthorized, selectHasDeviceDiscovery } from '@suite-common/wallet-core';
 import { OnSelectAccount } from '@suite-native/accounts';
 import { Card } from '@suite-native/atoms';
@@ -64,22 +64,16 @@ export const Assets = () => {
     return (
         <>
             <Card noPadding>
-                {deviceNetworks.map(networkSymbol => (
-                    <Animated.View
-                        entering={isLoading ? FadeInDown : undefined}
-                        key={networkSymbol}
-                    >
-                        <AssetItem
-                            cryptoCurrencySymbol={networkSymbol}
-                            onPress={setSelectedAssetSymbol}
-                        />
+                {deviceNetworks.map(symbol => (
+                    <Animated.View entering={isLoading ? FadeInDown : undefined} key={symbol}>
+                        <AssetItem cryptoCurrencySymbol={symbol} onPress={setSelectedAssetSymbol} />
                     </Animated.View>
                 ))}
                 {isLoading && <DiscoveryAssetsLoader isListEmpty={deviceNetworks.length < 1} />}
             </Card>
             {selectedAssetSymbol && (
                 <NetworkAssetsBottomSheet
-                    networkSymbol={selectedAssetSymbol}
+                    symbol={selectedAssetSymbol}
                     onSelectAccount={handleSelectAssetsAccount}
                     onClose={handleCloseBottomSheet}
                 />

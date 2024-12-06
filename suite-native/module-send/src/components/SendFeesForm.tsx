@@ -180,12 +180,12 @@ export const SendFeesForm = ({ accountKey, tokenContract }: SendFormProps) => {
                             {selectedFeeLevel !== 'custom' && (
                                 <FeeOptionsList
                                     feeLevels={feeLevels}
-                                    networkSymbol={account.symbol}
+                                    symbol={account.symbol}
                                     accountKey={accountKey}
                                     tokenContract={tokenContract}
                                 />
                             )}
-                            <CustomFee networkSymbol={account.symbol} />
+                            <CustomFee symbol={account.symbol} />
                         </VStack>
                     </VStack>
                     <FeesFooter
@@ -194,7 +194,7 @@ export const SendFeesForm = ({ accountKey, tokenContract }: SendFormProps) => {
                         onSubmit={handleNavigateToReviewScreen}
                         totalAmount={selectedFeeLevelTransaction?.totalSpent ?? mockedTotalAmount}
                         fee={selectedFeeLevelTransaction?.fee ?? mockedFee}
-                        networkSymbol={account.symbol}
+                        symbol={account.symbol}
                         tokenContract={tokenContract}
                     />
                 </VStack>

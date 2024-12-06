@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { BITCOIN_ONLY_SYMBOLS } from '@suite-common/suite-constants';
+import { BITCOIN_ONLY_SYMBOLS, BitcoinOnlySymbolsItemType } from '@suite-common/suite-constants';
 import { isArrayMember } from '@trezor/utils';
 
 import { CoinjoinBackend } from '../../src/backend/CoinjoinBackend';
@@ -8,11 +8,8 @@ import type { CoinjoinBackendSettings } from '../../src/types';
 
 const { getCoinjoinConfig } = require('../../../suite/src/services/coinjoin/config');
 
-const supportedSymbols = BITCOIN_ONLY_SYMBOLS;
-type SupportedNetwork = (typeof supportedSymbols)[number];
-
-const isSupportedSymbol = (symbol: string): symbol is SupportedNetwork =>
-    isArrayMember(symbol, supportedSymbols);
+const isSupportedSymbol = (symbol: string): symbol is BitcoinOnlySymbolsItemType =>
+    isArrayMember(symbol, BITCOIN_ONLY_SYMBOLS);
 
 export const getAccountInfoParams = (symbol: string, descriptor: string) => {
     if (!symbol) throw new Error('symbol arg missing');

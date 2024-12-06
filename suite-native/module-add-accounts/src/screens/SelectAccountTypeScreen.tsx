@@ -96,7 +96,9 @@ export const SelectAccountTypeScreen = ({
 
     const [selectedAccountType, setSelectedAccountType] = useState<AccountType>(defaultType);
 
-    const types: AccountType[] = getAvailableAccountTypesForNetworkSymbol({ networkSymbol });
+    const types: AccountType[] = getAvailableAccountTypesForNetworkSymbol({
+        symbol: networkSymbol,
+    });
     const { titleKey: accountTypeKey } = accountTypeTranslationKeys[selectedAccountType];
 
     const handleClose = () => navigation.goBack();
@@ -104,7 +106,7 @@ export const SelectAccountTypeScreen = ({
     const handleMoreTap = () => openLink(ACCOUNT_TYPES_URL);
 
     const handleConfirmTap = () =>
-        addCoinAccount({ networkSymbol, accountType: selectedAccountType, flowType });
+        addCoinAccount({ symbol: networkSymbol, accountType: selectedAccountType, flowType });
 
     return (
         <>

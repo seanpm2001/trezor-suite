@@ -116,7 +116,7 @@ export const TransactionNotification = ({
                 <TransactionNotificationDescription
                     amount={transaction?.amount ?? null}
                     prefix={prefix}
-                    networkSymbol={notification.symbol}
+                    symbol={notification.symbol}
                     targetAddress={transactionTargetAddress}
                 />
             }

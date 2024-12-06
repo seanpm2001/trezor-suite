@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { LayoutChangeEvent, View } from 'react-native';
 
-import { NetworkSymbol } from '@suite-common/wallet-config';
+import { type NetworkSymbol } from '@suite-common/wallet-config';
 import { AccountsRootState, DeviceRootState, SendRootState } from '@suite-common/wallet-core';
 import { AccountKey, TokenAddress } from '@suite-common/wallet-types';
 import { VStack } from '@suite-native/atoms';
@@ -15,36 +15,36 @@ import { ReviewOutputCard } from './ReviewOutputCard';
 
 type ReviewOutputSummaryItemProps = {
     accountKey: AccountKey;
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
     onLayout: (event: LayoutChangeEvent) => void;
     tokenContract?: TokenAddress;
 };
 
-type ValuesProps = {
+type BitcoinValuesProps = {
     totalSpent: string;
     fee: string;
-    networkSymbol: NetworkSymbol;
-    tokenContract?: TokenAddress;
 };
 
-const BitcoinValues = ({ totalSpent, fee, networkSymbol }: ValuesProps) => {
+type TokenEnabledValuesProps = {
+    tokenContract?: TokenAddress;
+} & BitcoinValuesProps;
+
+const BitcoinValues = ({ totalSpent, fee }: BitcoinValuesProps) => {
     return (
         <>
             <ReviewOutputItemValues
                 value={totalSpent}
-                networkSymbol={networkSymbol}
                 translationKey="moduleSend.review.outputs.summary.totalAmount"
             />
             <ReviewOutputItemValues
                 value={fee}
-                networkSymbol={networkSymbol}
                 translationKey="moduleSend.review.outputs.summary.fee"
             />
         </>
     );
 };
 
-const TokenEnabledValues = ({ totalSpent, fee, tokenContract, networkSymbol }: ValuesProps) => {
+const TokenEnabledValues = ({ totalSpent, fee, tokenContract }: TokenEnabledValuesProps) => {
     const amount = tokenContract ? totalSpent : BigNumber(totalSpent).minus(fee).toString();
 
     return (
@@ -52,12 +52,10 @@ const TokenEnabledValues = ({ totalSpent, fee, tokenContract, networkSymbol }: V
             <ReviewOutputItemValues
                 value={amount}
                 tokenContract={tokenContract}
-                networkSymbol={networkSymbol}
                 translationKey="moduleSend.review.outputs.summary.amount"
             />
             <ReviewOutputItemValues
                 value={fee}
-                networkSymbol={networkSymbol}
                 translationKey="moduleSend.review.outputs.summary.maxFee"
             />
         </>
@@ -66,7 +64,7 @@ const TokenEnabledValues = ({ totalSpent, fee, tokenContract, networkSymbol }: V
 
 export const ReviewOutputSummaryItem = ({
     accountKey,
-    networkSymbol,
+    symbol,
     tokenContract,
     onLayout,
 }: ReviewOutputSummaryItemProps) => {
@@ -80,7 +78,7 @@ export const ReviewOutputSummaryItem = ({
 
     const { state, totalSpent, fee } = summaryOutput;
 
-    const canHaveTokens = isCoinWithTokens(networkSymbol);
+    const canHaveTokens = isCoinWithTokens(symbol);
 
     return (
         <View onLayout={onLayout}>
@@ -93,15 +91,10 @@ export const ReviewOutputSummaryItem = ({
                         <TokenEnabledValues
                             totalSpent={totalSpent}
                             fee={fee}
-                            networkSymbol={networkSymbol}
                             tokenContract={tokenContract}
                         />
                     ) : (
-                        <BitcoinValues
-                            totalSpent={totalSpent}
-                            fee={fee}
-                            networkSymbol={networkSymbol}
-                        />
+                        <BitcoinValues totalSpent={totalSpent} fee={fee} />
                     )}
                 </VStack>
             </ReviewOutputCard>

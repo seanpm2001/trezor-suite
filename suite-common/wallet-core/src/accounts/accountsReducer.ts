@@ -8,7 +8,7 @@ import {
 } from '@suite-common/redux-utils';
 import { enhanceHistory, isTestnet, isUtxoBased } from '@suite-common/wallet-utils';
 import { Account, AccountKey } from '@suite-common/wallet-types';
-import { AccountType, networks, NetworkSymbol } from '@suite-common/wallet-config';
+import { type AccountType, networks, type NetworkSymbol } from '@suite-common/wallet-config';
 import { DeviceState, StaticSessionId } from '@trezor/connect';
 
 import { accountsActions } from './accountsActions';
@@ -183,13 +183,13 @@ export const selectAccountsByDeviceStateAndNetworkSymbol = createMemoizedSelecto
         (
             _state: AccountsRootState,
             _deviceState: StaticSessionId | DeviceState,
-            networkSymbol: NetworkSymbol,
-        ) => networkSymbol,
+            symbol: NetworkSymbol,
+        ) => symbol,
     ],
-    (accounts, networkSymbol) =>
+    (accounts, symbol) =>
         pipe(
             accounts,
-            A.filter(account => account.symbol === networkSymbol),
+            A.filter(account => account.symbol === symbol),
             returnStableArrayIfEmpty,
         ),
 );
@@ -291,15 +291,14 @@ export const selectHasAccountTransactions = createMemoizedSelector(
 export const selectDeviceAccountsByNetworkSymbol = createMemoizedSelector(
     [
         selectDeviceAccounts,
-        (_state: AccountsRootState & DeviceRootState, networkSymbol: NetworkSymbol | null) =>
-            networkSymbol,
+        (_state: AccountsRootState & DeviceRootState, symbol: NetworkSymbol | null) => symbol,
     ],
-    (accounts, networkSymbol) => {
-        if (G.isNull(networkSymbol)) return EMPTY_STABLE_ACCOUNTS_ARRAY;
+    (accounts, symbol) => {
+        if (G.isNull(symbol)) return EMPTY_STABLE_ACCOUNTS_ARRAY;
 
         return pipe(
             accounts,
-            A.filter(account => account.symbol === networkSymbol),
+            A.filter(account => account.symbol === symbol),
             returnStableArrayIfEmpty,
         );
     },
@@ -350,13 +349,12 @@ export const selectAccountsByNetworkAndDeviceState = createMemoizedSelector(
     [
         selectAccounts,
         (_state: AccountsRootState, deviceState: StaticSessionId) => deviceState,
-        (_state: AccountsRootState, _deviceState: StaticSessionId, networkSymbol: NetworkSymbol) =>
-            networkSymbol,
+        (_state: AccountsRootState, _deviceState: StaticSessionId, symbol: NetworkSymbol) => symbol,
     ],
-    (accounts, deviceState, networkSymbol) =>
+    (accounts, deviceState, symbol) =>
         pipe(
             accounts.filter(
-                account => account.deviceState === deviceState && account.symbol === networkSymbol,
+                account => account.deviceState === deviceState && account.symbol === symbol,
             ),
             returnStableArrayIfEmpty,
         ),
@@ -364,8 +362,8 @@ export const selectAccountsByNetworkAndDeviceState = createMemoizedSelector(
 
 export const selectFirstNormalAccountForNetworkSymbol = createMemoizedSelector(
     [
-        (state: AccountsRootState & DeviceRootState, networkSymbol: NetworkSymbol) =>
-            selectDeviceAccountsForNetworkSymbolAndAccountType(state, networkSymbol, 'normal'),
+        (state: AccountsRootState & DeviceRootState, symbol: NetworkSymbol) =>
+            selectDeviceAccountsForNetworkSymbolAndAccountType(state, symbol, 'normal'),
     ],
     accounts => accounts.find(account => account.index === 0) ?? null,
 );

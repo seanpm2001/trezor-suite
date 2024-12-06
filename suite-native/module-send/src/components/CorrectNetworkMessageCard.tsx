@@ -1,5 +1,5 @@
 import { CryptoIcon } from '@suite-native/icons';
-import { networks, NetworkSymbol } from '@suite-common/wallet-config';
+import { getNetwork, type NetworkSymbol } from '@suite-common/wallet-config';
 import { Card, HStack, Text } from '@suite-native/atoms';
 import { Translation } from '@suite-native/intl';
 import { Link } from '@suite-native/link';
@@ -16,22 +16,22 @@ const cardStyle = prepareNativeStyle(utils => ({
 }));
 
 type CorrectNetworkMessageCardProps = {
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
 };
 
 const LINK_URL = 'https://trezor.io/learn/a/how-to-choose-the-right-network';
 
-export const CorrectNetworkMessageCard = ({ networkSymbol }: CorrectNetworkMessageCardProps) => {
+export const CorrectNetworkMessageCard = ({ symbol }: CorrectNetworkMessageCardProps) => {
     const { applyStyle } = useNativeStyles();
 
-    if (!isCoinWithTokens(networkSymbol)) return null;
+    if (!isCoinWithTokens(symbol)) return null;
 
-    const networkName = networks[networkSymbol].name;
+    const networkName = getNetwork(symbol).name;
 
     return (
         <Card style={applyStyle(cardStyle)}>
             <HStack spacing="sp12">
-                <CryptoIcon symbol={networkSymbol} size={20} />
+                <CryptoIcon symbol={symbol} size={20} />
                 <Text variant="hint">
                     <Translation
                         id="moduleSend.outputs.correctNetworkMessage"

@@ -63,7 +63,6 @@ export const ReviewOutputItemList = ({ accountKey, tokenContract }: ReviewOutput
                 <VStack spacing={LIST_VERTICAL_SPACING}>
                     {reviewOutputs?.map((output, index) => (
                         <ReviewOutputItem
-                            networkSymbol={account.symbol}
                             key={output.value}
                             reviewOutput={output}
                             onLayout={event => handleReadListItemHeight(event, index)}
@@ -71,7 +70,7 @@ export const ReviewOutputItemList = ({ accountKey, tokenContract }: ReviewOutput
                     ))}
                     <ReviewOutputSummaryItem
                         accountKey={accountKey}
-                        networkSymbol={account.symbol}
+                        symbol={account.symbol}
                         tokenContract={tokenContract}
                         onLayout={event => handleReadListItemHeight(event, reviewOutputs.length)}
                     />

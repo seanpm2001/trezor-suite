@@ -1,4 +1,4 @@
-import { NetworkSymbol } from '@suite-common/wallet-config';
+import type { NetworkSymbol } from '@suite-common/wallet-config';
 import {
     AccountsRootState,
     selectAccountByKey,
@@ -15,13 +15,13 @@ import { NativeStakingRootState } from './types';
 
 export const selectVisibleDeviceEthereumAccountsWithStakingByNetworkSymbol = (
     state: NativeStakingRootState,
-    networkSymbol: NetworkSymbol | null,
+    symbol: NetworkSymbol | null,
 ) => {
     const accounts = selectDeviceAccounts(state);
 
     return accounts.filter(
         account =>
-            account.symbol === networkSymbol &&
+            account.symbol === symbol &&
             account.visible &&
             !!getAccountEverstakeStakingPool(account),
     );

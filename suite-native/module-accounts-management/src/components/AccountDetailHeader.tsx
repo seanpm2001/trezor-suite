@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { useAtomValue, useSetAtom } from 'jotai';
 
-import { NetworkSymbol } from '@suite-common/wallet-config';
+import { type NetworkSymbol } from '@suite-common/wallet-config';
 import { AccountsRootState, selectAccountByKey } from '@suite-common/wallet-core';
 import { AccountKey, TokenAddress, TokenSymbol } from '@suite-common/wallet-types';
 import { DiscreetTextTrigger, VStack } from '@suite-native/atoms';
@@ -39,7 +39,7 @@ const CryptoBalance = ({
     return (
         <DiscreetTextTrigger>
             <AccountDetailCryptoValue
-                networkSymbol={accountSymbol}
+                symbol={accountSymbol}
                 tokenSymbol={tokenSymbol}
                 tokenAddress={tokenAddress}
                 value={selectedPoint.cryptoBalance}

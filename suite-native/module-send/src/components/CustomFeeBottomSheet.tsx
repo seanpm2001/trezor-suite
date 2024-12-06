@@ -75,7 +75,7 @@ export const CustomFeeBottomSheet = ({ isVisible, onClose }: CustomFeeBottomShee
             testID="@send/custom-fee-bottom-sheet"
         >
             <VStack spacing="sp24" justifyContent="space-between" flex={1}>
-                <CustomFeeInputs networkSymbol={symbol} />
+                <CustomFeeInputs symbol={symbol} />
                 <HStack
                     flex={1}
                     justifyContent="space-between"
@@ -93,7 +93,7 @@ export const CustomFeeBottomSheet = ({ isVisible, onClose }: CustomFeeBottomShee
                         />
                         <CryptoAmountFormatter
                             value={feeValue}
-                            network={symbol}
+                            symbol={symbol}
                             variant="body"
                             isLoading={isFeeLoading}
                             isBalance={false}

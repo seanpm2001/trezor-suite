@@ -6,7 +6,12 @@ import {
     updateFiatRatesThunk,
 } from '@suite-common/wallet-core';
 import TrezorConnect, { AccountInfo } from '@trezor/connect';
-import { networks, NetworkSymbol, AccountType, Bip43Path } from '@suite-common/wallet-config';
+import {
+    type NetworkSymbol,
+    type AccountType,
+    type Bip43Path,
+    getNetworkType,
+} from '@suite-common/wallet-config';
 import { getXpubOrDescriptorInfo } from '@trezor/utxo-lib';
 import { getAccountIdentity, shouldUseIdentities } from '@suite-common/wallet-utils';
 import { Timestamp, TokenAddress } from '@suite-common/wallet-types';
@@ -26,16 +31,12 @@ const ACCOUNTS_IMPORT_MODULE_PREFIX = '@suite-native/accountsImport';
 type ImportAssetThunkPayload = {
     accountInfo: AccountInfo;
     accountLabel: string;
-    coin: NetworkSymbol;
+    symbol: NetworkSymbol;
 };
 
-const getAccountTypeFromDescriptor = (
-    descriptor: string,
-    networkSymbol: NetworkSymbol,
-): AccountType => {
+const getAccountTypeFromDescriptor = (descriptor: string, symbol: NetworkSymbol): AccountType => {
     // account type supported only for btc and ltc
-    if (networkSymbol !== 'btc' && networkSymbol !== 'ltc' && networkSymbol !== 'test')
-        return 'imported';
+    if (symbol !== 'btc' && symbol !== 'ltc' && symbol !== 'test') return 'imported';
     const { paymentType } = getXpubOrDescriptorInfo(descriptor);
 
     return paymentTypeToAccountType[paymentType];
@@ -43,13 +44,13 @@ const getAccountTypeFromDescriptor = (
 
 export const importAccountThunk = createThunk(
     `${ACCOUNTS_IMPORT_MODULE_PREFIX}/importAccountThunk`,
-    ({ accountInfo, accountLabel, coin }: ImportAssetThunkPayload, { dispatch, getState }) => {
+    ({ accountInfo, accountLabel, symbol }: ImportAssetThunkPayload, { dispatch, getState }) => {
         const deviceState = PORTFOLIO_TRACKER_DEVICE_STATE;
 
         const deviceNetworkAccounts = selectAccountsByNetworkAndDeviceState(
             getState(),
             deviceState,
-            coin,
+            symbol,
         );
         const existingAccount = deviceNetworkAccounts.find(
             account => account.descriptor === accountInfo.descriptor,
@@ -58,7 +59,7 @@ export const importAccountThunk = createThunk(
         if (existingAccount) {
             dispatch(accountsActions.updateAccount(existingAccount, accountInfo));
         } else {
-            const accountType = getAccountTypeFromDescriptor(accountInfo.descriptor, coin);
+            const accountType = getAccountTypeFromDescriptor(accountInfo.descriptor, symbol);
             const imported = true;
             dispatch(
                 accountsActions.createAccount({
@@ -67,8 +68,8 @@ export const importAccountThunk = createThunk(
                         index: deviceNetworkAccounts.length, // indexed from 0
                         path: (accountInfo?.path ?? '') as Bip43Path,
                         accountType,
-                        networkType: networks[coin].networkType,
-                        coin,
+                        networkType: getNetworkType(symbol),
+                        coin: symbol,
                     },
                     accountInfo,
                     imported,

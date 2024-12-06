@@ -1,12 +1,12 @@
 import { Box, Text } from '@suite-native/atoms';
 import { CryptoAmountFormatter, AccountAddressFormatter } from '@suite-native/formatters';
-import { NetworkSymbol } from '@suite-common/wallet-config';
+import type { NetworkSymbol } from '@suite-common/wallet-config';
 import { useNativeStyles, prepareNativeStyle } from '@trezor/styles';
 
 type TransactionNotificationDescriptionProps = {
     amount: string | null;
     prefix: string;
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
     targetAddress?: string;
 };
 
@@ -18,7 +18,7 @@ export const TransactionNotificationDescription = ({
     amount,
     prefix,
     targetAddress,
-    networkSymbol,
+    symbol,
 }: TransactionNotificationDescriptionProps) => {
     const { applyStyle } = useNativeStyles();
 
@@ -26,7 +26,7 @@ export const TransactionNotificationDescription = ({
         <Box flexDirection="row">
             <CryptoAmountFormatter
                 value={amount}
-                network={networkSymbol}
+                symbol={symbol}
                 isBalance={false}
                 variant="label"
             />

@@ -2,11 +2,7 @@ import { useSelector } from 'react-redux';
 
 import { AccountsRootState, selectAccountNetworkSymbol } from '@suite-common/wallet-core';
 import { AccountKey, TokenAddress } from '@suite-common/wallet-types';
-import {
-    selectAccountTokenInfo,
-    selectAccountTokenSymbol,
-    TokensRootState,
-} from '@suite-native/tokens';
+import { selectAccountTokenInfo, TokensRootState } from '@suite-native/tokens';
 import { TextProps } from '@suite-native/atoms';
 
 import { TokenAmountFormatter } from './TokenAmountFormatter';
@@ -30,7 +26,7 @@ export const CoinAmountFormatter = ({
     decimals,
     ...restProps
 }: CoinAmountFormatterProps) => {
-    const networkSymbol = useSelector((state: AccountsRootState) =>
+    const symbol = useSelector((state: AccountsRootState) =>
         selectAccountNetworkSymbol(state, accountKey),
     );
 
@@ -38,11 +34,7 @@ export const CoinAmountFormatter = ({
         selectAccountTokenInfo(state, accountKey, tokenContract),
     );
 
-    const tokenSymbol = useSelector((state: TokensRootState) =>
-        selectAccountTokenSymbol(state, accountKey, tokenContract),
-    );
-
-    if (!networkSymbol) {
+    if (!symbol) {
         return null;
     }
 
@@ -51,11 +43,11 @@ export const CoinAmountFormatter = ({
             <TokenAmountFormatter
                 decimals={decimals ?? tokenInfo.decimals}
                 value={value}
-                tokenSymbol={tokenSymbol}
+                tokenSymbol={tokenInfo.symbol}
                 {...restProps}
             />
         );
     }
 
-    return <CryptoAmountFormatter value={value} network={networkSymbol} {...restProps} />;
+    return <CryptoAmountFormatter value={value} symbol={symbol} {...restProps} />;
 };

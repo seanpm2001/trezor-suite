@@ -95,7 +95,7 @@ export const CustomFeeCard = ({ onEdit, onCancel }: CustomFeeCardProps) => {
                                 />
                                 <CryptoAmountFormatter
                                     value={customFeeTransaction?.fee}
-                                    network={networkSymbol}
+                                    symbol={networkSymbol}
                                     isBalance={false}
                                     variant="hint"
                                     numberOfLines={1}

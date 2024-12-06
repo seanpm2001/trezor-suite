@@ -14,7 +14,7 @@ import { prepareNativeStyle, useNativeStyles } from '@trezor/styles';
 import { GroupedBalanceMovementEventPayload } from '@suite-common/graph';
 import { EventTooltipComponentProps } from '@suite-native/react-native-graph/src/LineGraphProps';
 import { SignValue } from '@suite-common/suite-types';
-import { NetworkSymbol, getNetworkType } from '@suite-common/wallet-config';
+import { type NetworkSymbol, getNetworkType } from '@suite-common/wallet-config';
 import { AccountKey, TokenAddress } from '@suite-common/wallet-types';
 import { selectAccountTokenInfo, TokensRootState } from '@suite-native/tokens';
 
@@ -25,7 +25,7 @@ type EventTooltipRowProps = {
     title: string;
     signValue: SignValue;
     value: number;
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
     accountKey: AccountKey;
     tokenAddress?: TokenAddress;
 };
@@ -58,12 +58,12 @@ const TooltipCardStyle = prepareNativeStyle(utils => ({
 const TokenAmountTooltipFormatter = ({
     accountKey,
     tokenAddress,
-    networkSymbol,
+    symbol,
     value,
 }: {
     accountKey: AccountKey;
     tokenAddress: TokenAddress;
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
     value: number;
 }) => {
     const token = useSelector((state: TokensRootState) =>
@@ -76,7 +76,7 @@ const TokenAmountTooltipFormatter = ({
     }
 
     // We might want to add support for other networks in the future.
-    if (getNetworkType(networkSymbol) === 'ethereum') {
+    if (getNetworkType(symbol) === 'ethereum') {
         return (
             <TokenAmountFormatter
                 color="textDefault"
@@ -95,7 +95,7 @@ const TokenAmountTooltipFormatter = ({
 const EventTooltipRow = ({
     title,
     signValue,
-    networkSymbol,
+    symbol,
     tokenAddress,
     value,
     accountKey,
@@ -111,14 +111,14 @@ const EventTooltipRow = ({
                     color="textDefault"
                     variant="label"
                     value={value}
-                    network={networkSymbol}
+                    symbol={symbol}
                     isBalance={false}
                 />
             ) : (
                 <TokenAmountTooltipFormatter
                     accountKey={accountKey}
                     tokenAddress={tokenAddress}
-                    networkSymbol={networkSymbol}
+                    symbol={symbol}
                     value={value}
                 />
             )}
@@ -130,7 +130,7 @@ export const TransactionEventTooltip = ({
     eventX,
     eventY,
     eventPayload: {
-        networkSymbol,
+        symbol,
         received,
         sent,
         receivedTransactionsCount,
@@ -158,7 +158,7 @@ export const TransactionEventTooltip = ({
                         title={`Sent · ${sentTransactionsCount}`}
                         signValue="negative"
                         value={sent}
-                        networkSymbol={networkSymbol}
+                        symbol={symbol}
                         tokenAddress={tokenAddress}
                         accountKey={accountKey}
                     />
@@ -168,7 +168,7 @@ export const TransactionEventTooltip = ({
                         title={`Received · ${receivedTransactionsCount}`}
                         signValue="positive"
                         value={received}
-                        networkSymbol={networkSymbol}
+                        symbol={symbol}
                         tokenAddress={tokenAddress}
                         accountKey={accountKey}
                     />
@@ -178,7 +178,7 @@ export const TransactionEventTooltip = ({
                         title="In total"
                         signValue={totalAmount}
                         value={Math.abs(totalAmount)}
-                        networkSymbol={networkSymbol}
+                        symbol={symbol}
                         tokenAddress={tokenAddress}
                         accountKey={accountKey}
                     />

@@ -1,4 +1,4 @@
-import { NetworkSymbol } from '@suite-common/wallet-config';
+import type { NetworkSymbol } from '@suite-common/wallet-config';
 import { selectAccountByKey } from '@suite-common/wallet-core';
 import { Account, AccountKey } from '@suite-common/wallet-types';
 import { getEthereumCryptoBalanceWithStaking } from '@suite-common/wallet-utils';
@@ -21,20 +21,20 @@ const EMPTY_ACCOUNT_ARRAY: Account[] = [];
 
 export const selectDeviceAccountsWithStaking = (
     state: NativeStakingRootState,
-    networkSymbol: NetworkSymbol,
+    symbol: NetworkSymbol,
 ) => {
-    if (!doesCoinSupportStaking(networkSymbol)) {
+    if (!doesCoinSupportStaking(symbol)) {
         return EMPTY_ACCOUNT_ARRAY;
     }
 
-    switch (networkSymbol) {
+    switch (symbol) {
         case 'eth':
         case 'thol':
         case 'tsep':
             return selectVisibleDeviceEthereumAccountsWithStakingByNetworkSymbol(state, 'eth');
         default:
-            // This throws error if any networkSymbol is not handled.
-            networkSymbol satisfies never;
+            // This throws error if any symbol is not handled.
+            symbol satisfies never;
 
             return EMPTY_ACCOUNT_ARRAY;
     }
@@ -42,9 +42,9 @@ export const selectDeviceAccountsWithStaking = (
 
 export const selectHasAnyDeviceAccountsWithStaking = (
     state: NativeStakingRootState,
-    networkSymbol: NetworkSymbol,
+    symbol: NetworkSymbol,
 ) => {
-    return selectDeviceAccountsWithStaking(state, networkSymbol).length > 0;
+    return selectDeviceAccountsWithStaking(state, symbol).length > 0;
 };
 
 export const getAccountCryptoBalanceWithStaking = (account: Account | null) => {

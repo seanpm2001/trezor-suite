@@ -1,12 +1,12 @@
 import { prepareNativeStyle, useNativeStyles } from '@trezor/styles';
 import { Box, Button } from '@suite-native/atoms';
-import { networks, NetworkSymbol, NetworkType } from '@suite-common/wallet-config';
+import { getNetworkType, type NetworkSymbol, type NetworkType } from '@suite-common/wallet-config';
 
 import { QrWithLaser } from './QRWithLaser';
 
 type XpubImportSectionProps = {
     onRequestCamera: () => void;
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
 };
 
 const iconWrapperStyle = prepareNativeStyle(_ => ({
@@ -25,10 +25,10 @@ export const networkTypeToTitleMap: Record<NetworkType, string> = {
     solana: 'Scan receive address',
 };
 
-export const XpubImportSection = ({ onRequestCamera, networkSymbol }: XpubImportSectionProps) => {
+export const XpubImportSection = ({ onRequestCamera, symbol }: XpubImportSectionProps) => {
     const { applyStyle } = useNativeStyles();
 
-    const { networkType } = networks[networkSymbol];
+    const networkType = getNetworkType(symbol);
     const buttonTitle = networkTypeToTitleMap[networkType];
 
     return (

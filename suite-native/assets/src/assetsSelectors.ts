@@ -7,7 +7,7 @@ import {
     selectTokenDefinitions,
     TokenDefinitionsRootState,
 } from '@suite-common/token-definitions';
-import { NetworkSymbol, networkSymbolCollection } from '@suite-common/wallet-config';
+import { type NetworkSymbol, networkSymbolCollection } from '@suite-common/wallet-config';
 import {
     AccountsRootState,
     DeviceRootState,
@@ -45,12 +45,12 @@ TODO: revalidate if this is still true for reselect
 
 export const selectVisibleDeviceAccountsKeysByNetworkSymbol = (
     state: AssetsRootState,
-    networkSymbol: NetworkSymbol | null,
+    symbol: NetworkSymbol | null,
 ) => {
-    if (G.isNull(networkSymbol)) return [];
+    if (G.isNull(symbol)) return [];
 
     const accounts = selectDeviceAccounts(state).filter(
-        account => account.symbol === networkSymbol && account.visible,
+        account => account.symbol === symbol && account.visible,
     );
 
     return accounts.map(account => account.key);
@@ -77,16 +77,16 @@ export const selectBottomSheetDeviceNetworkItems = createMemoizedSelector(
     [
         selectVisibleDeviceAccountsByNetworkSymbol,
         selectTokenDefinitions,
-        (_state, networkSymbol: NetworkSymbol) => networkSymbol,
+        (_state, symbol: NetworkSymbol) => symbol,
     ],
-    (accounts, tokenDefinitions, networkSymbol) =>
+    (accounts, tokenDefinitions, symbol) =>
         pipe(
             accounts,
             sortAccountsByNetworksAndAccountTypes,
             A.map(account =>
                 getAccountListSections(
                     account,
-                    getSimpleCoinDefinitionsByNetwork(tokenDefinitions, networkSymbol),
+                    getSimpleCoinDefinitionsByNetwork(tokenDefinitions, symbol),
                 ),
             ),
             A.flat,
@@ -118,9 +118,9 @@ const selectDeviceAssetsWithBalances = createMemoizedSelector(
 
         let totalFiatBalance = 0;
 
-        const assets = deviceNetworksWithAssets.map((networkSymbol: NetworkSymbol) => {
+        const assets = deviceNetworksWithAssets.map((symbol: NetworkSymbol) => {
             const networkAccounts = accountsWithFiatBalance.filter(
-                account => account.symbol === networkSymbol,
+                account => account.symbol === symbol,
             );
             const assetBalance = networkAccounts.reduce(
                 (sum, { cryptoValue }) => sum + Number(cryptoValue),
@@ -134,7 +134,7 @@ const selectDeviceAssetsWithBalances = createMemoizedSelector(
             totalFiatBalance += fiatBalance ?? 0;
 
             const asset: AssetType = {
-                symbol: networkSymbol,
+                symbol,
                 // For assets we should always only 8 decimals to save space
                 assetBalance: assetBalance.toFixed(8),
                 fiatBalance: fiatBalance !== null ? fiatBalance.toFixed(2) : null,
@@ -155,9 +155,9 @@ export const selectAssetCryptoValue = (state: AssetsRootState, symbol: NetworkSy
 };
 
 export const selectAssetFiatValue = createMemoizedSelector(
-    [selectDeviceAssetsWithBalances, (_state, networkSymbol: NetworkSymbol) => networkSymbol],
-    (assets, networkSymbol) => {
-        const asset = assets.assets.find(a => a.symbol === networkSymbol);
+    [selectDeviceAssetsWithBalances, (_state, symbol: NetworkSymbol) => symbol],
+    (assets, symbol) => {
+        const asset = assets.assets.find(a => a.symbol === symbol);
 
         return asset?.fiatBalance ?? null;
     },
@@ -173,9 +173,9 @@ const selectAssetsFiatValuePercentage = createMemoizedSelector(
 );
 
 export const selectAssetFiatValuePercentage = createMemoizedSelector(
-    [selectAssetsFiatValuePercentage, (_state, networkSymbol: NetworkSymbol) => networkSymbol],
-    (assetsPercentages, networkSymbol) => {
-        const asset = assetsPercentages.find(a => a.symbol === networkSymbol);
+    [selectAssetsFiatValuePercentage, (_state, symbol: NetworkSymbol) => symbol],
+    (assetsPercentages, symbol) => {
+        const asset = assetsPercentages.find(a => a.symbol === symbol);
 
         const assetPercentage = {
             fiatPercentage: Math.ceil(asset?.fiatPercentage ?? 0),

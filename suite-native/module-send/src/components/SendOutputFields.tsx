@@ -24,7 +24,7 @@ const cardStyle = prepareNativeStyle(utils => ({
 export const SendOutputFields = ({ accountKey }: SendOutputFieldsProps) => {
     const { applyStyle } = useNativeStyles();
     const { control } = useFormContext<SendOutputsFormValues>();
-    const networkSymbol = useSelector((state: AccountsRootState) =>
+    const symbol = useSelector((state: AccountsRootState) =>
         selectAccountNetworkSymbol(state, accountKey),
     );
     const outputsFieldArray = useFieldArray({ control, name: 'outputs' });
@@ -34,7 +34,7 @@ export const SendOutputFields = ({ accountKey }: SendOutputFieldsProps) => {
             <Text variant="titleSmall">
                 <Translation id="moduleSend.outputs.recipients.title" />
             </Text>
-            {networkSymbol && <CorrectNetworkMessageCard networkSymbol={networkSymbol} />}
+            {symbol && <CorrectNetworkMessageCard symbol={symbol} />}
             <Card style={applyStyle(cardStyle)}>
                 {outputsFieldArray.fields.map((output, index) => (
                     <RecipientInputs key={output.id} index={index} accountKey={accountKey} />

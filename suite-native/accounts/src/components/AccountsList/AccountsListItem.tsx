@@ -131,7 +131,7 @@ export const AccountsListItem = ({
             secondaryValue={
                 <CryptoAmountFormatter
                     value={account.balance}
-                    network={account.symbol}
+                    symbol={account.symbol}
                     isBalance={false}
                     numberOfLines={1}
                     adjustsFontSizeToFit

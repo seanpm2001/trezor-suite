@@ -112,7 +112,7 @@ export const TransactionDetailHeader = ({
                         ) : (
                             <CryptoAmountFormatter
                                 value={transaction.amount}
-                                network={transaction.symbol}
+                                symbol={transaction.symbol}
                                 isBalance={false}
                                 variant="titleMedium"
                                 color="textDefault"

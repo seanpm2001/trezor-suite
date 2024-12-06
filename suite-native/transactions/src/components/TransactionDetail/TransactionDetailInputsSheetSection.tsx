@@ -3,7 +3,7 @@ import { ReactNode, Fragment } from 'react';
 import { A, G } from '@mobily/ts-belt';
 
 import { Icon } from '@suite-native/icons';
-import { NetworkSymbol, isNetworkSymbol } from '@suite-common/wallet-config';
+import { type NetworkSymbol, isNetworkSymbol } from '@suite-common/wallet-config';
 import { TokenSymbol } from '@suite-common/wallet-types';
 import { Box, Card, Text } from '@suite-native/atoms';
 import {
@@ -38,7 +38,7 @@ const TransactionAddressAmount = ({
             (isNetworkSymbol(symbol) ? (
                 <CryptoAmountFormatter
                     value={amount}
-                    network={symbol}
+                    symbol={symbol}
                     isBalance={false}
                     variant="label"
                     numberOfLines={1}

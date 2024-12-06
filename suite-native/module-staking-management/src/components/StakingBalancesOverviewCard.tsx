@@ -80,7 +80,7 @@ export const StakingBalancesOverviewCard = ({
                         </Box>
                         <CryptoAmountFormatter
                             value={stakedBalance}
-                            network={symbol}
+                            symbol={symbol}
                             decimals={CRYPTO_BALANCE_DECIMALS}
                             color="textDefault"
                             variant="titleSmall"
@@ -104,7 +104,7 @@ export const StakingBalancesOverviewCard = ({
                         </Box>
                         <CryptoAmountFormatter
                             value={rewardsBalance}
-                            network={symbol}
+                            symbol={symbol}
                             decimals={CRYPTO_BALANCE_DECIMALS}
                             color="textSecondaryHighlight"
                             variant="titleSmall"

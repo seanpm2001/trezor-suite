@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigation } from '@react-navigation/native';
 
-import { networks } from '@suite-common/wallet-config';
+import { getNetwork } from '@suite-common/wallet-config';
 import { VStack, Text, Spinner, SpinnerLoadingState } from '@suite-native/atoms';
 import { AddCoinAccountStackRoutes, Screen } from '@suite-native/navigation';
 import { Translation } from '@suite-native/intl';
@@ -38,7 +38,7 @@ export const AddCoinDiscoveryRunningScreen = ({ route }) => {
     const goToAccountDetail = ({ account }: { account: Account }) => {
         navigateToSuccessorScreen({
             flowType,
-            networkSymbol,
+            symbol: networkSymbol,
             accountType: account.accountType,
             accountIndex: account.index,
         });
@@ -95,7 +95,7 @@ export const AddCoinDiscoveryRunningScreen = ({ route }) => {
                     <Text variant="titleSmall" textAlign="center">
                         <Translation
                             id="moduleAddAccounts.coinDiscoveryRunningScreen.title"
-                            values={{ coin: networks[networkSymbol].name }}
+                            values={{ coin: getNetwork(networkSymbol).name }}
                         />
                     </Text>
                     <Text variant="body" textAlign="center" color="textSubdued">

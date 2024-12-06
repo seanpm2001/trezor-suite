@@ -8,7 +8,7 @@ import Animated, {
     withTiming,
 } from 'react-native-reanimated';
 
-import { getNetworkType, NetworkSymbol, NetworkType } from '@suite-common/wallet-config';
+import { getNetworkType, type NetworkSymbol, type NetworkType } from '@suite-common/wallet-config';
 import {
     AccountKey,
     GeneralPrecomposedTransaction,
@@ -38,7 +38,7 @@ import { updateSelectedFeeLevelThunk } from '../sendFormThunks';
 type FeeOptionProps = {
     feeKey: Exclude<SendFeesFormValues['feeLevel'], 'custom'>;
     feeLevel: GeneralPrecomposedTransactionFinal;
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
     transactionBytes: number;
     accountKey: AccountKey;
     tokenContract?: TokenAddress;
@@ -88,7 +88,7 @@ const getFeePerUnit = ({
 export const FeeOption = ({
     feeKey,
     feeLevel,
-    networkSymbol,
+    symbol,
     transactionBytes,
     accountKey,
     tokenContract,
@@ -99,11 +99,11 @@ export const FeeOption = ({
     const dispatch = useDispatch();
 
     const feeTimeEstimate = useSelector((state: FeesRootState) =>
-        selectNetworkFeeLevelTimeEstimate(state, networkSymbol, feeKey),
+        selectNetworkFeeLevelTimeEstimate(state, symbol, feeKey),
     );
 
     const backendFeePerUnit = useSelector((state: FeesRootState) =>
-        selectNetworkFeeLevelFeePerUnit(state, networkSymbol, feeKey),
+        selectNetworkFeeLevelFeePerUnit(state, symbol, feeKey),
     );
 
     const areFeeValuesComplete = isFinalPrecomposedTransaction(feeLevel);
@@ -132,7 +132,7 @@ export const FeeOption = ({
     );
 
     const label = feeLabelsMap[feeKey];
-    const networkType = getNetworkType(networkSymbol);
+    const networkType = getNetworkType(symbol);
     const feeUnits = getFeeUnits(networkType);
 
     // If trezor-connect was not able to compose the fee level (e.g. insufficient account balance), we have to mock its value.
@@ -200,13 +200,13 @@ export const FeeOption = ({
                                 variant="body"
                                 color="textDefault"
                                 value={fee}
-                                symbol={networkSymbol}
+                                symbol={symbol}
                             />
                             <CryptoAmountFormatter
                                 variant="hint"
                                 color="textSubdued"
                                 value={fee}
-                                network={networkSymbol}
+                                symbol={symbol}
                                 isBalance={false}
                                 adjustsFontSizeToFit
                                 numberOfLines={1}

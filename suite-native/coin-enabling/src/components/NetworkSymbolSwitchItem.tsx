@@ -2,7 +2,7 @@ import { TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { CryptoIcon } from '@suite-native/icons';
-import { networks, NetworkSymbol } from '@suite-common/wallet-config';
+import { getNetwork, type NetworkSymbol } from '@suite-common/wallet-config';
 import { Card, HStack, Text, Switch, VStack } from '@suite-native/atoms';
 import {
     selectDeviceEnabledDiscoveryNetworkSymbols,
@@ -17,7 +17,7 @@ import { selectIsDeviceConnected } from '@suite-common/wallet-core';
 import { analytics, EventType } from '@suite-native/analytics';
 
 type NetworkSymbolSwitchItemProps = {
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
     isEnabled: boolean;
     allowDeselectLastCoin: boolean;
     allowChangeAnalytics?: boolean;
@@ -50,7 +50,7 @@ const iconWrapperStyle = prepareNativeStyle(utils => ({
 }));
 
 export const NetworkSymbolSwitchItem = ({
-    networkSymbol,
+    symbol,
     isEnabled,
     allowDeselectLastCoin,
     allowChangeAnalytics,
@@ -61,7 +61,7 @@ export const NetworkSymbolSwitchItem = ({
     const { applyStyle } = useNativeStyles();
     const { showToast } = useToast();
     const { showAlert } = useAlert();
-    const { name } = networks[networkSymbol];
+    const { name } = getNetwork(symbol);
 
     const showOneNetworkSymbolAlert = () =>
         showAlert({
@@ -78,7 +78,7 @@ export const NetworkSymbolSwitchItem = ({
             !isChecked &&
             !allowDeselectLastCoin &&
             enabledNetworkSymbols.length === 1 &&
-            enabledNetworkSymbols.includes(networkSymbol)
+            enabledNetworkSymbols.includes(symbol)
         ) {
             showOneNetworkSymbolAlert();
 
@@ -101,13 +101,13 @@ export const NetworkSymbolSwitchItem = ({
                 ),
             });
         }
-        dispatch(toggleEnabledDiscoveryNetworkSymbol(networkSymbol));
+        dispatch(toggleEnabledDiscoveryNetworkSymbol(symbol));
 
         if (allowChangeAnalytics) {
             analytics.report({
                 type: EventType.SettingsChangeCoinEnabled,
                 payload: {
-                    symbol: networkSymbol,
+                    symbol,
                     value: isChecked,
                 },
             });
@@ -120,11 +120,11 @@ export const NetworkSymbolSwitchItem = ({
                 onPress={_ => handleEnabledChange(!isEnabled)}
                 accessibilityRole="togglebutton"
                 activeOpacity={0.6}
-                testID={`@coin-enabling/toggle-${networkSymbol}`}
+                testID={`@coin-enabling/toggle-${symbol}`}
             >
                 <HStack style={applyStyle(wrapperStyle)}>
                     <View style={applyStyle(iconWrapperStyle)}>
-                        <CryptoIcon symbol={networkSymbol} />
+                        <CryptoIcon symbol={symbol} />
                     </View>
                     <HStack
                         justifyContent="space-between"
@@ -134,7 +134,7 @@ export const NetworkSymbolSwitchItem = ({
                     >
                         <VStack spacing={0}>
                             <Text variant="callout">{name}</Text>
-                            {isCoinWithTokens(networkSymbol) && (
+                            {isCoinWithTokens(symbol) && (
                                 <Text variant="hint" color="textSubdued">
                                     <Translation id="generic.tokens" />
                                 </Text>

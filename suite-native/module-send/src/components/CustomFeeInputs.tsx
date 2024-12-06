@@ -13,13 +13,13 @@ import { useSendAmountTransformers, integerTransformer } from '../hooks/useSendA
 import { SendFeesFormValues } from '../sendFeesFormSchema';
 
 type CustomFeeInputsProps = {
-    networkSymbol: NetworkSymbol;
+    symbol: NetworkSymbol;
 };
 
-export const CustomFeeInputs = ({ networkSymbol }: CustomFeeInputsProps) => {
+export const CustomFeeInputs = ({ symbol }: CustomFeeInputsProps) => {
     const { translate } = useTranslate();
     const feeInfo = useSelector((state: FeesRootState) => selectNetworkFeeInfo(state, 'btc'));
-    const { cryptoAmountTransformer } = useSendAmountTransformers(networkSymbol!);
+    const { cryptoAmountTransformer } = useSendAmountTransformers(symbol);
 
     const {
         formState: { errors },
@@ -27,7 +27,7 @@ export const CustomFeeInputs = ({ networkSymbol }: CustomFeeInputsProps) => {
     const feePerUnitFieldName = 'customFeePerUnit';
     const hasFeePerByteError = G.isNotNullable(errors[feePerUnitFieldName]);
 
-    const networkType = getNetworkType(networkSymbol);
+    const networkType = getNetworkType(symbol);
     const feeUnits = getFeeUnits(networkType);
     const formattedFeePerUnit = `${feeInfo?.minFee} ${feeUnits}`;
 

@@ -59,7 +59,7 @@ export const ReceiveAccount = ({ accountKey, tokenContract }: AccountReceiveProp
                     />
                 )}
                 <ReceiveAddressCard
-                    networkSymbol={account.symbol}
+                    symbol={account.symbol}
                     address={address}
                     isTokenAddress={!!tokenContract}
                     isReceiveApproved={isReceiveApproved}

@@ -1,6 +1,5 @@
 import { useRoute } from '@react-navigation/native';
 
-import { NetworkSymbol } from '@suite-common/wallet-config';
 import { TokenAddress } from '@suite-common/wallet-types';
 import { HStack, VStack, Text, Box } from '@suite-native/atoms';
 import { CoinAmountFormatter, CoinToFiatAmountFormatter } from '@suite-native/formatters';
@@ -14,7 +13,6 @@ export const ReviewOutputItemValues = ({
     value,
     translationKey,
 }: {
-    networkSymbol: NetworkSymbol;
     tokenContract?: TokenAddress;
     value: string;
     translationKey: TxKeyPath;

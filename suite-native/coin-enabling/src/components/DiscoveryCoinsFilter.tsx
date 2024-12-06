@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { VStack, Text } from '@suite-native/atoms';
-import { NetworkSymbol } from '@suite-common/wallet-config';
 import { Translation } from '@suite-native/intl';
 import { Icon } from '@suite-native/icons';
 import {
@@ -39,11 +38,11 @@ export const DiscoveryCoinsFilter = ({
 
     return (
         <VStack spacing="sp12">
-            {uniqueNetworkSymbols.map((networkSymbol: NetworkSymbol) => (
+            {uniqueNetworkSymbols.map(symbol => (
                 <NetworkSymbolSwitchItem
-                    key={networkSymbol}
-                    networkSymbol={networkSymbol}
-                    isEnabled={enabledNetworkSymbols.includes(networkSymbol)}
+                    key={symbol}
+                    symbol={symbol}
+                    isEnabled={enabledNetworkSymbols.includes(symbol)}
                     allowDeselectLastCoin={allowDeselectLastCoin}
                     allowChangeAnalytics={allowChangeAnalytics}
                 />

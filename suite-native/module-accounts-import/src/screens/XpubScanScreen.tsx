@@ -187,7 +187,7 @@ export const XpubScanScreen = ({
                 <View style={applyStyle(cameraStyle)}>
                     <XpubImportSection
                         onRequestCamera={handleToggleScanner}
-                        networkSymbol={networkSymbol}
+                        symbol={networkSymbol}
                     />
                 </View>
 
