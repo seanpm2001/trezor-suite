@@ -32,18 +32,32 @@ export type BluetoothDeviceState = {
     status: DeviceBluetoothStatus;
 };
 
+// found
+// pairing
+// paired
+// bluetooth-connecting
+// bluetooth-connected
+// connect-connected
+
 type BluetoothState = {
     isBluetoothEnabled: boolean;
     scanStatus: BluetoothScanStatus;
+
+    // This will be persisted, those are devices we believed that are paired
+    // (because we already successfully paired them in the Suite) in the Operating System
+    pairedDevices: BluetoothDevice[];
+
+    // This list of devices that is union of saved-devices and device that we get from scan
     deviceList: Record<string, BluetoothDeviceState>;
-    selectedDeviceUuid?: string;
+
+    selectedDeviceUuid?: string; // Todo: this shall be stored in the local component
 };
 
 const initialState: BluetoothState = {
     isBluetoothEnabled: true, // To prevent the UI from flickering when the page is loaded
     scanStatus: 'running', // To prevent the UI from flickering when the page is loaded
     deviceList: {},
-    selectedDeviceUuid: undefined,
+    selectedDeviceUuid: undefined, // Todo: this shall be stored in the local component
 };
 
 export const bluetoothReducer = createReducer(initialState, builder =>
@@ -56,6 +70,8 @@ export const bluetoothReducer = createReducer(initialState, builder =>
         })
         .addCase(bluetoothDeviceListUpdate, (state, { payload: { devices } }) => {
             devices.forEach(device => {
+                // Todo: unifiy connectedDevices (saved in DB) and devices, so we drop devices that are no longer visible
+
                 const deviceState = state.deviceList[device.uuid];
 
                 if (deviceState === undefined) {
@@ -102,5 +118,27 @@ export const bluetoothReducer = createReducer(initialState, builder =>
                     state.selectedDeviceUuid = undefined;
                 }
             }
-        }),
+        })
+
+        // TODO: forgetDevice, save reducer to DB
+        .addCase(
+            deviceActions.connectDevice,
+            (
+                state,
+                {
+                    payload: {
+                        device: { bluetoothProps },
+                    },
+                },
+            ) => {
+                if (bluetoothProps) {
+                    if (state.selectedDeviceUuid === bluetoothProps.uuid) {
+                        state.deviceList[bluetoothProps.uuid].status = {
+                            type: 'connect-connected',
+                            uuid: bluetoothProps.uuid,
+                        };
+                    }
+                }
+            },
+        ),
 );

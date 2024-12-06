@@ -32,7 +32,7 @@ export const SwitchDevice = ({ onCancel }: ForegroundAppProps) => {
     return (
         <SwitchDeviceModal isAnimationEnabled onCancel={onCancel}>
             {isBluetoothMode ? (
-                <BluetoothConnect onClose={() => setIsBluetoothMode(false)} />
+                <BluetoothConnect onClose={() => setIsBluetoothMode(false)} uiMode="card" />
             ) : (
                 <Column gap={spacings.md}>
                     {sortedDevices.map((device, index) => (

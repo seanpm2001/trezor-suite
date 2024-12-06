@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
-import { Card, CollapsibleBox, ElevationUp, Link, Text } from '@trezor/components';
-import { spacings } from '@trezor/theme';
+import { CollapsibleBox, Link, Text } from '@trezor/components';
 
 import { BluetoothTips } from './BluetoothTips';
 
@@ -14,7 +13,6 @@ export const NotTrezorYouAreLookingFor = ({ onReScanClick }: NotTrezorYouAreLook
 
     return (
         <CollapsibleBox
-            margin={{ horizontal: spacings.md }}
             fillType="none"
             paddingType="none"
             headingSize="medium"
@@ -26,14 +24,7 @@ export const NotTrezorYouAreLookingFor = ({ onReScanClick }: NotTrezorYouAreLook
             }
         >
             {showTips && (
-                <ElevationUp>
-                    <Card minWidth={475} paddingType="none">
-                        <BluetoothTips
-                            onReScanClick={onReScanClick}
-                            header="Check tips & try again"
-                        />
-                    </Card>
-                </ElevationUp>
+                <BluetoothTips onReScanClick={onReScanClick} header="Check tips & try again" />
             )}
         </CollapsibleBox>
     );

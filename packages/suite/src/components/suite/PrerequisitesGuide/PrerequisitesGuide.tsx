@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 import { getStatus, deviceNeedsAttention } from '@suite-common/suite-utils';
-import { Button, ElevationContext, ElevationDown, motionEasing } from '@trezor/components';
+import { Button, ElevationContext, ElevationDown, Flex, motionEasing } from '@trezor/components';
 import { selectDevices, selectDevice } from '@suite-common/wallet-core';
 
 import { ConnectDevicePrompt, Translation } from 'src/components/suite';
@@ -118,7 +118,12 @@ export const PrerequisitesGuide = ({ allowSwitchDevice }: PrerequisitesGuideProp
                 <ElevationContext baseElevation={-1}>
                     {/* Here we need to draw the inner card with elevation -1 (custom design) */}
                     <ElevationDown>
-                        <BluetoothConnect onClose={() => setIsBluetoothConnectOpen(false)} />
+                        <Flex width={470}>
+                            <BluetoothConnect
+                                onClose={() => setIsBluetoothConnectOpen(false)}
+                                uiMode="spatial"
+                            />
+                        </Flex>
                     </ElevationDown>
                 </ElevationContext>
             ) : (

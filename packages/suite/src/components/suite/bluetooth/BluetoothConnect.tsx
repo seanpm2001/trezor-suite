@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import TrezorConnect from '@trezor/connect';
-import { Card, ElevationUp, Column } from '@trezor/components';
+import { Card, Column, ElevationUp } from '@trezor/components';
 import { spacings } from '@trezor/theme';
 import { notificationsActions } from '@suite-common/toast-notifications';
 import { bluetoothManager } from '@trezor/transport-bluetooth';
@@ -33,11 +33,12 @@ const SCAN_TIMEOUT = 30_000;
 
 type BluetoothConnectProps = {
     onClose: () => void;
+    uiMode: 'spatial' | 'card';
 };
 
 type TimerId = ReturnType<typeof setTimeout>; // Todo: TimerId import type after rebase
 
-export const BluetoothConnect = ({ onClose }: BluetoothConnectProps) => {
+export const BluetoothConnect = ({ onClose, uiMode }: BluetoothConnectProps) => {
     const dispatch = useDispatch();
     const [scannerTimerId, setScannerTimerId] = useState<TimerId | null>(null);
 
@@ -46,6 +47,9 @@ export const BluetoothConnect = ({ onClose }: BluetoothConnectProps) => {
     const selectedDevice = useSelector(selectBluetoothSelectedDevice);
     const deviceList = useSelector(selectBluetoothDeviceList);
 
+    // Todo: move this to some Singleton component to synchronize the bluetoothManager with Redux State
+    // Todo: or move to action in the same manner as TrezorConnect.init() is initialized
+    // See: package/suite/services
     useEffect(() => {
         bluetoothManager.on('adapter-event', isPowered => {
             console.warn('adapter-event', isPowered);
@@ -62,12 +66,15 @@ export const BluetoothConnect = ({ onClose }: BluetoothConnectProps) => {
             dispatch(bluetoothConnectDeviceEventAction({ connectionStatus }));
         });
 
+        // Todo: this shall not be on top-level, this shall be called onClick on the connect button
         bluetoothManager.startScan();
 
         return () => {
             bluetoothManager.removeAllListeners('adapter-event');
             bluetoothManager.removeAllListeners('device-list-update');
             bluetoothManager.removeAllListeners('device-connection-status');
+
+            // Todo: move this to action and run on close or something
             bluetoothManager.stopScan();
         };
     }, [dispatch]);
@@ -101,6 +108,7 @@ export const BluetoothConnect = ({ onClose }: BluetoothConnectProps) => {
     const onSelect = async (uuid: string) => {
         dispatch(bluetoothSelectDeviceAction({ uuid }));
 
+        // Todo move this to action and call this in thunk
         const result = await bluetoothManager.connectDevice(uuid);
 
         if (!result.success) {
@@ -173,6 +181,17 @@ export const BluetoothConnect = ({ onClose }: BluetoothConnectProps) => {
         );
     }
 
+    const content = scanFailed ? (
+        <BluetoothTips onReScanClick={onReScanClick} header="Check tips & try again" />
+    ) : (
+        <BluetoothDeviceList
+            isDisabled={selectedDevice !== undefined}
+            onSelect={onSelect}
+            deviceList={deviceList}
+            isScanning={isScanning}
+        />
+    );
+
     return (
         <Column gap={spacings.sm} flex="1">
             <Card paddingType="none">
@@ -187,29 +206,31 @@ export const BluetoothConnect = ({ onClose }: BluetoothConnectProps) => {
                         numberOfDevices={deviceList.length}
                     />
 
-                    <ElevationUp>
-                        {scanFailed ? (
-                            <BluetoothTips
-                                onReScanClick={onReScanClick}
-                                header="Check tips & try again"
-                            />
-                        ) : (
-                            <BluetoothDeviceList
-                                isDisabled={selectedDevice !== undefined}
-                                onSelect={onSelect}
-                                deviceList={deviceList}
-                                isScanning={isScanning}
-                            />
-                        )}
-                    </ElevationUp>
+                    {/* Here we need to do +1 in elevation because of custom design on the welcome screen */}
+                    {uiMode === 'spatial' ? <ElevationUp>{content}</ElevationUp> : content}
+
+                    {uiMode === 'card' && (
+                        <BluetoothScanFooter
+                            onReScanClick={onReScanClick}
+                            numberOfDevices={deviceList.length}
+                            scanStatus={scanStatus}
+                        />
+                    )}
                 </Column>
             </Card>
 
-            <BluetoothScanFooter
-                onReScanClick={onReScanClick}
-                numberOfDevices={deviceList.length}
-                scanStatus={scanStatus}
-            />
+            {uiMode === 'spatial' && (
+                // Here we need to do +2 in elevation because of custom design on the welcome screen
+                <ElevationUp>
+                    <ElevationUp>
+                        <BluetoothScanFooter
+                            onReScanClick={onReScanClick}
+                            numberOfDevices={deviceList.length}
+                            scanStatus={scanStatus}
+                        />
+                    </ElevationUp>
+                </ElevationUp>
+            )}
         </Column>
     );
 };
