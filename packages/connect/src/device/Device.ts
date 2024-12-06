@@ -958,6 +958,9 @@ export class Device extends TypedEmitter<DeviceEvents> {
         const revision = parseRevision(feat);
         feat.revision = revision;
 
+        // feat.model = 'maow';
+        // feat.internal_model = 'brambora';
+
         // Fix missing model and internal_model in older fw, model has to be fixed first
         // 1. - old T1B1 is missing features.model
         if (!feat.model && feat.major_version === 1) {
@@ -965,7 +968,7 @@ export class Device extends TypedEmitter<DeviceEvents> {
         }
         // 2. - old fw does not include internal_model. T1B1 does not report it yet, T2T1 starts in 2.6.0
         //    - or reported internal_model is not known to connect
-        if (!feat.internal_model) {
+        if (!feat.internal_model || !DeviceModelInternal[feat.internal_model]) {
             feat.internal_model = ensureInternalModelFeature(feat.model);
         }
 
