@@ -1,4 +1,4 @@
-export type SvgImage = keyof typeof SVG_IMAGES;
+export type SvgImageKey = keyof typeof SVG_IMAGES;
 
 export const SVG_IMAGES = {
     UNI_ERROR: 'uni-error.svg',
@@ -40,7 +40,7 @@ export const SVG_IMAGES = {
     GAINS_GRAPH: 'gains-graph.svg',
 } as const;
 
-export type PngImage = keyof typeof PNG_IMAGES;
+export type PngImageKey = keyof typeof PNG_IMAGES;
 
 export const PNG_IMAGES = {
     CLOUDY: 'cloudy.png',

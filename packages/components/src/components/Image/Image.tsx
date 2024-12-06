@@ -8,7 +8,7 @@ import {
     pickAndPrepareFrameProps,
     withFrameProps,
 } from '../../utils/frameProps';
-import { PNG_IMAGES, SVG_IMAGES, PngImage, SvgImage } from './images';
+import { PNG_IMAGES, SVG_IMAGES, PngImageKey, SvgImageKey } from './images';
 import { TransientProps } from '../../utils/transientProps';
 import { resolveStaticPath } from '../../utils/resolveStaticPath';
 
@@ -23,12 +23,13 @@ type AllowedFrameProps = Pick<FrameProps, (typeof allowedImageFrameProps)[number
 export const PNG_PATH = 'images/png';
 export const SVG_PATH = 'images/svg';
 
-export type ImageKey = PngImage | SvgImage;
+export type ImageKey = PngImageKey | SvgImageKey;
 
-const buildSrcSet = (basePath: string, images: typeof PNG_IMAGES, imageKey: PngImage) => {
-    const imageFile1x = images[imageKey];
-    const hiRes = `${String(imageKey)}_2x` as PngImage;
-    const imageFile2x = hiRes in images ? images[hiRes] : undefined;
+const buildPngSrcSet = (imageKey: PngImageKey) => {
+    const basePath = PNG_PATH;
+    const imageFile1x = PNG_IMAGES[imageKey];
+    const hiRes = `${String(imageKey)}_2x` as PngImageKey;
+    const imageFile2x = hiRes in PNG_IMAGES ? PNG_IMAGES[hiRes] : undefined;
 
     if (!imageFile2x) {
         return undefined;
@@ -39,17 +40,19 @@ const buildSrcSet = (basePath: string, images: typeof PNG_IMAGES, imageKey: PngI
     )} 2x`;
 };
 
-const getSourceProps = (image: ImageKey) => {
-    const path = image in PNG_IMAGES ? PNG_PATH : SVG_PATH;
-    const images =
-        image in PNG_IMAGES ? (PNG_IMAGES as typeof PNG_IMAGES) : (SVG_IMAGES as typeof SVG_IMAGES);
+const isPNGImageKey = (key: ImageKey): key is PngImageKey => key in PNG_IMAGES;
+
+const getSourceProps = (imageKey: ImageKey) => {
+    if (isPNGImageKey(imageKey)) {
+        return {
+            src: resolveStaticPath(`${imageKey}/${PNG_IMAGES[imageKey]}`),
+            srcSet: buildPngSrcSet(imageKey),
+        };
+    }
 
     return {
-        src: resolveStaticPath(`${path}/${images[image as keyof typeof images]}`),
-        srcSet:
-            image in PNG_IMAGES
-                ? buildSrcSet(path, images as typeof PNG_IMAGES, image as PngImage)
-                : undefined,
+        src: resolveStaticPath(`${SVG_PATH}/${SVG_IMAGES[imageKey]}`),
+        srcSet: undefined,
     };
 };
 

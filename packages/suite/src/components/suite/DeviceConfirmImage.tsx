@@ -13,7 +13,7 @@ export const DeviceConfirmImage = ({ device }: DeviceConfirmImageProps) => {
         return null;
     }
 
-    const imgName = `DEVICE_CONFIRM_TREZOR_${deviceModelInternal}` as ImageKey;
+    const imgName: ImageKey = `DEVICE_CONFIRM_TREZOR_${deviceModelInternal}`;
 
     return <Image image={imgName} />;
 };

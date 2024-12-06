@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import styled, { css } from 'styled-components';
 
-import { Card, Image, PngImage, variables } from '@trezor/components';
+import { Card, Image, PngImageKey, variables } from '@trezor/components';
 
 const containerGridStyle = css`
     display: grid;
@@ -105,7 +105,7 @@ const Description = styled.p`
 
 export interface TileProps {
     description: ReactNode;
-    image: PngImage;
+    image: PngImageKey;
     title: ReactNode;
 }
 
