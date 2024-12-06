@@ -21,14 +21,9 @@ export const bluetoothDeviceListUpdate = createAction(
 
 export const bluetoothConnectDeviceEventAction = createAction(
     `${BLUETOOTH_PREFIX}/device-connection-status`,
-    ({ connectionStatus }: { connectionStatus: DeviceBluetoothStatus }) => ({
-        payload: { connectionStatus },
+    ({ connectionStatus, uuid }: { uuid: string; connectionStatus: DeviceBluetoothStatus }) => ({
+        payload: { uuid, connectionStatus },
     }),
-);
-
-export const bluetoothSelectDeviceAction = createAction(
-    `${BLUETOOTH_PREFIX}/select-device`,
-    ({ uuid }: { uuid: string | undefined }) => ({ payload: { uuid } }),
 );
 
 export const bluetoothScanStatusAction = createAction(
@@ -40,6 +35,5 @@ export const allBluetoothActions = {
     bluetoothAdapterEventAction,
     bluetoothDeviceListUpdate,
     bluetoothConnectDeviceEventAction,
-    bluetoothSelectDeviceAction,
     bluetoothScanStatusAction,
 };

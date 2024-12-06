@@ -4,7 +4,6 @@ import TrezorConnect from '@trezor/connect';
 import { Card, Column, ElevationUp } from '@trezor/components';
 import { spacings } from '@trezor/theme';
 import { notificationsActions } from '@suite-common/toast-notifications';
-import { bluetoothManager } from '@trezor/transport-bluetooth';
 
 import { BluetoothNotEnabled } from './errors/BluetoothNotEnabled';
 import { BluetoothDeviceList } from './BluetoothDeviceList';
@@ -15,19 +14,18 @@ import { BluetoothScanFooter } from './BluetoothScanFooter';
 import { useDispatch, useSelector } from '../../../hooks/suite';
 import { BluetoothSelectedDevice } from './BluetoothSelectedDevice';
 import {
-    bluetoothAdapterEventAction,
     bluetoothConnectDeviceEventAction,
-    bluetoothDeviceListUpdate,
     bluetoothScanStatusAction,
-    bluetoothSelectDeviceAction,
 } from '../../../actions/bluetooth/bluetoothActions';
 import {
     selectBluetoothDeviceList,
     selectBluetoothEnabled,
     selectBluetoothScanStatus,
-    selectBluetoothSelectedDevice,
 } from '../../../reducers/bluetooth/bluetoothSelectors';
 import { BluetoothPairingPin } from './BluetoothPairingPin';
+import { bluetoothStartScanningThunk } from '../../../actions/bluetooth/bluetoothStartScanningThunk';
+import { bluetoothStopScanningThunk } from '../../../actions/bluetooth/bluetoothStopScanningThunk';
+import { bluetoothConnectDeviceThunk } from '../../../actions/bluetooth/bluetoothConnectDeviceThunk';
 
 const SCAN_TIMEOUT = 30_000;
 
@@ -40,42 +38,22 @@ type TimerId = ReturnType<typeof setTimeout>; // Todo: TimerId import type after
 
 export const BluetoothConnect = ({ onClose, uiMode }: BluetoothConnectProps) => {
     const dispatch = useDispatch();
+    const [selectedDeviceUuid, setSelectedDeviceUuid] = useState<string | null>(null);
     const [scannerTimerId, setScannerTimerId] = useState<TimerId | null>(null);
 
     const isBluetoothEnabled = useSelector(selectBluetoothEnabled);
     const scanStatus = useSelector(selectBluetoothScanStatus);
-    const selectedDevice = useSelector(selectBluetoothSelectedDevice);
     const deviceList = useSelector(selectBluetoothDeviceList);
+    const devices = Object.values(deviceList);
 
-    // Todo: move this to some Singleton component to synchronize the bluetoothManager with Redux State
-    // Todo: or move to action in the same manner as TrezorConnect.init() is initialized
-    // See: package/suite/services
+    const selectedDevice =
+        selectedDeviceUuid !== null ? deviceList[selectedDeviceUuid] ?? null : null;
+
     useEffect(() => {
-        bluetoothManager.on('adapter-event', isPowered => {
-            console.warn('adapter-event', isPowered);
-            dispatch(bluetoothAdapterEventAction({ isPowered }));
-        });
-
-        bluetoothManager.on('device-list-update', devices => {
-            console.warn('device-list-update', devices);
-            dispatch(bluetoothDeviceListUpdate({ devices }));
-        });
-
-        bluetoothManager.on('device-connection-status', connectionStatus => {
-            console.warn('device-connection-status', connectionStatus);
-            dispatch(bluetoothConnectDeviceEventAction({ connectionStatus }));
-        });
-
-        // Todo: this shall not be on top-level, this shall be called onClick on the connect button
-        bluetoothManager.startScan();
+        dispatch(bluetoothStartScanningThunk());
 
         return () => {
-            bluetoothManager.removeAllListeners('adapter-event');
-            bluetoothManager.removeAllListeners('device-list-update');
-            bluetoothManager.removeAllListeners('device-connection-status');
-
-            // Todo: move this to action and run on close or something
-            bluetoothManager.stopScan();
+            dispatch(bluetoothStopScanningThunk());
         };
     }, [dispatch]);
 
@@ -95,7 +73,7 @@ export const BluetoothConnect = ({ onClose, uiMode }: BluetoothConnectProps) => 
     }, [dispatch]);
 
     const onReScanClick = () => {
-        dispatch(bluetoothSelectDeviceAction({ uuid: undefined }));
+        setSelectedDeviceUuid(null);
         dispatch(bluetoothScanStatusAction({ status: 'running' }));
 
         clearScamTimer();
@@ -106,15 +84,15 @@ export const BluetoothConnect = ({ onClose, uiMode }: BluetoothConnectProps) => 
     };
 
     const onSelect = async (uuid: string) => {
-        dispatch(bluetoothSelectDeviceAction({ uuid }));
+        setSelectedDeviceUuid(uuid);
 
-        // Todo move this to action and call this in thunk
-        const result = await bluetoothManager.connectDevice(uuid);
+        const result = await dispatch(bluetoothConnectDeviceThunk({ uuid })).unwrap();
 
         if (!result.success) {
             dispatch(
                 bluetoothConnectDeviceEventAction({
-                    connectionStatus: { type: 'error', uuid, error: result.error },
+                    uuid,
+                    connectionStatus: { type: 'error', error: result.error },
                 }),
             );
             dispatch(
@@ -128,7 +106,8 @@ export const BluetoothConnect = ({ onClose, uiMode }: BluetoothConnectProps) => 
 
             dispatch(
                 bluetoothConnectDeviceEventAction({
-                    connectionStatus: { type: 'connected', uuid },
+                    uuid,
+                    connectionStatus: { type: 'connected' },
                 }),
             );
 
@@ -148,6 +127,7 @@ export const BluetoothConnect = ({ onClose, uiMode }: BluetoothConnectProps) => 
     }
 
     // Todo: incompatible version
+    // eslint-disable-next-line no-constant-condition
     if (false) {
         return <BluetoothVersionNotCompatible onCancel={onClose} />;
     }
@@ -156,19 +136,15 @@ export const BluetoothConnect = ({ onClose, uiMode }: BluetoothConnectProps) => 
 
     // This is fake, we scan for devices all the time
     const isScanning = scanStatus !== 'done';
-    const scanFailed = deviceList.length === 0 && scanStatus === 'done';
+    const scanFailed = devices.length === 0 && scanStatus === 'done';
 
     const handlePairingCancel = () => {
-        dispatch(bluetoothSelectDeviceAction({ uuid: undefined }));
+        setSelectedDeviceUuid(null);
         onReScanClick();
     };
 
-    if (selectedDevice !== undefined && selectedDevice.status.type !== 'pairing') {
-        return <BluetoothSelectedDevice device={selectedDevice} onReScanClick={onReScanClick} />;
-    }
-
     if (
-        selectedDevice !== undefined &&
+        selectedDevice !== null &&
         selectedDevice.status.type === 'pairing' &&
         (selectedDevice.status.pin?.length ?? 0) > 0
     ) {
@@ -181,15 +157,14 @@ export const BluetoothConnect = ({ onClose, uiMode }: BluetoothConnectProps) => 
         );
     }
 
+    if (selectedDevice !== null) {
+        return <BluetoothSelectedDevice device={selectedDevice} onReScanClick={onReScanClick} />;
+    }
+
     const content = scanFailed ? (
         <BluetoothTips onReScanClick={onReScanClick} header="Check tips & try again" />
     ) : (
-        <BluetoothDeviceList
-            isDisabled={selectedDevice !== undefined}
-            onSelect={onSelect}
-            deviceList={deviceList}
-            isScanning={isScanning}
-        />
+        <BluetoothDeviceList onSelect={onSelect} deviceList={devices} isScanning={isScanning} />
     );
 
     return (
@@ -203,7 +178,7 @@ export const BluetoothConnect = ({ onClose, uiMode }: BluetoothConnectProps) => 
                     <BluetoothScanHeader
                         isScanning={isScanning}
                         onClose={onClose}
-                        numberOfDevices={deviceList.length}
+                        numberOfDevices={devices.length}
                     />
 
                     {/* Here we need to do +1 in elevation because of custom design on the welcome screen */}
@@ -212,7 +187,7 @@ export const BluetoothConnect = ({ onClose, uiMode }: BluetoothConnectProps) => 
                     {uiMode === 'card' && (
                         <BluetoothScanFooter
                             onReScanClick={onReScanClick}
-                            numberOfDevices={deviceList.length}
+                            numberOfDevices={devices.length}
                             scanStatus={scanStatus}
                         />
                     )}
@@ -225,7 +200,7 @@ export const BluetoothConnect = ({ onClose, uiMode }: BluetoothConnectProps) => 
                     <ElevationUp>
                         <BluetoothScanFooter
                             onReScanClick={onReScanClick}
-                            numberOfDevices={deviceList.length}
+                            numberOfDevices={devices.length}
                             scanStatus={scanStatus}
                         />
                     </ElevationUp>

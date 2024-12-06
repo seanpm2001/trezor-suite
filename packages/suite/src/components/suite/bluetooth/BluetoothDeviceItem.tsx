@@ -7,7 +7,7 @@ import { BluetoothDevice } from './BluetoothDevice';
 type BluetoothDeviceItemProps = {
     device: BluetoothDeviceType;
     onClick: () => void;
-    isDisabled: boolean;
+    isDisabled?: boolean;
 };
 
 export const BluetoothDeviceItem = ({ device, onClick, isDisabled }: BluetoothDeviceItemProps) => (

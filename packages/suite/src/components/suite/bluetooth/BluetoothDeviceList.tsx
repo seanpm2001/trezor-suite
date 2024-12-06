@@ -26,7 +26,6 @@ export const BluetoothDeviceList = ({
     onSelect,
     deviceList,
     isScanning,
-    isDisabled,
 }: BluetoothDeviceListProps) => (
     <Card>
         <Column gap={spacings.md} alignItems="stretch">
@@ -35,7 +34,6 @@ export const BluetoothDeviceList = ({
                     key={d.device.uuid}
                     device={d.device}
                     onClick={() => onSelect(d.device.uuid)}
-                    isDisabled={isDisabled}
                 />
             ))}
             {isScanning && <SkeletonDevice />}
