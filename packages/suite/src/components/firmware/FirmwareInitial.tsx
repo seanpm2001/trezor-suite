@@ -11,7 +11,11 @@ import { FirmwareType } from '@trezor/connect';
 import { selectDevices } from '@suite-common/wallet-core';
 import { spacingsPx } from '@trezor/theme';
 
-import { OnboardingStepBox, OnboardingButtonSkip } from 'src/components/onboarding';
+import {
+    OnboardingStepBox,
+    OnboardingButtonSkip,
+    SkipStepConfirmation,
+} from 'src/components/onboarding';
 import { useDevice, useFirmware, useOnboarding, useSelector } from 'src/hooks/suite';
 import { FirmwareInstallButton, FirmwareOffer } from 'src/components/firmware';
 
@@ -124,13 +128,14 @@ export const FirmwareInitial = ({
     standaloneFwUpdate = false,
     onClose,
 }: FirmwareInitialProps) => {
-    const [bitcoinOnlyOffer, setBitcoinOnlyOffer] = useState(false);
     const { device } = useDevice();
     const { deviceWillBeWiped, firmwareUpdate, setStatus, targetFirmwareType } = useFirmware({
         shouldSwitchFirmwareType,
     });
-    const { goToNextStep, updateAnalytics } = useOnboarding();
+    const { updateAnalytics } = useOnboarding();
     const devices = useSelector(selectDevices);
+    const [bitcoinOnlyOffer, setBitcoinOnlyOffer] = useState(false);
+    const [showSkipConfirmation, setShowSkipConfirmation] = useState(false);
 
     // Just to satisfy TS, disconnected device should be handled upstream.
     if (!device?.connected || !device?.features) {
@@ -340,7 +345,7 @@ export const FirmwareInitial = ({
                     // Fw update is not mandatory, show skip button
                     <OnboardingButtonSkip
                         onClick={() => {
-                            goToNextStep();
+                            setShowSkipConfirmation(true);
                             updateAnalytics({ firmware: 'skip' });
                         }}
                         data-testid="@firmware/skip-button"
@@ -354,6 +359,9 @@ export const FirmwareInitial = ({
     if (content) {
         return (
             <>
+                {showSkipConfirmation && (
+                    <SkipStepConfirmation onCancel={() => setShowSkipConfirmation(false)} />
+                )}
                 <OnboardingStepBox
                     image="FIRMWARE"
                     heading={content.heading}
