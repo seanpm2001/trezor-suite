@@ -17,6 +17,7 @@ const AddBatchButton = styled.div`
     flex-direction: row;
     align-items: center;
     gap: 8px;
+    align-self: flex-start;
 `;
 
 const AddButton = ({ field, onAdd, label }: AddButtonProps) => {
@@ -26,7 +27,7 @@ const AddButton = ({ field, onAdd, label }: AddButtonProps) => {
 
     return (
         <AddBatchButton title="Add batch" onClick={onAdd}>
-            <Icon name="plus" onClick={() => {}} /> {label}
+            <Icon name="plus" onClick={onAdd} /> {label}
         </AddBatchButton>
     );
 };

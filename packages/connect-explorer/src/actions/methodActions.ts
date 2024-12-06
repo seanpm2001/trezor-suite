@@ -136,7 +136,17 @@ export const onCodeChange = (value: string) => (dispatch: Dispatch, getState: Ge
         const { fields } = getState().method;
         const parsed = JSON5.parse(value);
         const processField = (field: Field<unknown>) => {
+            const value = getDeepValue(parsed, [...(field.path ?? []), ...field.name.split('.')]);
+            dispatch(onFieldChange(field, value));
+
             if (field.type === 'array') {
+                // ensure the array has the correct number of items
+                for (let i = field.items.length; i < value.length; i++) {
+                    dispatch(onBatchAdd(field, field.batch[0].fields));
+                }
+                for (let i = field.items.length; i > value.length; i--) {
+                    dispatch(onBatchRemove(field, field.items[i - 1]));
+                }
                 field.items.forEach(batch => {
                     batch.forEach(processField);
                 });
@@ -144,17 +154,6 @@ export const onCodeChange = (value: string) => (dispatch: Dispatch, getState: Ge
                 field.options.forEach(batch => {
                     batch.forEach(processField);
                 });
-            }
-
-            if (field.path && field.path.length > 0) {
-                dispatch(
-                    onFieldChange(
-                        field,
-                        getDeepValue(parsed, [...field.path, ...field.name.split('.')]),
-                    ),
-                );
-            } else {
-                dispatch(onFieldChange(field, getDeepValue(parsed, field.name.split('.'))));
             }
         };
         fields.forEach(processField);
